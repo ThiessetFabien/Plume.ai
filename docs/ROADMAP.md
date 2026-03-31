@@ -28,16 +28,17 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 ### PHASE 0 : L'Infrastructure (Base de données, CI/CD, Git)
 > *Note : Un beau portfolio, ce sont de beaux commits bien ordonnés !*
 
-- **Tâche 0.0 (Configuration Dépôt & CI/CD) :** "Génère un `.gitignore` très strict (excluant `.env`, `node_modules`, bases locales) pour préparer mon dépôt. Configure un workflow GitHub Actions vierge (`.github/workflows/ci.yml`) que nous templaterons plus tard avec Python, puis exécute le premier commit d'initialisation du projet."
-- **Tâche 0.1 (DevOps) :** "Rédige le fichier `docker-compose.yml` incluant PostgreSQL (données) et Metabase (Dashboarding), puis crée un `Makefile` pour tout lancer. Ensuite, commit (feat:)."
-- **Tâche 0.2 (Backend & Sécurité) :** "Génère le répertoire `backend/`, les `requirements.txt` (FastAPI, SQLAlchemy) et un `Dockerfile` Python minimal avec CORS Middleware. N'oublie pas le `.env.example` et effectue un commit propre."
-- **Tâche 0.3 (Frontend) :** "Génère l'application React Native vierge via `npx create-expo-app mobile --template blank` et sécurise l'étape par un commit formel."
+- [x] **Tâche 0.0 (Configuration Dépôt & CI/CD) :** "Génère un `.gitignore` très strict (excluant `.env`, `node_modules`, bases locales) pour préparer mon dépôt. Configure un workflow GitHub Actions vierge (`.github/workflows/ci.yml`) que nous templaterons plus tard avec Python, puis exécute le premier commit d'initialisation du projet."
+- [x] **Tâche 0.1 (DevOps) :** "Rédige le fichier `docker-compose.yml` incluant PostgreSQL (données) et Metabase (Dashboarding), puis crée un `Makefile` pour tout lancer. Ensuite, commit (feat:)."
+- [x] **Tâche 0.2 (Backend & Sécurité) :** "Génère le répertoire `backend/`, les `requirements.txt` (FastAPI, SQLAlchemy) et un `Dockerfile` Python minimal avec CORS Middleware. N'oublie pas le `.env.example` et effectue un commit propre."
+- [x] **Tâche 0.3 (Frontend) :** "Génère l'application React Native vierge via `npx create-expo-app mobile --template blank` et sécurise l'étape par un commit formel."
 
 
 ### PHASE 1 : La Donnée (Profil Data Analyst)
 
-- **Tâche 1.1 (Base de Données) :** "Crée le fichier `models.py` dans le backend avec SQLAlchemy. Je veux deux tables simples : `Player` (nom, age, frequence_moyenne) et `Attendance` (player_id, date, duration). Utilise Pydantic pour les schémas de validation."
-- **Tâche 1.2 (Script de Peplement) :** "Écris un script Python de *Seed* (ex: `seed.py`) qui injecte 50 fausses données d'assiduité réalistes dans PostgreSQL. C'est crucial pour que je puisse brancher Metabase et avoir de beaux graphiques à montrer en soutenance."
+- [x] **Tâche 1.1 (Base de Données) :** "Crée le fichier `models.py` dans le backend avec SQLAlchemy. Je veux deux tables simples : `Player` (nom, age, frequence_moyenne) et `Attendance` (player_id, date, duration). Utilise Pydantic pour les schémas de validation."
+- [ ] **Tâche 1.2 (Script de Peuplement) :** "Écris un script Python de *Seed* (ex: `seed.py`) qui injecte 50 fausses données d'assiduité réalistes dans PostgreSQL. C'est crucial pour que je puisse brancher Metabase et avoir de beaux graphiques à montrer en soutenance."
+- [ ] **Tâche 1.3 (Les Endpoints CRUD) :** "Développe les routes API simples (`GET`, `POST`) pour manipuler les joueurs et les présences afin que l'application mobile puisse enregistrer des données réelles."
 
 ---
 

@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: plume_db
+    restart: always
+    environment:
+      POSTGRES_USER: plume_admin
+      POSTGRES_PASSWORD: plume_super_secret_password
+      POSTGRES_DB: plume_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U plume_admin -d plume_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Le backend est préparé ici. Il échouera tant que Tâche 0.2 n'est pas faite, c'est normal en dev atomique.
+  backend_api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: plume_backend
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://plume_admin:plume_super_secret_password@postgres:5432/plume_ai
+    env_file:
+      - ./backend/.env.example # Utilisation sécurisée via env_file (Tâche 0.2)
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app # Montage pour Hot-Reload
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: plume_metabase
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - MB_DB_TYPE=postgres
+      - MB_DB_DBNAME=plume_ai
+      - MB_DB_PORT=5432
+      - MB_DB_USER=plume_admin
+      - MB_DB_PASS=plume_super_secret_password
+      - MB_DB_HOST=postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

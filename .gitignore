@@ -1,6 +1,7 @@
 # Sécurité maximale (Portfolio First) : Les secrets ne doivent jamais fuiter
 .env
 .env.*
+!.env.example
 
 # Python (Backend FastAPI)
 __pycache__/

@@ -6,6 +6,12 @@ from dotenv import load_dotenv
 # Charger les variables du fichier .env (s'il existe en dev local)
 load_dotenv()
 
+from database import engine, Base
+import models
+
+# Création des tables physiques au lancement (Portfolio First : Zéro friction)
+Base.metadata.create_all(bind=engine)
+
 app = FastAPI(
     title="Plume.ai API",
     description="Backend 'Portfolio First' pour suivi club de sport et Copilote IA.",

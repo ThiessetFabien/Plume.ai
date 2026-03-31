@@ -28,3 +28,7 @@ db-logs:
 # Lance l'application mobile React Native en mode dev
 mobile-dev:
 	cd mobile && npx expo start
+
+# Peuplement de la base de données (Seeding)
+seed:
+	docker compose exec backend_api python seed.py

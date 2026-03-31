@@ -1,0 +1,25 @@
+# Sécurité maximale (Portfolio First) : Les secrets ne doivent jamais fuiter
+.env
+.env.*
+
+# Python (Backend FastAPI)
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+
+# Node / React Native (Frontend Mobile)
+node_modules/
+.expo/
+npm-debug.log
+yarn-error.log
+
+# Base de données PostgreSQL locale
+pgdata/
+*.sqlite3
+
+# Fichiers Système
+.DS_Store
+Thumbs.db

@@ -51,6 +51,17 @@ def read_players(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
     players = crud.get_players(db, skip=skip, limit=limit)
     return players
 
+@app.get("/players/{player_id}/stats/", response_model=schemas.PlayerStats, tags=["Joueurs"])
+def read_player_stats(player_id: int, db: Session = Depends(get_db)):
+    """
+    Récupère les statistiques d'assiduité d'un joueur
+    sur les 30 derniers jours pour analyse.
+    """
+    db_stats = crud.get_player_stats(db, player_id=player_id)
+    if db_stats is None:
+        raise HTTPException(status_code=404, detail="Joueur non trouvé")
+    return db_stats
+
 # --- ENDPOINTS ATTENDANCE ---
 @app.post("/attendances/", response_model=schemas.Attendance, tags=["Présences"])
 def create_attendance(attendance: schemas.AttendanceCreate, db: Session = Depends(get_db)):

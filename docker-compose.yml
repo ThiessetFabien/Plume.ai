@@ -25,7 +25,7 @@ services:
     container_name: plume_backend
     restart: always
     env_file:
-      - ./backend/.env # Source de vérité unique pour les secrets (non versionné)
+      - .env # Source de vérité unique pour les secrets (non versionné)
     ports:
       - "8000:8000"
     depends_on:

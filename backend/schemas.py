@@ -44,3 +44,10 @@ class PlayerStats(Player):
     total_sessions: int
     total_minutes: int
     average_duration: float
+
+# --- SCHÉMAS COPILOTE IA ---
+class CopilotMessage(BaseModel):
+    """Réponse générée par l'IA Groq (Phase 2)."""
+    message: str
+    player_id: int
+    generated_at: datetime = Field(default_factory=datetime.utcnow)

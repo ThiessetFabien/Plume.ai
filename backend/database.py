@@ -17,3 +17,11 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Base commune pour tous nos futurs modèles SQL (Standard SQLAlchemy 2.x)
 Base = declarative_base()
+
+# Dépendance cruciale : Fournit une session DB à chaque endpoint FastAPI
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

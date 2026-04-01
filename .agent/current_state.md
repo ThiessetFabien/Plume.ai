@@ -4,8 +4,8 @@ Ce document sert de mémoire vive persistante pour l'agent IA. Il doit être mis
 
 ---
 
-## 📅 Dernière mise à jour : 2026-04-01 | 14:24
-## 🚀 Statut Actuel : Phase 1 - Sécurisation & Persistance
+## 📅 Dernière mise à jour : 2026-04-01 | 14:30
+## 🚀 Statut Actuel : Phase 2 - Intelligence (Groq)
 
 ## ✅ Tâches Complétées :
 *   [x] Initialisation du dépôt Git.
@@ -14,16 +14,18 @@ Ce document sert de mémoire vive persistante pour l'agent IA. Il doit être mis
 *   [x] Modèles `Player` et `Attendance` créés.
 *   [x] Script de Seed (50 données) fonctionnel.
 *   [x] Endpoints CRUD de base opérationnels.
-*   [x] **CRÉATION DE LA COUCHE DE PERSISTANCE AGENT (.agent/)**.
+*   [x] CRÉATION DE LA COUCHE DE PERSISTANCE AGENT (.agent/).
+*   [x] SÉCURISATION DU MOT DE PASSE POSTGRESQL (Secrets).
+*   [x] CENTRALISATION DU .ENV À LA RACINE.
+*   [x] **RESTAURATION DU .ENV.EXAMPLE (Template sécurisé)**.
 
 ## 🚧 En cours :
-*   [/] Sécurisation du mot de passe PostgreSQL (Secrets).
-*   [/] Centralisation du fichier `.env` à la racine.
+*   [ ] Rétablissement de la connexion Backend -> DB avec le nouveau mot de passe.
+*   [ ] Intégration du SDK Groq.
 
 ## 📋 Prochaines étapes :
-1.  Rétablir la connexion Backend -> DB avec le nouveau mot de passe.
-2.  Passer à la **Phase 2 : L'Intelligence (Groq)**.
-3.  Développer la route `/api/copilot/{id}`.
+1.  Passer à la **Phase 2 : L'Intelligence (Groq)**.
+2.  Développer la route `/api/copilot/{id}`.
 
 ---
 

@@ -26,7 +26,7 @@ def read_player(player_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Joueur non trouvé")
     return db_player
 
-@router.get("/{player_id}/stats/", response_model=schemas.PlayerStats)
+@router.get("/{player_id}/stats", response_model=schemas.PlayerStats)
 def read_player_stats(player_id: int, db: Session = Depends(get_db)):
     stats = crud.get_player_stats(db, player_id=player_id)
     if not stats:

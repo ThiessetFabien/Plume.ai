@@ -37,8 +37,8 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 ### PHASE 1 : La Donnée (Profil Data Analyst)
 
 - [x] **Tâche 1.1 (Base de Données) :** "Crée le fichier `models.py` dans le backend avec SQLAlchemy. Je veux deux tables simples : `Player` (nom, age, frequence_moyenne) et `Attendance` (player_id, date, duration). Utilise Pydantic pour les schémas de validation."
-- [ ] **Tâche 1.2 (Script de Peuplement) :** "Écris un script Python de *Seed* (ex: `seed.py`) qui injecte 50 fausses données d'assiduité réalistes dans PostgreSQL. C'est crucial pour que je puisse brancher Metabase et avoir de beaux graphiques à montrer en soutenance."
-- [ ] **Tâche 1.3 (Les Endpoints CRUD) :** "Développe les routes API simples (`GET`, `POST`) pour manipuler les joueurs et les présences afin que l'application mobile puisse enregistrer des données réelles."
+- [x] **Tâche 1.2 (Script de Peuplement) :** "Écris un script Python de *Seed* (ex: `seed.py`) qui injecte 50 fausses données d'assiduité réalistes dans PostgreSQL. C'est crucial pour que je puisse brancher Metabase et avoir de beaux graphiques à montrer en soutenance."
+- [x] **Tâche 1.3 (Les Endpoints CRUD) :** "Développe les routes API simples (`GET`, `POST`) pour manipuler les joueurs et les présences." (Vérifié via `curl` et Documentation Swagger `/docs`).
 
 ---
 

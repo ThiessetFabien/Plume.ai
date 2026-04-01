@@ -5,7 +5,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: plume_admin
-      POSTGRES_PASSWORD: DB_PASSWORD_PLACEHOLDER
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-DB_PASSWORD_PLACEHOLDER}
       POSTGRES_DB: plume_ai
     ports:
       - "5432:5432"
@@ -24,10 +24,8 @@ services:
       dockerfile: Dockerfile
     container_name: plume_backend
     restart: always
-    environment:
-      - DATABASE_URL=postgresql://plume_admin:DB_PASSWORD_PLACEHOLDER@postgres:5432/plume_ai
     env_file:
-      - ./backend/.env.example # Utilisation sécurisée via env_file (Tâche 0.2)
+      - ./backend/.env # Source de vérité unique pour les secrets (non versionné)
     ports:
       - "8000:8000"
     depends_on:

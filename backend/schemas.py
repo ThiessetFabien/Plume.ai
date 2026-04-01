@@ -1,14 +1,15 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import List, Optional
 
 # --- SCHÉMAS ATTENDANCE ---
+# OWASP A03:2021 : Validation stricte des types et portées
 class AttendanceBase(BaseModel):
-    date: datetime
-    duration: int
+    date: datetime = Field(..., description="Date et heure de l'entraînement")
+    duration: int = Field(..., gt=14, lt=481, description="Durée en minutes (entre 15 et 480)")
 
 class AttendanceCreate(AttendanceBase):
-    player_id: int
+    player_id: int = Field(..., description="ID du joueur associé")
 
 class Attendance(AttendanceBase):
     id: int
@@ -18,10 +19,11 @@ class Attendance(AttendanceBase):
         from_attributes = True
 
 # --- SCHÉMAS PLAYER ---
+# Prévention contre les données absurdes ou malveillantes
 class PlayerBase(BaseModel):
-    name: str
-    age: Optional[int] = None
-    average_frequency: Optional[float] = 0.0
+    name: str = Field(..., min_length=2, max_length=100, description="Nom complet du joueur")
+    age: Optional[int] = Field(None, ge=5, le=120, description="Âge réaliste (5 à 120 ans)")
+    average_frequency: Optional[float] = Field(0.0, ge=0.0, le=7.0, description="Fréquence d'entraînement hebdo (0-7)")
 
 class PlayerCreate(PlayerBase):
     pass

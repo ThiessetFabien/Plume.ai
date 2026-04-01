@@ -11,6 +11,8 @@ L'objectif de ce projet est de prouver votre ingénierie de développement via l
 1. **Environnement Git Vierge (`git init`)** : Le socle de votre portfolio ! Tapez `git init` à la racine de votre dossier `Plume.ai` dès maintenant. Créer une archive locale étape-par-étape est capital pour un recruteur.
 2. **Docker & Docker Compose** : Installés sur votre machine (pour PostgreSQL et Metabase).
 2. **Node.js (LTS)** : Requis pour faire tourner l'application React Native (Expo) en local.
+
+
 3. **Clé API Groq (L'IA Gratuite)** : 
    - Créez un compte gratuit sur [console.groq.com](https://console.groq.com).
    - Générez une clé API standard. L'agent IA vous demandera de l'insérer dans un fichier `.env` au niveau du backend pour l'authentification.
@@ -59,6 +61,14 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 ### PHASE 4 : Le "Clou du Spectacle" (Data Analyst)
 
 - **Tâche 4.1 (Configuration Metabase) :** Cette étape est manuelle. "Va sur `http://localhost:3000` (Metabase). Connecte-le à PostgreSQL. Crée un Camembert avec la répartition des âges, et une Courbe temporelle du remplissage des terrains."
+
+### PHASE 5 : Sécurisation & Mise en Production 🛡️
+- [ ] **Authentification (OAuth2/JWT)** : Sécuriser les endpoints pour que seul le joueur puisse accéder à ses données.
+- [ ] **Rate Limiting** : Protéger l'API Groq contre les abus.
+- [ ] **Durcissement Docker** :
+    - [ ] Passer à un utilisateur non-root dans le Dockerfile.
+    - [ ] Configurer les CORS dynamiquement via `.env`.
+    - [ ] Créer une image de production optimisée (sans `--reload`).
 
 ---
 

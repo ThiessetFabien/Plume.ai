@@ -34,3 +34,13 @@ class Player(PlayerBase):
 
     class Config:
         from_attributes = True
+
+# --- SCHÉMAS STATS ---
+class PlayerStats(Player):
+    """
+    Schéma enrichi pour l'IA (Phase 2)
+    Retourne les infos du joueur et une liste filtrée de ses présences (30j).
+    """
+    total_sessions: int
+    total_minutes: int
+    average_duration: float

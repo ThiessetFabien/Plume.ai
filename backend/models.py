@@ -7,7 +7,8 @@ class Player(Base):
     __tablename__ = "players"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True, nullable=False)
+    full_name = Column(String, index=True, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
     age = Column(Integer)
     average_frequency = Column(Float, default=0.0)
 

@@ -10,7 +10,8 @@ def get_players(db: Session, skip: int = 0, limit: int = 100):
 
 def create_player(db: Session, player: schemas.PlayerCreate):
     db_player = models.Player(
-        name=player.name, 
+        full_name=player.full_name,
+        email=player.email,
         age=player.age, 
         average_frequency=player.average_frequency
     )
@@ -47,21 +48,26 @@ def get_player_stats(db: Session, player_id: int, days: int = 30):
     limit_date = datetime.utcnow() - timedelta(days=days)
     
     # Filtrer les sessions d'entraînement sur cette période
-    # (Data Analyst : Requête SQL directe plus performante que le filtrage Python)
     recent_attendances = db.query(models.Attendance).filter(
         models.Attendance.player_id == player_id,
         models.Attendance.date >= limit_date
     ).all()
     
-    # Calculs agrégés pour l'IA et le dashboard
-    total_sessions = len(recent_attendances)
-    total_minutes = sum(att.duration for att in recent_attendances)
-    average_duration = round(total_minutes / total_sessions, 1) if total_sessions > 0 else 0.0
+    total_attendances = len(recent_attendances)
     
-    # On enrichit l'objet pour qu'il colle au schéma PlayerStats
-    player.attendances = recent_attendances
-    player.total_sessions = total_sessions
-    player.total_minutes = total_minutes
-    player.average_duration = average_duration
+    # Calcul du taux de présence (Business / UX Insight)
+    # Objectif sur 30 jours = fréquence_hebdo * (30/7)
+    expected_sessions = (player.average_frequency or 0) * (days / 7)
+    attendance_rate = round((total_attendances / expected_sessions) * 100, 1) if expected_sessions > 0 else 0.0
     
-    return player
+    # On retourne un objet Pydantic propre (Phase 2 : Robustesse)
+    return schemas.PlayerStats(
+        id=player.id,
+        full_name=player.full_name,
+        email=player.email,
+        age=player.age,
+        average_frequency=player.average_frequency,
+        attendance_rate=attendance_rate,
+        total_attendances=total_attendances,
+        attendances=recent_attendances
+    )

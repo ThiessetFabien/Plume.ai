@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime
 from typing import List, Optional
 
@@ -21,7 +21,8 @@ class Attendance(AttendanceBase):
 # --- SCHÉMAS PLAYER ---
 # Prévention contre les données absurdes ou malveillantes
 class PlayerBase(BaseModel):
-    name: str = Field(..., min_length=2, max_length=100, description="Nom complet du joueur")
+    full_name: str = Field(..., min_length=2, max_length=100, description="Nom complet du joueur")
+    email: str = Field(..., pattern=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", description="Email valide")
     age: Optional[int] = Field(None, ge=5, le=120, description="Âge réaliste (5 à 120 ans)")
     average_frequency: Optional[float] = Field(0.0, ge=0.0, le=7.0, description="Fréquence d'entraînement hebdo (0-7)")
 
@@ -36,14 +37,17 @@ class Player(PlayerBase):
         from_attributes = True
 
 # --- SCHÉMAS STATS ---
-class PlayerStats(Player):
+class PlayerStats(PlayerBase):
     """
     Schéma enrichi pour l'IA (Phase 2)
     Retourne les infos du joueur et une liste filtrée de ses présences (30j).
     """
-    total_sessions: int
-    total_minutes: int
-    average_duration: float
+    id: int
+    total_attendances: int
+    attendance_rate: float = Field(0.0, description="Taux de présence sur les 30 derniers jours (%)")
+    recent_sessions: List[Attendance] = Field(..., alias="attendances")
+
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
 # --- SCHÉMAS COPILOTE IA ---
 class CopilotMessage(BaseModel):

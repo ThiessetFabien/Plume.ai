@@ -4,8 +4,8 @@ Ce document sert de mémoire vive persistante pour l'agent IA. Il doit être mis
 
 ---
 
-## 📅 Dernière mise à jour : 2026-04-01 | 22:15
-## 🚀 Statut Actuel : Phase 2 TERMINÉE | Préparation Phase 3 (Mobile)
+## 📅 Dernière mise à jour : 2026-04-03 | 18:32
+## 🚀 Statut Actuel : Phase 1 LIVRÉE (dettes ouvertes) | Phase 2 EN COURS (3 tâches restantes)
 
 ## ✅ Tâches Complétées :
 *   [x] Initialisation du dépôt Git.
@@ -22,18 +22,26 @@ Ce document sert de mémoire vive persistante pour l'agent IA. Il doit être mis
 *   [x] **REFACTORISATION MODULAIRE (Routers/Services) TERMINÉE**.
 *   [x] **ALIGNEMENT DES SCHÉMAS ET DU CRUD OPÉRATIONNEL**.
 
-## 🚧 En cours :
-*   [ ] Audit final de sécurité/UX/Business (Nouveaux Rôles).
-*   [ ] Commit de fin de Phase 2.
+## 🚧 En cours (Phase 2 — dettes + tâches restantes) :
+*   [ ] **Dette 1.A** : Seed → 50+ entrées réalistes (`seed.py`).
+*   [ ] **Dette 1.B** : Anonymisation prompt Groq → `Joueur_{ID}` (`services/ai_service.py`).
+*   [ ] **Dette 1.C** : 5 tests `pytest` sur les endpoints CRUD.
+*   [ ] **Dette 1.D** : Tag Git `v0.1.0` + commit formel sur `main`.
+*   [ ] **Tâche 2.2b** : RGPD — anonymisation bloquante.
+*   [ ] **Tâche 2.3** : Modèle `CoachingMessage` + endpoint historique coaching.
+*   [ ] **Tâche 2.4** : Endpoint membres fantômes (absence > 21 jours).
 
-## 📋 Prochaines étapes :
-1.  **Phase 3 : Interface Mobile (Expo/React Native)**.
-2.  Développement des écrans de Dashboard et Copilot.
+## 📋 Prochaines étapes recommandées :
+1.  Solder les dettes 1.B + 1.D (rapide, haute valeur).
+2.  Implémenter Tâche 2.4 — membres fantômes (US-02 PO).
+3.  Démarrer Phase 3 Mobile une fois Phase 2 soldée.
 
 ---
 
 ## 💡 Notes de Contextes (Key Insights)
-*   **Connexion DB** : Actuellement en transition pour utiliser `DATABASE_URL` via un `.env` unique.
+*   **Connexion DB** : `DATABASE_URL` via `.env` unique à la racine — stable.
 *   **Infrastructure** : Docker Compose prêt, `backend_api` stable.
-*   **Équipe** : Élargie avec Auditeur Sécurité, UX Designer et Expert Business.
-*   **UI Mobile** : Démarrage imminent (Phase 3).
+*   **Agents** : 11 rôles définis dans `.agent/roles.md` (enrichis le 2026-04-03).
+*   **Versioning** : Pas encore de tag `v0.1.0` — bloquant (Dette 1.D).
+*   **RGPD** : Nom du joueur encore exposé dans prompt Groq — bloquant (Dette 1.B).
+*   **UI Mobile** : Démarrage conditionné à la clôture Phase 2.

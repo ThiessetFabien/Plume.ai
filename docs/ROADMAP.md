@@ -38,16 +38,25 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 
 ### PHASE 1 : La Donnée (Profil Data Analyst)
 
-- [x] **Tâche 1.1 (Base de Données) :** "Crée le fichier `models.py` dans le backend avec SQLAlchemy. Je veux deux tables simples : `Player` (nom, age, frequence_moyenne) et `Attendance` (player_id, date, duration). Utilise Pydantic pour les schémas de validation."
-- [x] **Tâche 1.2 (Script de Peuplement) :** "Écris un script Python de *Seed* (ex: `seed.py`) qui injecte 50 fausses données d'assiduité réalistes dans PostgreSQL. C'est crucial pour que je puisse brancher Metabase et avoir de beaux graphiques à montrer en soutenance."
-- [x] **Tâche 1.3 (Les Endpoints CRUD) :** "Développe les routes API simples (`GET`, `POST`) pour manipuler les joueurs et les présences." (Vérifié via `curl` et Documentation Swagger `/docs`).
+- [x] **Tâche 1.1 (Base de Données) :** Modèles `Player` + `Attendance` créés avec SQLAlchemy 2.0 + Pydantic v2. Schémas de validation séparés dans `schemas.py`. ✅
+- [x] **Tâche 1.2 (Script de Peuplement) :** Script `seed.py` opérationnel — 4 profils × ~6 sessions ≈ 26 lignes. ⚠️ *Objectif initial : 50 entrées non atteint.*
+- [x] **Tâche 1.3 (Les Endpoints CRUD) :** Routes `GET`/`POST` joueurs & présences opérationnelles. Vérifiées via Swagger `/docs`. ✅
+
+#### 🔧 Dettes Techniques Phase 1 (à solder avant `v1.0.0`)
+- [ ] **Dette 1.A (Seed) :** Augmenter le seed à 50+ entrées réalistes pour Metabase (`seed.py`).
+- [ ] **Dette 1.B (Anonymisation) :** Le nom du joueur est actuellement injecté dans le prompt Groq — remplacer par `Joueur_ID` (`services/ai_service.py`).
+- [ ] **Dette 1.C (Tests) :** Aucun test automatisé — ajouter au moins 5 tests `pytest` sur les endpoints CRUD.
+- [ ] **Dette 1.D (Release) :** Tag Git `v0.1.0` + commit formel `chore: close Phase 1 - data layer stable` à effectuer sur `main`.
 
 ---
 
 ### PHASE 2 : L'Intelligence (L'API Métier & Groq)
 
-- **Tâche 2.1 (API Data) :** "Crée la route GET `/api/players/{id}/stats` dans `main.py` qui renvoie l'historique d'assiduité du joueur des 30 derniers jours."
-- **Tâche 2.2 (Copilote IA & RGPD) :** "Intègre le SDK officiel de Groq. Crée la route POST `/api/copilot/{id}`. Extrais les stats d'assiduité, assure-toi de les **anonymiser totalement** (aucun nom propre, juste 'Joueur_ID'), puis injecte-les dans LLaMa 3 pour générer un SMS (Santé ou Motivation)."
+- [x] **Tâche 2.1 (API Data) :** Route `GET /players/{id}/stats` opérationnelle — historique 30 jours glissants, taux de présence calculé. ✅ *(Absorbée en avance pendant Phase 1)*
+- [x] **Tâche 2.2a (Intégration Groq) :** SDK Groq intégré, Llama 3.3-70b opérationnel, lazy loading du client. ✅ *(Absorbée en avance pendant Phase 1)*
+- [ ] **Tâche 2.2b (RGPD / Anonymisation) :** ⚠️ *Restant* — Remplacer le nom du joueur par `Joueur_{ID}` dans le prompt envoyé à Groq (`services/ai_service.py`). Bloquant pour conformité RGPD.
+- [ ] **Tâche 2.3 (Historique Coaching) :** Stocker les messages Groq en base (nouveau modèle `CoachingMessage`) avec date + player_id. Endpoint `GET /players/{id}/coaching-history`.
+- [ ] **Tâche 2.4 (Membres Fantômes) :** Endpoint `GET /players/ghost` — retourne les joueurs sans `Attendance` depuis > 21 jours avec email + dernière présence.
 
 ---
 

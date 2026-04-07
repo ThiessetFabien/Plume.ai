@@ -15,8 +15,7 @@ class Attendance(AttendanceBase):
     id: int
     player_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- SCHÉMAS PLAYER ---
 # Prévention contre les données absurdes ou malveillantes
@@ -33,8 +32,7 @@ class Player(PlayerBase):
     id: int
     attendances: List[Attendance] = []
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- SCHÉMAS STATS ---
 class PlayerStats(PlayerBase):

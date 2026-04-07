@@ -43,8 +43,8 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 - [x] **Tâche 1.3 (Les Endpoints CRUD) :** Routes `GET`/`POST` joueurs & présences opérationnelles. Vérifiées via Swagger `/docs`. ✅
 
 #### 🔧 Dettes Techniques Phase 1 (à solder avant `v1.0.0`)
-- [ ] **Dette 1.A (Seed) :** Augmenter le seed à 50+ entrées réalistes pour Metabase (`seed.py`).
-- [ ] **Dette 1.B (Anonymisation) :** Le nom du joueur est actuellement injecté dans le prompt Groq — remplacer par `Joueur_ID` (`services/ai_service.py`).
+- [x] **Dette 1.A (Seed) :** Augmenter le seed à 50+ entrées réalistes pour Metabase (`seed.py`).
+- [x] **Dette 1.B (Anonymisation) :** Le nom du joueur est actuellement injecté dans le prompt Groq — remplacer par `Joueur_ID` (`services/ai_service.py`).
 - [ ] **Dette 1.C (Tests) :** Aucun test automatisé — ajouter au moins 5 tests `pytest` sur les endpoints CRUD.
 - [ ] **Dette 1.D (Release) :** Tag Git `v0.1.0` + commit formel `chore: close Phase 1 - data layer stable` à effectuer sur `main`.
 

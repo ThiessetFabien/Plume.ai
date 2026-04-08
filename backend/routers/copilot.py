@@ -2,7 +2,8 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-import crud, schemas, models
+import crud
+import schemas
 from database import get_db
 from services import ai_service
 

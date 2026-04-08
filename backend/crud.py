@@ -1,5 +1,8 @@
 from sqlalchemy.orm import Session
-import models, schemas
+from sqlalchemy import func
+import models
+import schemas
+from datetime import datetime, timedelta
 
 # --- LOGIQUE PLAYER ---
 def get_player(db: Session, player_id: int):
@@ -36,7 +39,6 @@ def create_player_attendance(db: Session, attendance: schemas.AttendanceCreate):
     return db_attendance
 
 # --- LOGIQUE STATS (Phase 2 : Copilote IA) ---
-from datetime import datetime, timedelta
 
 def get_player_stats(db: Session, player_id: int, days: int = 30):
     # Récupérer le joueur
@@ -89,7 +91,6 @@ def get_coaching_history(db: Session, player_id: int, skip: int = 0, limit: int 
     ).order_by(models.CoachingMessage.created_at.desc()).offset(skip).limit(limit).all()
 
 # --- LOGIQUE GHOSTS (Phase 2) ---
-from sqlalchemy import func
 
 def get_ghost_players(db: Session, threshold_days: int = 21):
     """
@@ -114,7 +115,7 @@ def get_ghost_players(db: Session, threshold_days: int = 21):
         last_attendance_sub, models.Player.id == last_attendance_sub.c.player_id
     ).filter(
         (last_attendance_sub.c.last_date < threshold_date) |
-        (last_attendance_sub.c.last_date == None)
+        (last_attendance_sub.c.last_date.is_(None))
     ).all()
 
     return ghosts_query

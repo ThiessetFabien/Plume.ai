@@ -58,18 +58,27 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 - [x] **Tâche 2.3 (Historique Coaching) :** Stocker les messages Groq en base (nouveau modèle `CoachingMessage`) avec date + player_id. Endpoint `GET /players/{id}/coaching-history`. ✅
 - [x] **Tâche 2.4 (Membres Fantômes) :** Endpoint `GET /players/ghost` — retourne les joueurs sans `Attendance` depuis > 21 jours avec email + dernière présence. ✅
 
+### PHASE 2.5 : La Gestion des Terrains (Réservation) ✅
+
+- [x] **Tâche 2.5a (Modèle & CRUD) :** Ajout du modèle `Reservation` (id, player_id, court_id, start_at, duration). Logique de vérification des conflits (un terrain ne peut pas être réservé deux fois sur le même créneau). ✅
+- [x] **Tâche 2.5b (API Réservation) :** Endpoints `POST /reservations` pour réserver et `GET /reservations/day/{date}` pour visualiser le planning d'un jour donné. ✅
+
 ---
 
-### PHASE 3 : L'Interface (Le Smartphone)
+### PHASE 3 : L'Interface (Le Smartphone - React Native & Expo)
 
-- **Tâche 3.1 (L'Écran d'Accueil) :** "Modifie `App.tsx` dans le dossier mobile. Utilise la librairie `react-native-chart-kit` pour afficher un graphique d'assiduité. Assure-toi que l'URL des requêtes pointe vers **l'IP réseau local (ex: 192.168.1.X)** et non `localhost`, indispensable pour Expo."
-- **Tâche 3.2 (L'Intégration du Bouton Waow) :** "Ajoute le bouton 'Mon Bilan IA' sous le graphique. Au clic, déclenche un `fetch` vers notre route `/api/copilot/{id}` et affiche chaleureusement le message généré par LLaMa 3."
+- [ ] **Tâche 3.1 (Infrastructure Mobile) :** Configuration du client API (Axios/Fetch) avec gestion dynamique de l'IP du serveur (indispensable pour Expo Go). Mise en place d'un dossier `services/` et `theme/` pour le Design System.
+- [ ] **Tâche 3.2 (Le Dashboard Premium) :** Création de l'écran d'accueil avec `react-native-chart-kit`. Affichage dynamique du taux de présence et des statistiques individuelles. Design soigné (Mode Sombre/Clair, dégradés).
+- [ ] **Tâche 3.3 (L'Expérience Copilote) :** Intégration du coaching IA. Animation de chargement ("Thinking...") et affichage du message Llama 3 sous forme de carte interactive.
+- [ ] **Tâche 3.4 (Historique & Mémoire) :** Nouvel écran pour consulter la liste des anciens conseils enregistrés (Tâche 2.3). Mise en place de la navigation (React Navigation).
+- [ ] **Tâche 3.5 (Module de Réservation) :** Création de l'interface de sélection de terrain et de créneau horaire. Validation visuelle de la disponibilité.
+- [ ] **Tâche 3.6 (Saisie de Présence) :** Formulaire rapide pour ajouter une session d'entraînement, avec validation en temps réel.
 
 ---
 
 ### PHASE 4 : Le "Clou du Spectacle" (Data Analyst)
 
-- **Tâche 4.1 (Configuration Metabase) :** Cette étape est manuelle. "Va sur `http://localhost:3000` (Metabase). Connecte-le à PostgreSQL. Crée un Camembert avec la répartition des âges, et une Courbe temporelle du remplissage des terrains."
+- [x] **Tâche 4.1 (Configuration Metabase) :** Cette étape est manuelle. "Va sur `http://localhost:3000` (Metabase). Connecte-le à PostgreSQL. Crée un Camembert avec la répartition des âges, et une Courbe temporelle du remplissage des terrains."
 
 ### PHASE 5 : Sécurisation & Mise en Production 🛡️
 - [ ] **Authentification (OAuth2/JWT)** : Sécuriser les endpoints pour que seul le joueur puisse accéder à ses données.

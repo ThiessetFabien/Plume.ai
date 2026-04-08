@@ -32,12 +32,12 @@ def generate_coaching_message(player_id: int, stats) -> str:
     )
     
     user_content = f"""
-    Données du joueur {stats.full_name} (ID: {player_id}) sur les 30 derniers jours :
+    Données du Joueur_{player_id} sur les 30 derniers jours :
     - Taux de présence : {stats.attendance_rate}%
     - Nombre total de séances : {stats.total_attendances}
     - Fréquence cible : {stats.average_frequency} fois/semaine
     
-    Rédige le message de coaching Plume parfait pour lui.
+    Rédige le message de coaching Plume parfait pour lui en t'adressant directement à lui.
     """
     
     try:

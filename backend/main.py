@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from database import engine
 import models
-from routers import players, attendances, copilot
+from routers import players, attendances, copilot, reservations
 
 # Création des tables (si elles n'existent pas)
 models.Base.metadata.create_all(bind=engine)
@@ -27,6 +27,7 @@ app.add_middleware(
 app.include_router(players.router)
 app.include_router(attendances.router)
 app.include_router(copilot.router)
+app.include_router(reservations.router)
 
 @app.get("/health", tags=["Système"])
 def health_check():

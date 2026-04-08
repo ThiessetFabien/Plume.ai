@@ -118,3 +118,36 @@ def get_ghost_players(db: Session, threshold_days: int = 21):
     ).all()
 
     return ghosts_query
+
+# --- LOGIQUE RÉSERVATION (Phase 2.5) ---
+def get_reservations_by_day(db: Session, date: datetime):
+    # Début et fin de la journée demandée
+    start_of_day = datetime(date.year, date.month, date.day, 0, 0, 0)
+    end_of_day = start_of_day + timedelta(days=1)
+    
+    return db.query(models.Reservation).filter(
+        models.Reservation.start_time >= start_of_day,
+        models.Reservation.start_time < end_of_day
+    ).all()
+
+def create_reservation(db: Session, reservation: schemas.ReservationCreate):
+    # 1. Vérification de conflit (Un terrain ne peut être réservé deux fois sur le même créneau)
+    # Pour simplifier, on vérifie si une résa commence exactement au même moment sur le même terrain
+    existing = db.query(models.Reservation).filter(
+        models.Reservation.court_number == reservation.court_number,
+        models.Reservation.start_time == reservation.start_time
+    ).first()
+    
+    if existing:
+        return None # Conflit détecté
+        
+    db_reservation = models.Reservation(
+        court_number=reservation.court_number,
+        start_time=reservation.start_time,
+        duration=reservation.duration,
+        player_id=reservation.player_id
+    )
+    db.add(db_reservation)
+    db.commit()
+    db.refresh(db_reservation)
+    return db_reservation

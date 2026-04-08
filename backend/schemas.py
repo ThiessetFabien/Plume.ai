@@ -75,3 +75,18 @@ class CoachingMessage(CoachingMessageBase):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+# --- SCHÉMAS RÉSERVATION (Phase 2.5) ---
+class ReservationBase(BaseModel):
+    court_number: int = Field(..., ge=1, le=5, description="Numéro du terrain (1-5)")
+    start_time: datetime = Field(..., description="Date et heure de début")
+    duration: int = Field(60, description="Durée en minutes")
+
+class ReservationCreate(ReservationBase):
+    player_id: int
+
+class Reservation(ReservationBase):
+    id: int
+    player_id: int
+
+    model_config = ConfigDict(from_attributes=True)

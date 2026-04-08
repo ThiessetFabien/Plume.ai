@@ -30,6 +30,12 @@ L'association affiche complet, mais de nombreux terrains restent vides car certa
 - Elle prouve la capacité à collecter et analyser la donnée (Data Engineer / Analyst).
 - Elle exploite intelligemment les capacités de rédaction contextuelle des LLM (Génération de SMS de rétention).
 
+### L'aspect "Gestion Capacitaire" : La Réservation de Terrains
+Pour assurer le bon fonctionnement du club au quotidien, le système intègre une gestion de réservation en temps réel :
+1. **Disponibilité des Terrains** : Visualisation des 5 terrains disponibles sur des créneaux de 60 minutes.
+2. **Équité & Flux** : Un joueur ne peut réserver qu'un créneau à la fois, garantissant une rotation fluide des membres.
+3. **Analytique Terrain** : Les données de réservation alimentent directement les dashboards Metabase pour l'optimisation des horaires d'ouverture.
+
 ## 4. Stack Technique Hybride
 La "Golden Stack" du prototype permet d'épouser au mieux l'état de l'art actuel du développement logiciel :
 

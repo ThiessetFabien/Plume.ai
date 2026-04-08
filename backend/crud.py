@@ -71,3 +71,19 @@ def get_player_stats(db: Session, player_id: int, days: int = 30):
         total_attendances=total_attendances,
         attendances=recent_attendances
     )
+
+# --- LOGIQUE COACHING (Phase 2) ---
+def create_coaching_message(db: Session, player_id: int, message: str):
+    db_message = models.CoachingMessage(
+        player_id=player_id,
+        message=message
+    )
+    db.add(db_message)
+    db.commit()
+    db.refresh(db_message)
+    return db_message
+
+def get_coaching_history(db: Session, player_id: int, skip: int = 0, limit: int = 10):
+    return db.query(models.CoachingMessage).filter(
+        models.CoachingMessage.player_id == player_id
+    ).order_by(models.CoachingMessage.created_at.desc()).offset(skip).limit(limit).all()

@@ -110,6 +110,7 @@ Critère d'acceptation : [condition vérifiable].
 - ❌ Pas de refactor global sans validation du plan.
 - ✅ Produire un **plan d'implémentation Markdown** avant tout gros changement.
 - ✅ Se limiter aux fichiers réellement concernés (routers, models, services, config).
+- ✅ **Garde-fou Mobile** : Tout commit sur le dossier `mobile/` doit être validé par le script `verify-infra.js` (Zero Tolerance).
 - Standard : Clean Code (SOLID/DRY), Zero Technical Debt, Portfolio-Ready.
 
 **Versioning Git (Standards Portfolio-First) :**

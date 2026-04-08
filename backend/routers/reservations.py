@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
 
-import crud, schemas
+import crud
+import schemas
 from database import get_db
 
 router = APIRouter(

@@ -1,7 +1,7 @@
 import random
 from datetime import datetime, timedelta
 from faker import Faker
-from database import SessionLocal, engine
+from database import SessionLocal
 import models
 
 # Initialisation de Faker (en français pour plus de réalisme Portfolio)
@@ -11,9 +11,12 @@ def seed_db():
     print("🚀 Démarrage du peuplement de la base de données Premium...")
     db = SessionLocal()
     
-    # Nettoyage optionnel (Standard QA)
+    # Nettoyage GLOBAL (Standard QA : Repartir de zéro pour les tests)
+    db.query(models.CoachingMessage).delete()
+    db.query(models.Reservation).delete()
     db.query(models.Attendance).delete()
     db.query(models.Player).delete()
+    db.commit()
     
     # 1. Création de Joueurs avec des profils stratégiques (Expert Business)
     profiles = [
@@ -60,6 +63,25 @@ def seed_db():
 
     db.commit()
     print("✅ Données de présence injectées avec succès.")
+
+    # 3. Création de Réservations futures (Logiciel de gestion club)
+    print("📅 Génération des réservations de terrains...")
+    for i in range(5):
+        court = (i % 5) + 1
+        # Réservation dans les 7 prochains jours
+        res_date = datetime.utcnow() + timedelta(days=i, hours=random.randint(10, 20))
+        res_date = res_date.replace(minute=0, second=0, microsecond=0)
+        
+        reservation = models.Reservation(
+            court_number=court,
+            start_time=res_date,
+            duration=60,
+            player_id=random.choice(created_players).id
+        )
+        db.add(reservation)
+
+    db.commit()
+    print("✅ Réservations futures créées.")
     print("✨ Base de données synchronisée et prête pour le Copilot IA !")
     db.close()
 

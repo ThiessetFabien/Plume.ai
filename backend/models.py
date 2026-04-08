@@ -25,3 +25,14 @@ class Attendance(Base):
 
     # Relation inverse : Une présence appartient à un joueur unique
     owner = relationship("Player", back_populates="attendances")
+
+class CoachingMessage(Base):
+    __tablename__ = "coaching_messages"
+
+    id = Column(Integer, primary_key=True, index=True)
+    message = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    player_id = Column(Integer, ForeignKey("players.id"))
+
+    # Relation : Un message appartient à un joueur
+    player = relationship("Player")

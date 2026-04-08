@@ -53,3 +53,16 @@ class CopilotMessage(BaseModel):
     message: str
     player_id: int
     generated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class CoachingMessageBase(BaseModel):
+    message: str
+    player_id: int
+
+class CoachingMessageCreate(CoachingMessageBase):
+    pass
+
+class CoachingMessage(CoachingMessageBase):
+    id: int
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)

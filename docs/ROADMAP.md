@@ -56,7 +56,7 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 - [x] **Tâche 2.2a (Intégration Groq) :** SDK Groq intégré, Llama 3.3-70b opérationnel, lazy loading du client. ✅ *(Absorbée en avance pendant Phase 1)*
 - [x] **Tâche 2.2b (RGPD / Anonymisation) :** ⚠️ *Fait* — Le nom du joueur a été remplacé par `Joueur_{ID}` dans le prompt envoyé à Groq (`services/ai_service.py`). Bloquant pour conformité RGPD.
 - [x] **Tâche 2.3 (Historique Coaching) :** Stocker les messages Groq en base (nouveau modèle `CoachingMessage`) avec date + player_id. Endpoint `GET /players/{id}/coaching-history`. ✅
-- [ ] **Tâche 2.4 (Membres Fantômes) :** Endpoint `GET /players/ghost` — retourne les joueurs sans `Attendance` depuis > 21 jours avec email + dernière présence.
+- [x] **Tâche 2.4 (Membres Fantômes) :** Endpoint `GET /players/ghost` — retourne les joueurs sans `Attendance` depuis > 21 jours avec email + dernière présence. ✅
 
 ---
 

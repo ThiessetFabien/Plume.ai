@@ -19,6 +19,11 @@ def read_players(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
     players = crud.get_players(db, skip=skip, limit=limit)
     return players
 
+@router.get("/ghost", response_model=List[schemas.PlayerGhost], tags=["Intelligence"])
+def read_ghost_players(threshold_days: int = 21, db: Session = Depends(get_db)):
+    """Identification des joueurs n'ayant pas eu de séance depuis X jours."""
+    return crud.get_ghost_players(db, threshold_days=threshold_days)
+
 @router.get("/{player_id}", response_model=schemas.Player)
 def read_player(player_id: int, db: Session = Depends(get_db)):
     db_player = crud.get_player(db, player_id=player_id)

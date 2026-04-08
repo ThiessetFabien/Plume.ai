@@ -47,6 +47,15 @@ class PlayerStats(PlayerBase):
 
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
+class PlayerGhost(BaseModel):
+    """Schéma pour les joueurs inactifs (Membres Fantômes)."""
+    id: int
+    full_name: str
+    email: str
+    last_attendance_date: Optional[datetime] = None
+
+    model_config = ConfigDict(from_attributes=True)
+
 # --- SCHÉMAS COPILOTE IA ---
 class CopilotMessage(BaseModel):
     """Réponse générée par l'IA Groq (Phase 2)."""

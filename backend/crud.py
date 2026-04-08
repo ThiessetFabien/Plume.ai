@@ -87,3 +87,34 @@ def get_coaching_history(db: Session, player_id: int, skip: int = 0, limit: int 
     return db.query(models.CoachingMessage).filter(
         models.CoachingMessage.player_id == player_id
     ).order_by(models.CoachingMessage.created_at.desc()).offset(skip).limit(limit).all()
+
+# --- LOGIQUE GHOSTS (Phase 2) ---
+from sqlalchemy import func
+
+def get_ghost_players(db: Session, threshold_days: int = 21):
+    """
+    Retourne les joueurs n'ayant pas eu de séance depuis X jours (ou jamais).
+    """
+    threshold_date = datetime.utcnow() - timedelta(days=threshold_days)
+
+    # Sous-requête pour obtenir la date de dernière présence par joueur
+    # (Data Engineering : Optimisation par aggrégation)
+    last_attendance_sub = db.query(
+        models.Attendance.player_id,
+        func.max(models.Attendance.date).label("last_date")
+    ).group_by(models.Attendance.player_id).subquery()
+
+    # Jointure pour récupérer les infos joueurs + date de dernière séance
+    ghosts_query = db.query(
+        models.Player.id,
+        models.Player.full_name,
+        models.Player.email,
+        last_attendance_sub.c.last_date.label("last_attendance_date")
+    ).outerjoin(
+        last_attendance_sub, models.Player.id == last_attendance_sub.c.player_id
+    ).filter(
+        (last_attendance_sub.c.last_date < threshold_date) |
+        (last_attendance_sub.c.last_date == None)
+    ).all()
+
+    return ghosts_query

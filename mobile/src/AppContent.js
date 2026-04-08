@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, StatusBar, SafeAreaView, TouchableOpacity } fro
 import { Colors, Shadows } from './theme/colors';
 import { Activity } from 'lucide-react-native';
 
+import DashboardScreen from './screens/DashboardScreen';
+
 export default function AppContent() {
   return (
     <SafeAreaView style={styles.container}>
@@ -13,21 +15,8 @@ export default function AppContent() {
         <Text style={styles.title}>Plume<Text style={{ color: Colors.secondary }}>.ai</Text></Text>
       </View>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Infrastructure Mobile</Text>
-        <Text style={styles.cardBody}>
-          Le client API est configuré avec détection d'IP dynamique. 
-          Le Design System Premium est prêt.
-        </Text>
-        
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Prêt pour le Dashboard</Text>
-        </TouchableOpacity>
-      </View>
+      <DashboardScreen />
 
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>Version 1.0.0 - Phase 3.1 ✅</Text>
-      </View>
     </SafeAreaView>
   );
 }

@@ -112,11 +112,13 @@ Critère d'acceptation : [condition vérifiable].
 - ✅ Se limiter aux fichiers réellement concernés (routers, models, services, config).
 - Standard : Clean Code (SOLID/DRY), Zero Technical Debt, Portfolio-Ready.
 
-**Versioning Git :**
-- **Branches :** `feature/[us-id]-[description]` · `fix/[id]-[description]` · `release/vX.Y.Z`
-- **Commits :** Conventional Commits — `feat:` `fix:` `chore:` `docs:` `refactor:` `test:`
-- **Merge :** Validation Tech Lead obligatoire avant tout merge sur `main` (PR review)
-- **Tagging :** `vX.Y.Z` à chaque fin de phase validée (ex. `v1.0.0` = fin Phase 2)
+**Versioning Git (Standards Portfolio-First) :**
+- **Branches :** format `type/description-courte` (ex: `feat/ghost-players`, `fix/db-connection`, `docs/roadmap-update`).
+- **Commits :** format `type(scope): message` (ex: `feat(back): add reservation logic`).
+    - **Types :** `feat`, `fix`, `docs`, `chore`, `refactor`, `test`.
+    - **Scopes :** `back`, `mobile`, `ia`, `config`, `docs`, `ci`.
+- **Merge :** Validation Tech Lead obligatoire sur `main` (Checklist PR).
+- **Tagging :** `v0.1.0`, `v0.2.0`... à chaque jalon majeur ou fin de phase.
 
 **Déclencheur :** Nouvelles features, questions d'architecture, conflits de design technique, commits, branches, releases.
 

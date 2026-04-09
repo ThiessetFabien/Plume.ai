@@ -43,8 +43,8 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 - [x] **Tâche 1.3 (Les Endpoints CRUD) :** Routes `GET`/`POST` joueurs & présences opérationnelles. Vérifiées via Swagger `/docs`. ✅
 
 #### 🔧 Dettes Techniques Phase 1 (à solder avant `v1.0.0`)
-- [x] **Dette 1.A (Seed) :** Augmenter le seed à 50+ entrées réalistes pour Metabase (`seed.py`).
-- [x] **Dette 1.B (Anonymisation) :** Le nom du joueur est actuellement injecté dans le prompt Groq — remplacer par `Joueur_ID` (`services/ai_service.py`).
+- [x] **Dette 1.A (Seed) :** Augmenter le seed à 50+ entrées réalistes pour Metabase (`seed.py`). ✅
+- [x] **Dette 1.B (Anonymisation) :** Le nom et l'ID du joueur sont purgés du contexte IA (`services/ai_service.py`). ✅
 - [x] **Dette 1.C (Tests) :** Aucun test automatisé — ajouter au moins 5 tests `pytest` sur les endpoints CRUD.
 - [x] **Dette 1.D (Release) :** Tag Git `v0.1.0` + commit formel `chore: close Phase 1 - data layer stable` à effectuer sur `main`.
 
@@ -87,8 +87,13 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 
 ### PHASE 5 : Sécurisation Mobile & Mise en Production 🛡️
 
-- [ ] **Tâche 5.1 (Rate Limiting) :** Protéger l'API Groq contre les abus via un limiteur de débit côté backend.
-- [ ] **Tâche 5.2 (User Acceptance Testing - UAT) :** Test complet du parcours utilisateur (Saisie -> Stats -> Historique -> Réservation) sur un appareil physique.
+- [x] **Tâche 5.1 (Rate Limiting) :** Protéger l'API Groq contre les abus via un limiteur de débit côté backend. ✅
+- [x] **Tâche 5.2 (User Acceptance Testing - UAT) :** Test complet du parcours utilisateur (Saisie -> Stats -> Historique -> Réservation) sur un appareil physique. ✅
+- [x] **Développement Mobile (Conseils Dynamiques)**
+    - [x] Créer la banque de données `COACH_TIPS` ✅
+    - [x] Implémenter la sélection aléatoire au montage ✅
+- [x] **Phase Tech Lead : Finalisation**
+    - [x] Commit & Merge vers `main` ✅
 - [ ] **Tâche 5.3 (Déploiement) :**
     - [ ] Configuration utilisateur non-root dans Docker.
     - [ ] Image de production optimisée (sans `--reload`).

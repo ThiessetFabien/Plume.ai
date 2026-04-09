@@ -9,7 +9,7 @@ const path = require('path');
 const REQUIRED_FILES = [
   'src/services/api.js',
   'src/theme/colors.js',
-  'src/AppContent.js',
+  'src/screens/DashboardScreen.js',
   'package.json'
 ];
 
@@ -33,7 +33,7 @@ REQUIRED_FILES.forEach(file => {
 // 2. Vérification des dépendances (Shallow check)
 const pkg = require(path.join(mobileDir, 'package.json'));
 const deps = { ...pkg.dependencies, ...pkg.devDependencies };
-const essentialDeps = ['axios', 'expo-constants', 'lucide-react-native', 'react-native-chart-kit'];
+const essentialDeps = ['axios', 'expo-constants', '@react-navigation/native', 'lucide-react-native'];
 
 console.log("\n📦 Vérification des dépendances essentielles :");
 essentialDeps.forEach(dep => {
@@ -45,21 +45,22 @@ essentialDeps.forEach(dep => {
   }
 });
 
-// 3. Heuristique simple de "Style Linting"
-console.log("\n🧹 Vérification des styles orphelins (Heuristique) :");
-const appContent = fs.readFileSync(path.join(mobileDir, 'src/AppContent.js'), 'utf8');
-const stylesMatch = appContent.match(/styles\.([a-zA-Z0-9]+)/g) || [];
-const definedStyles = appContent.match(/([a-zA-Z0-9]+):\s*{/g) || [];
+// 3. Heuristique simple de "Style Linting" (cible DashboardScreen)
+console.log("\n🧹 Vérification des styles orphelins (Heuristique Dashboard) :");
+const targetFile = path.join(mobileDir, 'src/screens/DashboardScreen.js');
+if (fs.existsSync(targetFile)) {
+    const content = fs.readFileSync(targetFile, 'utf8');
+    const definedStyles = content.match(/([a-zA-Z0-9]+):\s*{/g) || [];
 
-definedStyles.forEach(s => {
-  const styleName = s.replace(/:\s*{/, '').trim();
-  if (styleName !== 'container' && !appContent.includes(`styles.${styleName}`)) {
-    console.log(`  ⚠️  Style '${styleName}' défini mais semble inutilisé.`);
-    // errors++; // On ne bloque pas pour l'instant, c'est informatif
-  } else {
-    console.log(`  ✅ Style '${styleName}' utilisé.`);
-  }
-});
+    definedStyles.forEach(s => {
+      const styleName = s.replace(/:\s*{/, '').trim();
+      if (styleName !== 'container' && !content.includes(`styles.${styleName}`)) {
+        console.log(`  ⚠️  Style '${styleName}' défini mais semble inutilisé.`);
+      } else {
+        console.log(`  ✅ Style '${styleName}' utilisé.`);
+      }
+    });
+}
 
 // 4. Résumé
 console.log("\n---");

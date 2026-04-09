@@ -1,9 +1,8 @@
-import React from 'react';
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
-import { Sparkles } from 'lucide-react-native';
+import { StyleSheet, Text, View, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { Sparkles, X } from 'lucide-react-native';
 import { Colors, Shadows } from '../theme/colors';
 
-const CoachingCard = ({ message, isLoading }) => {
+const CoachingCard = ({ message, isLoading, onClose }) => {
   if (isLoading) {
     return (
       <View style={[styles.card, styles.loadingCard]}>
@@ -18,10 +17,16 @@ const CoachingCard = ({ message, isLoading }) => {
   return (
     <View style={styles.card}>
       <View style={styles.header}>
-        <View style={styles.iconCircle}>
-          <Sparkles color={Colors.secondary} size={18} />
+        <View style={styles.headerTitle}>
+          <View style={styles.iconCircle}>
+            <Sparkles color={Colors.secondary} size={18} />
+          </View>
+          <Text style={styles.title}>Conseil Copilote</Text>
         </View>
-        <Text style={styles.title}>Conseil Copilote</Text>
+        
+        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+          <X color={Colors.textSecondary} size={20} />
+        </TouchableOpacity>
       </View>
       <Text style={styles.body}>{message}</Text>
     </View>
@@ -48,12 +53,21 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     fontSize: 14,
     fontStyle: 'italic',
+    flex: 1, // Permet au texte de passer à la ligne s'il est trop long
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    justifyContent: 'space-between', // Aligne le titre à gauche et le X à droite
     marginBottom: 12,
+  },
+  headerTitle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  closeButton: {
+    padding: 4,
   },
   iconCircle: {
     backgroundColor: Colors.secondary + '20',

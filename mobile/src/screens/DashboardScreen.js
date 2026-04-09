@@ -152,7 +152,11 @@ export default function DashboardScreen() {
       <AttendanceChart data={chartData} height={180} />
 
       {(isThinking || coachingMessage) && (
-        <CoachingCard message={coachingMessage} isLoading={Boolean(isThinking)} />
+        <CoachingCard 
+          message={coachingMessage} 
+          isLoading={Boolean(isThinking)} 
+          onClose={() => setCoachingMessage(null)}
+        />
       )}
 
       <View style={styles.actionRow}>

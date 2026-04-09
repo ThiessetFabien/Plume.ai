@@ -118,6 +118,17 @@ export default function DashboardScreen() {
         <Text style={styles.subtitle}>Voici ton bilan d'assiduité Plume.</Text>
       </View>
 
+      <TouchableOpacity 
+        style={styles.reserveBanner} 
+        onPress={() => navigation.navigate('Reservation')}
+      >
+        <View style={styles.reserveContent}>
+          <Text style={styles.reserveTitle}>Réserver un terrain 🏸</Text>
+          <Text style={styles.reserveSubtitle}>Vérifiez les disponibilités en direct.</Text>
+        </View>
+        <MapPin size={24} color={Colors.primary} />
+      </TouchableOpacity>
+
       <View style={styles.statsGrid}>
         <View style={styles.row}>
           <StatCard label="Assiduité" value={`${stats?.attendance_rate || 0}%`} icon={TargetIcon} color="#22c55e" />
@@ -160,16 +171,7 @@ export default function DashboardScreen() {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity 
-        style={styles.reserveBanner} 
-        onPress={() => navigation.navigate('Reservation')}
-      >
-        <View style={styles.reserveContent}>
-          <Text style={styles.reserveTitle}>Réserver un terrain 🏸</Text>
-          <Text style={styles.reserveSubtitle}>Vérifiez les disponibilités en direct.</Text>
-        </View>
-        <MapPin size={24} color={Colors.primary} />
-      </TouchableOpacity>
+
 
       <View style={styles.infoCard}>
         <Text style={styles.infoTitle}>Le saviez-vous ?</Text>

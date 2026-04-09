@@ -2,7 +2,9 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import DashboardScreen from './src/screens/DashboardScreen';
-import HistoryScreen from './src/screens/HistoryScreen'; // À créer prochainement
+import HistoryScreen from './src/screens/HistoryScreen';
+import ReservationScreen from './src/screens/ReservationScreen';
+import AttendanceScreen from './src/screens/AttendanceScreen';
 import { Colors } from './src/theme/colors';
 
 const Stack = createNativeStackNavigator();
@@ -29,12 +31,33 @@ export default function App() {
         <Stack.Screen 
           name="Dashboard" 
           component={DashboardScreen} 
-          options={{ headerShown: false }}
+          options={{ 
+            headerShown: false 
+          }}
         />
         <Stack.Screen 
           name="History" 
           component={HistoryScreen} 
-          options={{ title: 'Historique Coaching' }}
+          options={{ 
+            title: 'Historique Coaching',
+            headerShown: true
+          }}
+        />
+        <Stack.Screen 
+          name="Reservation" 
+          component={ReservationScreen} 
+          options={{ 
+            title: 'Réserver un terrain',
+            headerShown: true
+          }}
+        />
+        <Stack.Screen 
+          name="Attendance" 
+          component={AttendanceScreen} 
+          options={{ 
+            title: 'Déclarer une séance',
+            headerShown: true
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

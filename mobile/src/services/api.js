@@ -3,19 +3,26 @@ import Constants from 'expo-constants';
 
 /**
  * Gestion dynamique de l'IP du serveur.
- * Indispensable pour Expo Go afin de communiquer avec le backend local.
+ * - En développement (Expo Go) : utilise l'IP du Metro bundler avec http.
+ * - En production (build natif) : utilise https si EXPO_PUBLIC_API_URL est défini.
  */
 const getBaseURL = () => {
-  // hostUri ressemble à "192.168.1.XX:8081"
+  // Variable d'env pour la production (ex: https://api.plume.ai)
+  const productionUrl = process.env.EXPO_PUBLIC_API_URL;
+  if (productionUrl) {
+    return productionUrl;
+  }
+
+  // Mode développement : IP dynamique depuis Metro (Expo Go)
   const hostUri = Constants.expoConfig?.hostUri;
-  
   if (!hostUri) {
-    // Fallback pour le simulateur ou cas imprévu
     return 'http://localhost:8000';
   }
 
   const ip = hostUri.split(':').shift();
-  return `http://${ip}:8000`;
+  // Protocole configurable, http par défaut en dev local
+  const protocol = process.env.EXPO_PUBLIC_API_PROTOCOL || 'http';
+  return `${protocol}://${ip}:8000`;
 };
 
 const api = axios.create({
@@ -26,6 +33,9 @@ const api = axios.create({
   },
 });
 
-console.log(`🚀 API BaseURL: ${api.defaults.baseURL}`);
+// Interceptor de log uniquement en développement
+if (__DEV__) {
+  console.log(`🚀 API BaseURL: ${api.defaults.baseURL}`);
+}
 
 export default api;

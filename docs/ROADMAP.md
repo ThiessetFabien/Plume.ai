@@ -73,7 +73,7 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 - [x] **Tâche 3.4 (Historique & Mémoire) :** Nouvel écran pour consulter la liste des anciens conseils enregistrés (Tâche 2.3). Mise en place de la navigation (React Navigation). ✅
 - [x] **Tâche 3.5 (Module de Réservation) :** Refonte capacitive — Sélection par créneau avec quota de 20 places et limite de 2 réservations hebdomadaires. ✅
 - [x] **Tâche 3.6 (Saisie de Présence) :** Formulaire rapide pour ajouter une session d'entraînement, avec validation en temps réel. ✅
-- [ ] **Tâche 3.7 (Audit & Stabilisation) :** Synchronisation forcée des versions Expo (SDK 54), configuration `pnpm` (hoisting) et sécurisation du `getBaseURL` pour supporter l'HTTPS.
+- [x] **Tâche 3.7 (Audit & Stabilisation) :** Versions Expo SDK 54 alignées (`screens@4.16.0`, `safe-area@5.6.0`, `svg@15.12.1`). `getBaseURL` sécurisé avec support HTTPS via `EXPO_PUBLIC_API_URL`. Logs de debug conditionnels (`__DEV__`). ✅
 - [x] **Fix 3.5a (Timezone & Quota UI) :** Correction du bug de décalage de date (toLocalDateStr vs toISOString UTC+2). Affichage clair des places restantes (X/20), badge "Dernières places" sous 5 disponibles, gestion d'erreur réseau. ✅
 
 ---

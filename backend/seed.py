@@ -91,14 +91,30 @@ def seed_db():
 
     # 3. Création de Réservations futures (Logiciel de gestion club)
     print("📅 Génération des réservations de terrains...")
+    
+    # Créneaux autorisés
+    auth_schedules = {
+        0: ["17:00", "18:00", "19:00", "20:00", "21:00"], # Lundi = 0 en Python weekday()
+        3: ["19:00", "20:00", "21:00"],                   # Jeudi = 3
+        5: ["09:00", "10:00", "11:00"],                   # Samedi = 5
+    }
+    
     for i in range(5):
-        court = (i % 5) + 1
-        # Réservation dans les 7 prochains jours
-        res_date = datetime.utcnow() + timedelta(days=i, hours=random.randint(10, 20))
-        res_date = res_date.replace(minute=0, second=0, microsecond=0)
+        # Chercher une date valide dans le futur (7 prochains jours)
+        future_day = end_date + timedelta(days=i)
+        
+        # Trouver le prochain jour autorisé
+        while future_day.weekday() not in auth_schedules:
+            future_day += timedelta(days=1)
+            
+        valid_slots = auth_schedules[future_day.weekday()]
+        chosen_slot = random.choice(valid_slots)
+        hour, minute = map(int, chosen_slot.split(':'))
+        
+        res_date = future_day.replace(hour=hour, minute=minute, second=0, microsecond=0)
 
         reservation = models.Reservation(
-            court_number=court,
+            court_number=0,
             start_time=res_date,
             duration=60,
             player_id=random.choice(created_players).id,
@@ -106,7 +122,7 @@ def seed_db():
         db.add(reservation)
 
     db.commit()
-    print("✅ Réservations futures créées.")
+    print("✅ Réservations futures créées sur les créneaux officiels.")
     print("✨ Base de données synchronisée et prête pour le Copilot IA !")
     db.close()
 

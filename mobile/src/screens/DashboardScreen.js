@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { Users as UsersIcon, Target as TargetIcon, Calendar as CalendarIcon, Award as AwardIcon, Sparkles as SparkleIcon, Clock as ClockIcon, MapPin } from 'lucide-react-native';
+import { Target as TargetIcon, Calendar as CalendarIcon, Sparkles as SparkleIcon, Clock as ClockIcon, MapPin } from 'lucide-react-native';
 import api from '../services/api';
 import { Colors } from '../theme/colors';
 import StatCard from '../components/StatCard';
@@ -133,10 +133,6 @@ export default function DashboardScreen() {
         <View style={styles.row}>
           <StatCard label="Assiduité" value={`${stats?.attendance_rate || 0}%`} icon={TargetIcon} color="#22c55e" />
           <StatCard label="Séances" value={stats?.total_attendances || 0} icon={CalendarIcon} color="#3b82f6" />
-        </View>
-        <View style={styles.row}>
-          <StatCard label="Cible" value={`${stats?.average_frequency || 0}/sem`} icon={AwardIcon} color="#f59e0b" />
-          <StatCard label="Âge" value={`${stats?.age || '?'} ans`} icon={UsersIcon} color="#a855f7" />
         </View>
       </View>
 

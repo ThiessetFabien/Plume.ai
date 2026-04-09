@@ -108,7 +108,7 @@ class CoachingMessage(CoachingMessageBase):
 
 # --- SCHÉMAS RÉSERVATION (Phase 2.5) ---
 class ReservationBase(BaseModel):
-    court_number: int = Field(..., ge=1, le=5, description="Numéro du terrain (1-5)")
+    court_number: Optional[int] = Field(0, ge=0, le=5, description="Numéro du terrain (0 si quota)")
     start_time: datetime = Field(..., description="Date et heure de début")
     duration: int = Field(60, description="Durée en minutes")
 

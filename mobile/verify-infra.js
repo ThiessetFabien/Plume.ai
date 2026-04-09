@@ -33,6 +33,7 @@ console.log("\n🔍 Vérification de la syntaxe JS :");
   'src/screens/DashboardScreen.js',
   'src/screens/HistoryScreen.js',
   'src/screens/AttendanceScreen.js',
+  'src/screens/ReservationScreen.js',
   'App.js'
 ].forEach(file => {
   const fullPath = path.join(mobileDir, file);

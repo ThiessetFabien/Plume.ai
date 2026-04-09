@@ -168,22 +168,38 @@ def get_reservations_by_day(db: Session, date: datetime):
 
 
 def create_reservation(db: Session, reservation: schemas.ReservationCreate):
-    # 1. Vérification de conflit (Un terrain ne peut être réservé deux fois sur le même créneau)
-    # Pour simplifier, on vérifie si une résa commence exactement au même moment sur le même terrain
-    existing = (
+    # 1. Vérification du Quota Global (Max 20 places par créneau)
+    total_slots_taken = (
+        db.query(models.Reservation)
+        .filter(models.Reservation.start_time == reservation.start_time)
+        .count()
+    )
+    if total_slots_taken >= 20:
+        return None  # Quota atteint
+
+    # 2. Vérification du Plafond Hebdomadaire (Max 2 séances par semaine calendaire)
+    # Calcul du début de la semaine actuelle (Lundi 00:00)
+    current_time = reservation.start_time
+    # weekday() retourne 0 pour Lundi, 6 pour Dimanche
+    days_since_monday = current_time.weekday()
+    start_of_week = current_time.replace(
+        hour=0, minute=0, second=0, microsecond=0
+    ) - timedelta(days=days_since_monday)
+
+    player_weekly_count = (
         db.query(models.Reservation)
         .filter(
-            models.Reservation.court_number == reservation.court_number,
-            models.Reservation.start_time == reservation.start_time,
+            models.Reservation.player_id == reservation.player_id,
+            models.Reservation.start_time >= start_of_week,
         )
-        .first()
+        .count()
     )
+    if player_weekly_count >= 2:
+        return None  # Plafond hebdomadaire atteint
 
-    if existing:
-        return None  # Conflit détecté
-
+    # 3. Création de la réservation (court_number forcé à 0 pour le quota)
     db_reservation = models.Reservation(
-        court_number=reservation.court_number,
+        court_number=0,
         start_time=reservation.start_time,
         duration=reservation.duration,
         player_id=reservation.player_id,

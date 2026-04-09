@@ -44,6 +44,20 @@ export default function ReservationScreen() {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState(false);
+  const [currentPlayerId, setCurrentPlayerId] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const playersRes = await api.get('/players/');
+        if (playersRes.data?.length) {
+          setCurrentPlayerId(playersRes.data[0].id);
+        }
+      } catch (err) {
+        console.error("Failed to load player", err);
+      }
+    })();
+  }, []);
 
   // Générer les 21 prochains jours et ne garder que Lun/Jeu/Sam
   const dates = Array.from({ length: 21 }, (_, i) => {
@@ -83,11 +97,10 @@ export default function ReservationScreen() {
   const handleReserve = async (slot) => {
     try {
       setSubmitting(true);
-      const playersRes = await api.get('/players/');
-      if (!playersRes.data?.length) throw new Error("Joueur non trouvé");
+      if (!currentPlayerId) throw new Error("Joueur non trouvé");
 
       const payload = {
-        player_id: playersRes.data[0].id,
+        player_id: currentPlayerId,
         court_number: 0,
         start_time: `${selectedDate}T${slot}:00`,
       };
@@ -103,6 +116,32 @@ export default function ReservationScreen() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleCancel = (reservationId) => {
+    Alert.alert(
+      "Se désinscrire ?",
+      "Voulez-vous vraiment annuler votre présence à cette séance ?",
+      [
+        { text: "Annuler", style: "cancel" },
+        { 
+          text: "Oui, me désinscrire", 
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setSubmitting(true);
+              await api.delete(`/reservations/${reservationId}`);
+              Alert.alert("Désinscription", "Vous êtes bien désinscrit de cette séance.");
+              fetchAvailability();
+            } catch (err) {
+              Alert.alert("Erreur", "Impossible d'annuler la réservation.");
+            } finally {
+              setSubmitting(false);
+            }
+          }
+        }
+      ]
+    );
   };
 
   const getSlotOccupancy = (slot) =>
@@ -161,6 +200,9 @@ export default function ReservationScreen() {
               <Text style={styles.emptyText}>Aucun créneau ce jour.</Text>
             ) : (
               timeSlots.map(slot => {
+                const userReservation = reservations.find(r => r.player_id === currentPlayerId && r.start_time.includes(`T${slot}`));
+                const isRegistered = Boolean(userReservation);
+
                 const count = getSlotOccupancy(slot);
                 const remaining = QUOTA_MAX - count;
                 const isFull = remaining <= 0;
@@ -171,35 +213,38 @@ export default function ReservationScreen() {
                     key={slot}
                     style={[
                       styles.slotItem,
-                      isFull && styles.slotFull,
-                      isLowStock && styles.slotLow,
+                      isRegistered && styles.slotRegistered,
+                      !isRegistered && isFull && styles.slotFull,
+                      !isRegistered && isLowStock && styles.slotLow,
                     ]}
-                    disabled={isFull || Boolean(submitting)}
-                    onPress={() => handleReserve(slot)}
+                    disabled={(!isRegistered && isFull) || Boolean(submitting)}
+                    onPress={() => isRegistered ? handleCancel(userReservation.id) : handleReserve(slot)}
                     activeOpacity={0.75}
                   >
                     {/* Heure */}
                     <View style={styles.slotHour}>
-                      <Clock size={14} color={isFull ? Colors.textSecondary : Colors.primary} />
-                      <Text style={[styles.slotTimeText, isFull && styles.disabledText]}>
+                      <Clock size={14} color={(!isRegistered && isFull) ? Colors.textSecondary : Colors.primary} />
+                      <Text style={[styles.slotTimeText, (!isRegistered && isFull) && styles.disabledText]}>
                         {slot}
                       </Text>
                     </View>
 
                     {/* Compteur de places */}
-                    <View style={[styles.quota, isFull && styles.quotaFull]}>
-                      <Users size={13} color={isFull ? Colors.textSecondary : Colors.primary} />
-                      <Text style={[styles.quotaText, isFull && styles.disabledText]}>
+                    <View style={[styles.quota, (!isRegistered && isFull) && styles.quotaFull]}>
+                      <Users size={13} color={(!isRegistered && isFull) ? Colors.textSecondary : Colors.primary} />
+                      <Text style={[styles.quotaText, (!isRegistered && isFull) && styles.disabledText]}>
                         {remaining} / {QUOTA_MAX}
                       </Text>
                     </View>
 
                     {/* Statut */}
-                    {isFull
-                      ? <Text style={styles.tagFull}>Complet</Text>
-                      : isLowStock
-                        ? <Text style={styles.tagLow}>Dernières places</Text>
-                        : <CheckCircle2 size={18} color={Colors.secondary} />
+                    {isRegistered
+                      ? <Text style={styles.tagRegistered}>Inscrit - Se désinscrire</Text>
+                      : isFull
+                        ? <Text style={styles.tagFull}>Complet</Text>
+                        : isLowStock
+                          ? <Text style={styles.tagLow}>Dernières places</Text>
+                          : <CheckCircle2 size={18} color={Colors.secondary} />
                     }
                   </TouchableOpacity>
                 );
@@ -245,6 +290,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface, padding: 18, borderRadius: 20,
     borderLeftWidth: 5, borderLeftColor: Colors.secondary,
   },
+  slotRegistered: { borderLeftColor: '#ef4444', backgroundColor: '#ef444405' },
   slotFull: { opacity: 0.5, borderLeftColor: Colors.textSecondary },
   slotLow: { borderLeftColor: '#f59e0b' },
 
@@ -263,6 +309,11 @@ const styles = StyleSheet.create({
   tagFull: {
     fontSize: 11, fontWeight: '700', color: Colors.textSecondary,
     backgroundColor: Colors.textSecondary + '20',
+    paddingVertical: 3, paddingHorizontal: 8, borderRadius: 6,
+  },
+  tagRegistered: {
+    fontSize: 11, fontWeight: '700', color: '#ef4444',
+    backgroundColor: '#ef444415',
     paddingVertical: 3, paddingHorizontal: 8, borderRadius: 6,
   },
   tagLow: {

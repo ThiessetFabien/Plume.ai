@@ -34,3 +34,14 @@ def read_reservations_by_day(date_str: str, db: Session = Depends(get_db)):
         )
 
     return crud.get_reservations_by_day(db, date=date_obj)
+
+
+@router.delete("/{reservation_id}", status_code=204)
+def delete_reservation(reservation_id: int, db: Session = Depends(get_db)):
+    """
+    Supprime une réservation existante (Désinscription).
+    """
+    success = crud.delete_reservation(db, reservation_id=reservation_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Réservation introuvable.")
+    return None

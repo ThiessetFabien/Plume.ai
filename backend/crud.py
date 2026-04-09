@@ -208,3 +208,13 @@ def create_reservation(db: Session, reservation: schemas.ReservationCreate):
     db.commit()
     db.refresh(db_reservation)
     return db_reservation
+
+
+def delete_reservation(db: Session, reservation_id: int):
+    db_res = db.query(models.Reservation).filter(models.Reservation.id == reservation_id).first()
+    if db_res:
+        db.delete(db_res)
+        db.commit()
+        return True
+    return False
+

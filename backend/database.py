@@ -14,9 +14,11 @@ engine = create_engine(DATABASE_URL)
 # Usine à sessions (SessionLocal) : Pour chaque requête API, une nouvelle session propre
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 # Base commune pour tous nos futurs modèles SQL (Standard SQLAlchemy 2.0)
 class Base(DeclarativeBase):
     pass
+
 
 # Dépendance cruciale : Fournit une session DB à chaque endpoint FastAPI
 def get_db():

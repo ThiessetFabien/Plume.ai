@@ -28,10 +28,10 @@ def generate_coaching_message(player_id: int, stats) -> str:
             detail="Service IA temporairement indisponible (Clé API manquante).",
         )
 
-    system_prompt = "Tu es le coach de badminton expert de Plume.ai. Ta mission est de motiver le joueur et de lui donner un conseil technique court (1-2 phrases) basé sur son assiduité."
+    system_prompt = "Tu es le coach de badminton expert de Plume.ai. Ta mission est de motiver le joueur et de lui donner un conseil technique court (1-2 phrases) basé sur son assiduité. IMPORTANT : Ne mentionne jamais d'identifiant technique (ID) ou le nom d'un paramètre dans ta réponse."
 
     user_content = f"""
-    Données du Joueur_{player_id} sur les 30 derniers jours :
+    Données du Joueur sur les 30 derniers jours :
     - Taux de présence : {stats.attendance_rate}%
     - Nombre total de séances : {stats.total_attendances}
     - Fréquence cible : {stats.average_frequency} fois/semaine

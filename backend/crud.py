@@ -175,29 +175,29 @@ def create_reservation(db: Session, reservation: schemas.ReservationCreate):
         .count()
     )
     if total_slots_taken >= 20:
-        return None  # Quota atteint
+        raise ValueError("Le quota maximum de 20 joueurs est déjà atteint pour ce créneau.")
 
     # 2. Vérification du Plafond Hebdomadaire (Max 2 séances par semaine calendaire)
-    # Calcul du début de la semaine actuelle (Lundi 00:00)
     current_time = reservation.start_time
-    # weekday() retourne 0 pour Lundi, 6 pour Dimanche
     days_since_monday = current_time.weekday()
     start_of_week = current_time.replace(
         hour=0, minute=0, second=0, microsecond=0
     ) - timedelta(days=days_since_monday)
+    end_of_week = start_of_week + timedelta(days=7)
 
     player_weekly_count = (
         db.query(models.Reservation)
         .filter(
             models.Reservation.player_id == reservation.player_id,
             models.Reservation.start_time >= start_of_week,
+            models.Reservation.start_time < end_of_week,
         )
         .count()
     )
     if player_weekly_count >= 2:
-        return None  # Plafond hebdomadaire atteint
+        raise ValueError("Vous avez déjà atteint votre limite de 2 séances pour cette semaine calendaire.")
 
-    # 3. Création de la réservation (court_number forcé à 0 pour le quota)
+    # 3. Création de la réservation
     db_reservation = models.Reservation(
         court_number=0,
         start_time=reservation.start_time,

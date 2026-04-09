@@ -74,3 +74,16 @@ else:
     sys.exit(1)
 
 print("\n🚀 TOUS LES TESTS SONT AU VERT !")
+
+# --- TEARDOWN : Nettoyage de la base de données après les tests ---
+print("\n🧹 Nettoyage des données de test...")
+from sqlalchemy import text
+all_test_ids = [p.id for p in players] + [extra_player.id, weekly_player.id]
+ids_str = ','.join(str(i) for i in all_test_ids)
+
+db.execute(text(f'DELETE FROM coaching_messages WHERE player_id IN ({ids_str})'))
+db.execute(text(f'DELETE FROM reservations WHERE player_id IN ({ids_str})'))
+db.execute(text(f'DELETE FROM attendances WHERE player_id IN ({ids_str})'))
+db.execute(text(f'DELETE FROM players WHERE id IN ({ids_str})'))
+db.commit()
+print(f"✅ {len(all_test_ids)} joueurs de test et leurs données supprimés.")

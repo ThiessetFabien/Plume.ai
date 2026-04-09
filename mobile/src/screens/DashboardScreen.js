@@ -8,6 +8,15 @@ import StatCard from '../components/StatCard';
 import AttendanceChart from '../components/AttendanceChart';
 import CoachingCard from '../components/CoachingCard';
 
+const COACH_TIPS = [
+  "Une régularité de 2 séances par semaine augmente votre progression de 40%.",
+  "Le smash est le coup le plus rapide ! Travaillez votre rotation d'épaule.",
+  "Hydratation : buvez au moins 500ml d'eau par heure de jeu intense.",
+  "Le repos fait partie de l'entraînement. Ménagez vos jours de récupération.",
+  "Le jeu de jambes (footwork) économise 30% de votre énergie sur le terrain.",
+  "Plume.ai analyse vos tendances : la constance bat l'intensité ponctuelle."
+];
+
 export default function DashboardScreen() {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
@@ -16,6 +25,7 @@ export default function DashboardScreen() {
   const [error, setError] = useState(null);
   const [coachingMessage, setCoachingMessage] = useState(null);
   const [isThinking, setIsThinking] = useState(false);
+  const [currentTip, setCurrentTip] = useState(COACH_TIPS[0]);
 
   const fetchData = async () => {
     try {
@@ -34,6 +44,8 @@ export default function DashboardScreen() {
     } finally {
       setLoading(false);
       setRefreshing(false);
+      // Sélectionne un conseil aléatoire
+      setCurrentTip(COACH_TIPS[Math.floor(Math.random() * COACH_TIPS.length)]);
     }
   };
 
@@ -136,7 +148,7 @@ export default function DashboardScreen() {
         </View>
       </View>
 
-      <AttendanceChart data={chartData} />
+      <AttendanceChart data={chartData} height={180} />
 
       {(isThinking || coachingMessage) && (
         <CoachingCard message={coachingMessage} isLoading={Boolean(isThinking)} />
@@ -170,9 +182,9 @@ export default function DashboardScreen() {
 
 
       <View style={styles.infoCard}>
-        <Text style={styles.infoTitle}>Le saviez-vous ?</Text>
+        <Text style={styles.infoTitle}>Le saviez-vous ? 💡</Text>
         <Text style={styles.infoBody}>
-          Une régularité de 2 séances par semaine augmente vos chances de progression de 40%.
+          {currentTip}
         </Text>
       </View>
     </ScrollView>
@@ -182,11 +194,11 @@ export default function DashboardScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: 20 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.background },
-  header: { paddingVertical: 24, flexDirection: 'row', alignItems: 'center' },
+  header: { paddingVertical: 16, flexDirection: 'row', alignItems: 'center' },
   title: { fontSize: 28, fontWeight: '800', color: Colors.text },
-  welcome: { marginBottom: 24 },
+  welcome: { marginBottom: 16 },
   greeting: { fontSize: 26, fontWeight: '800', color: Colors.text },
-  subtitle: { fontSize: 16, color: Colors.textSecondary, marginTop: 4 },
+  subtitle: { fontSize: 16, color: Colors.textSecondary, marginTop: 2 },
   statsGrid: { marginBottom: 8 },
   row: { flexDirection: 'row', gap: 12 },
   actionRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginVertical: 10 },
@@ -194,10 +206,10 @@ const styles = StyleSheet.create({
   aiButtonText: { color: Colors.background, fontWeight: '800', fontSize: 16 },
   addSessionBtn: { backgroundColor: Colors.primary, padding: 18, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
   historyBtn: { backgroundColor: Colors.surface, padding: 18, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
-  infoCard: { backgroundColor: Colors.primary + '15', padding: 20, borderRadius: 20, borderWidth: 1, borderColor: Colors.primary + '30', marginVertical: 20, marginBottom: 40 },
-  reserveBanner: { backgroundColor: Colors.surface, padding: 20, borderRadius: 24, flexDirection: 'row', alignItems: 'center', marginVertical: 12, borderLeftWidth: 6, borderLeftColor: Colors.primary },
+  infoCard: { backgroundColor: Colors.primary + '15', padding: 18, borderRadius: 20, borderWidth: 1, borderColor: Colors.primary + '30', marginVertical: 10, marginBottom: 30 },
+  reserveBanner: { backgroundColor: Colors.surface, padding: 18, borderRadius: 24, flexDirection: 'row', alignItems: 'center', marginVertical: 8, borderLeftWidth: 6, borderLeftColor: Colors.primary },
   reserveContent: { flex: 1 },
-  reserveTitle: { color: Colors.text, fontSize: 18, fontWeight: '700', marginBottom: 4 },
+  reserveTitle: { color: Colors.text, fontSize: 18, fontWeight: '700', marginBottom: 2 },
   reserveSubtitle: { color: Colors.textSecondary, fontSize: 14 },
   infoTitle: { color: Colors.primary, fontWeight: '700', fontSize: 16, marginBottom: 4 },
   infoBody: { color: Colors.textSecondary, fontSize: 14, lineHeight: 20 },

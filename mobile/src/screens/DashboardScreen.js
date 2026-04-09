@@ -11,10 +11,11 @@ import CoachingCard from '../components/CoachingCard';
 const COACH_TIPS = [
   "Une régularité de 2 séances par semaine augmente votre progression de 40%.",
   "Le smash est le coup le plus rapide ! Travaillez votre rotation d'épaule.",
-  "Hydratation : buvez au moins 500ml d'eau par heure de jeu intense.",
-  "Le repos fait partie de l'entraînement. Ménagez vos jours de récupération.",
-  "Le jeu de jambes (footwork) économise 30% de votre énergie sur le terrain.",
-  "Plume.ai analyse vos tendances : la constance bat l'intensité ponctuelle."
+  "Hydratation : buvez au moins 500ml d'eau par heure de jeu intense. Prenez soin de vous !",
+  "Le repos fait partie de l'entraînement. Ménagez vos jours de récupération pour revenir plus fort.",
+  "Le jeu de jambes (footwork) économise 30% de votre énergie sur le terrain. Travaillez-le tout en douceur.",
+  "Chaque séance compte, quel que soit le résultat. L'important est le plaisir de jouer !",
+  "Plume.ai analyse vos tendances : la constance bienveillante bat l'intensité ponctuelle."
 ];
 
 export default function DashboardScreen() {

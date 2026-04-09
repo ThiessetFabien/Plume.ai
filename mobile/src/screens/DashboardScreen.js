@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native';
-import { Users as UsersIcon, Target as TargetIcon, Calendar as CalendarIcon, Award as AwardIcon, Sparkles as SparkleIcon } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Users as UsersIcon, Target as TargetIcon, Calendar as CalendarIcon, Award as AwardIcon, Sparkles as SparkleIcon, History as HistoryIcon } from 'lucide-react-native';
 import api from '../services/api';
 import { Colors } from '../theme/colors';
 import StatCard from '../components/StatCard';
@@ -8,6 +9,7 @@ import AttendanceChart from '../components/AttendanceChart';
 import CoachingCard from '../components/CoachingCard';
 
 export default function DashboardScreen() {
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [stats, setStats] = useState(null);
@@ -19,18 +21,12 @@ export default function DashboardScreen() {
     try {
       setLoading(true);
       setError(null);
-      
       const playersRes = await api.get('/players/');
-      if (playersRes.data.length === 0) {
-        throw new Error("Aucun joueur trouvé en base.");
-      }
-      
-      const playerId = playersRes.data[0].id;
-      const statsRes = await api.get(`/players/${playerId}/stats`);
+      if (playersRes.data.length === 0) throw new Error("Aucun joueur trouvé.");
+      const statsRes = await api.get(`/players/${playersRes.data[0].id}/stats`);
       setStats(statsRes.data);
     } catch (err) {
-      console.error(err);
-      setError(err.message || "Erreur de connexion au serveur.");
+      setError(err.message);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -44,8 +40,7 @@ export default function DashboardScreen() {
       const res = await api.post(`/players/${stats.id}/copilot/`);
       setCoachingMessage(res.data.message);
     } catch (err) {
-      console.error(err);
-      setCoachingMessage("Désolé, ton coach est momentanément indisponible.");
+      setCoachingMessage("Coach indisponible.");
     } finally {
       setIsThinking(false);
     }
@@ -64,7 +59,6 @@ export default function DashboardScreen() {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" color={Colors.primary} />
-        <Text style={styles.loadingText}>Coaching en cours...</Text>
       </View>
     );
   }
@@ -73,7 +67,6 @@ export default function DashboardScreen() {
     return (
       <View style={styles.center}>
         <Text style={styles.errorText}>⚠️ {error}</Text>
-        <Text style={styles.subErrorText}>Vérifiez que le backend est lancé et accessible.</Text>
       </View>
     );
   }
@@ -93,6 +86,12 @@ export default function DashboardScreen() {
       style={styles.container}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.primary} />}
     >
+      <View style={styles.header}>
+         <View style={styles.titleContainer}>
+            <Text style={styles.title}>Plume<Text style={{ color: Colors.secondary }}>.ai</Text></Text>
+         </View>
+      </View>
+
       <View style={styles.welcome}>
         <Text style={styles.greeting}>Salut, {stats?.full_name?.split(' ')[0] || 'Joueur'} ! 👋</Text>
         <Text style={styles.subtitle}>Voici ton bilan d'assiduité Plume.</Text>
@@ -100,32 +99,12 @@ export default function DashboardScreen() {
 
       <View style={styles.statsGrid}>
         <View style={styles.row}>
-          <StatCard 
-            label="Assiduité" 
-            value={`${stats?.attendance_rate || 0}%`} 
-            icon={TargetIcon} 
-            color="#22c55e" 
-          />
-          <StatCard 
-            label="Séances" 
-            value={stats?.total_attendances || 0} 
-            icon={CalendarIcon} 
-            color="#3b82f6" 
-          />
+          <StatCard label="Assiduité" value={`${stats?.attendance_rate || 0}%`} icon={TargetIcon} color="#22c55e" />
+          <StatCard label="Séances" value={stats?.total_attendances || 0} icon={CalendarIcon} color="#3b82f6" />
         </View>
         <View style={styles.row}>
-          <StatCard 
-            label="Cible" 
-            value={`${stats?.average_frequency || 0}/sem`} 
-            icon={AwardIcon} 
-            color="#f59e0b" 
-          />
-          <StatCard 
-            label="Âge" 
-            value={`${stats?.age || '?'} ans`} 
-            icon={UsersIcon} 
-            color="#a855f7" 
-          />
+          <StatCard label="Cible" value={`${stats?.average_frequency || 0}/sem`} icon={AwardIcon} color="#f59e0b" />
+          <StatCard label="Âge" value={`${stats?.age || '?'} ans`} icon={UsersIcon} color="#a855f7" />
         </View>
       </View>
 
@@ -135,19 +114,24 @@ export default function DashboardScreen() {
         <CoachingCard message={coachingMessage} isLoading={isThinking} />
       )}
 
-      <TouchableOpacity 
-        style={styles.aiButton} 
-        onPress={getAICoaching}
-        disabled={isThinking}
-      >
-        <SparkleIcon color={Colors.background} size={20} />
-        <Text style={styles.aiButtonText}>Mon Bilan IA</Text>
-      </TouchableOpacity>
+      <View style={styles.actionRow}>
+        <TouchableOpacity style={styles.aiButton} onPress={getAICoaching} disabled={isThinking}>
+          <SparkleIcon color={Colors.background} size={20} />
+          <Text style={styles.aiButtonText}>Nouveau Conseil</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.historyBtn} 
+          onPress={() => navigation.navigate('History')}
+        >
+          <HistoryIcon color={Colors.textSecondary} size={24} />
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.infoCard}>
         <Text style={styles.infoTitle}>Le saviez-vous ?</Text>
         <Text style={styles.infoBody}>
-          Une régularité de 2 séances par semaine augmente vos chances de progression technique de 40% sur 3 mois.
+          Une régularité de 2 séances par semaine augmente vos chances de progression de 40%.
         </Text>
       </View>
     </ScrollView>
@@ -155,88 +139,20 @@ export default function DashboardScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: Colors.background,
-  },
-  loadingText: {
-    marginTop: 12,
-    color: Colors.textSecondary,
-    fontSize: 16,
-  },
-  errorText: {
-    color: Colors.error,
-    fontSize: 18,
-    fontWeight: '700',
-    textAlign: 'center',
-    marginHorizontal: 40,
-  },
-  subErrorText: {
-    color: Colors.textSecondary,
-    marginTop: 8,
-    textAlign: 'center',
-  },
-  welcome: {
-    marginTop: 20,
-    marginBottom: 24,
-  },
-  greeting: {
-    fontSize: 26,
-    fontWeight: '800',
-    color: Colors.text,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: Colors.textSecondary,
-    marginTop: 4,
-  },
-  statsGrid: {
-    marginBottom: 8,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  aiButton: {
-    backgroundColor: Colors.secondary,
-    padding: 18,
-    borderRadius: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    marginVertical: 10,
-  },
-  aiButtonText: {
-    color: Colors.background,
-    fontWeight: '800',
-    fontSize: 16,
-    letterSpacing: 0.5,
-  },
-  infoCard: {
-    backgroundColor: Colors.primary + '15',
-    padding: 20,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: Colors.primary + '30',
-    marginVertical: 20,
-    marginBottom: 40,
-  },
-  infoTitle: {
-    color: Colors.primary,
-    fontWeight: '700',
-    fontSize: 16,
-    marginBottom: 4,
-  },
-  infoBody: {
-    color: Colors.textSecondary,
-    fontSize: 14,
-    lineHeight: 20,
-  }
+  container: { flex: 1, paddingHorizontal: 20 },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.background },
+  header: { paddingVertical: 24, flexDirection: 'row', alignItems: 'center' },
+  title: { fontSize: 28, fontWeight: '800', color: Colors.text },
+  welcome: { marginBottom: 24 },
+  greeting: { fontSize: 26, fontWeight: '800', color: Colors.text },
+  subtitle: { fontSize: 16, color: Colors.textSecondary, marginTop: 4 },
+  statsGrid: { marginBottom: 8 },
+  row: { flexDirection: 'row', gap: 12 },
+  actionRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginVertical: 10 },
+  aiButton: { flex: 1, backgroundColor: Colors.secondary, padding: 18, borderRadius: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 },
+  aiButtonText: { color: Colors.background, fontWeight: '800', fontSize: 16 },
+  historyBtn: { backgroundColor: Colors.surface, padding: 18, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
+  infoCard: { backgroundColor: Colors.primary + '15', padding: 20, borderRadius: 20, borderWIdth: 1, borderColor: Colors.primary + '30', marginVertical: 20, marginBottom: 40 },
+  infoTitle: { color: Colors.primary, fontWeight: '700', fontSize: 16, marginBottom: 4 },
+  infoBody: { color: Colors.textSecondary, fontSize: 14, lineHeight: 20 }
 });

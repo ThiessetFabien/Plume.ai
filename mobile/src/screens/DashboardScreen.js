@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Users as UsersIcon, Target as TargetIcon, Calendar as CalendarIcon, Award as AwardIcon, Sparkles as SparkleIcon, History as HistoryIcon } from 'lucide-react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { Users as UsersIcon, Target as TargetIcon, Calendar as CalendarIcon, Award as AwardIcon, Sparkles as SparkleIcon, Clock as ClockIcon, MapPin } from 'lucide-react-native';
 import api from '../services/api';
 import { Colors } from '../theme/colors';
 import StatCard from '../components/StatCard';
@@ -22,10 +22,14 @@ export default function DashboardScreen() {
       setLoading(true);
       setError(null);
       const playersRes = await api.get('/players/');
-      if (playersRes.data.length === 0) throw new Error("Aucun joueur trouvé.");
-      const statsRes = await api.get(`/players/${playersRes.data[0].id}/stats`);
-      setStats(statsRes.data);
+      if (playersRes.data && playersRes.data.length > 0) {
+        const statsRes = await api.get(`/players/${playersRes.data[0].id}/stats`);
+        setStats(statsRes.data);
+      } else {
+        throw new Error("Aucun joueur trouvé.");
+      }
     } catch (err) {
+      console.error(err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -34,13 +38,14 @@ export default function DashboardScreen() {
   };
 
   const getAICoaching = async () => {
-    if (!stats) return;
+    if (!stats || !stats.id) return;
     try {
       setIsThinking(true);
       const res = await api.post(`/players/${stats.id}/copilot/`);
       setCoachingMessage(res.data.message);
     } catch (err) {
-      setCoachingMessage("Coach indisponible.");
+      console.error(err);
+      setCoachingMessage("Le coach est indisponible pour le moment.");
     } finally {
       setIsThinking(false);
     }
@@ -50,6 +55,12 @@ export default function DashboardScreen() {
     fetchData();
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+    }, [])
+  );
+
   const onRefresh = () => {
     setRefreshing(true);
     fetchData();
@@ -58,7 +69,7 @@ export default function DashboardScreen() {
   if (loading && !refreshing) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color={Colors.primary} />
+        <ActivityIndicator size="large" color={Colors.primary} animating={true} />
       </View>
     );
   }
@@ -67,6 +78,9 @@ export default function DashboardScreen() {
     return (
       <View style={styles.center}>
         <Text style={styles.errorText}>⚠️ {error}</Text>
+        <TouchableOpacity style={styles.retryBtn} onPress={fetchData}>
+          <Text style={styles.retryText}>Réessayer</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -84,7 +98,14 @@ export default function DashboardScreen() {
   return (
     <ScrollView 
       style={styles.container}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.primary} />}
+      refreshControl={
+        <RefreshControl 
+          refreshing={Boolean(refreshing)} 
+          onRefresh={onRefresh} 
+          colors={[Colors.primary]} 
+          progressBackgroundColor={Colors.surface}
+        />
+      }
     >
       <View style={styles.header}>
          <View style={styles.titleContainer}>
@@ -111,22 +132,44 @@ export default function DashboardScreen() {
       <AttendanceChart data={chartData} />
 
       {(isThinking || coachingMessage) && (
-        <CoachingCard message={coachingMessage} isLoading={isThinking} />
+        <CoachingCard message={coachingMessage} isLoading={Boolean(isThinking)} />
       )}
 
       <View style={styles.actionRow}>
-        <TouchableOpacity style={styles.aiButton} onPress={getAICoaching} disabled={isThinking}>
+        <TouchableOpacity 
+          style={styles.aiButton} 
+          onPress={getAICoaching} 
+          disabled={Boolean(isThinking)}
+        >
           <SparkleIcon color={Colors.background} size={20} />
           <Text style={styles.aiButtonText}>Nouveau Conseil</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.addSessionBtn} 
+          onPress={() => navigation.navigate('Attendance')}
+        >
+          <TargetIcon color={Colors.text} size={24} />
         </TouchableOpacity>
 
         <TouchableOpacity 
           style={styles.historyBtn} 
           onPress={() => navigation.navigate('History')}
         >
-          <HistoryIcon color={Colors.textSecondary} size={24} />
+          <ClockIcon color={Colors.textSecondary} size={24} />
         </TouchableOpacity>
       </View>
+
+      <TouchableOpacity 
+        style={styles.reserveBanner} 
+        onPress={() => navigation.navigate('Reservation')}
+      >
+        <View style={styles.reserveContent}>
+          <Text style={styles.reserveTitle}>Réserver un terrain 🏸</Text>
+          <Text style={styles.reserveSubtitle}>Vérifiez les disponibilités en direct.</Text>
+        </View>
+        <MapPin size={24} color={Colors.primary} />
+      </TouchableOpacity>
 
       <View style={styles.infoCard}>
         <Text style={styles.infoTitle}>Le saviez-vous ?</Text>
@@ -151,8 +194,16 @@ const styles = StyleSheet.create({
   actionRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginVertical: 10 },
   aiButton: { flex: 1, backgroundColor: Colors.secondary, padding: 18, borderRadius: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 },
   aiButtonText: { color: Colors.background, fontWeight: '800', fontSize: 16 },
+  addSessionBtn: { backgroundColor: Colors.primary, padding: 18, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
   historyBtn: { backgroundColor: Colors.surface, padding: 18, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
-  infoCard: { backgroundColor: Colors.primary + '15', padding: 20, borderRadius: 20, borderWIdth: 1, borderColor: Colors.primary + '30', marginVertical: 20, marginBottom: 40 },
+  infoCard: { backgroundColor: Colors.primary + '15', padding: 20, borderRadius: 20, borderWidth: 1, borderColor: Colors.primary + '30', marginVertical: 20, marginBottom: 40 },
+  reserveBanner: { backgroundColor: Colors.surface, padding: 20, borderRadius: 24, flexDirection: 'row', alignItems: 'center', marginVertical: 12, borderLeftWidth: 6, borderLeftColor: Colors.primary },
+  reserveContent: { flex: 1 },
+  reserveTitle: { color: Colors.text, fontSize: 18, fontWeight: '700', marginBottom: 4 },
+  reserveSubtitle: { color: Colors.textSecondary, fontSize: 14 },
   infoTitle: { color: Colors.primary, fontWeight: '700', fontSize: 16, marginBottom: 4 },
-  infoBody: { color: Colors.textSecondary, fontSize: 14, lineHeight: 20 }
+  infoBody: { color: Colors.textSecondary, fontSize: 14, lineHeight: 20 },
+  errorText: { color: Colors.text, fontSize: 16, marginBottom: 16 },
+  retryBtn: { backgroundColor: Colors.primary, padding: 12, borderRadius: 8 },
+  retryText: { color: 'white', fontWeight: 'bold' }
 });

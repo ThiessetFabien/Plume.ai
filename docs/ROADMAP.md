@@ -70,23 +70,27 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 - [x] **Tâche 3.1 (Infrastructure Mobile) :** Configuration du client API (Axios/Fetch) avec gestion dynamique de l'IP du serveur (indispensable pour Expo Go). Mise en place d'un dossier `services/` et `theme/` pour le Design System. ✅
 - [x] **Tâche 3.2 (Le Dashboard Premium) :** Création de l'écran d'accueil avec `react-native-chart-kit`. Affichage dynamique du taux de présence et des statistiques individuelles. Design soigné (Mode Sombre/Clair, dégradés). ✅
 - [x] **Tâche 3.3 (L'Expérience Copilote) :** Intégration du coaching IA. Animation de chargement ("Thinking...") et affichage du message Llama 3 sous forme de carte interactive. ✅
-- [ ] **Tâche 3.4 (Historique & Mémoire) :** Nouvel écran pour consulter la liste des anciens conseils enregistrés (Tâche 2.3). Mise en place de la navigation (React Navigation).
-- [ ] **Tâche 3.5 (Module de Réservation) :** Création de l'interface de sélection de terrain et de créneau horaire. Validation visuelle de la disponibilité.
+- [x] **Tâche 3.4 (Historique & Mémoire) :** Nouvel écran pour consulter la liste des anciens conseils enregistrés (Tâche 2.3). Mise en place de la navigation (React Navigation). ✅
+- [x] **Tâche 3.5 (Module de Réservation) :** Création de l'interface de sélection de terrain et de créneau horaire. Validation visuelle de la disponibilité. ✅
 - [ ] **Tâche 3.6 (Saisie de Présence) :** Formulaire rapide pour ajouter une session d'entraînement, avec validation en temps réel.
+- [ ] **Tâche 3.7 (Audit & Stabilisation) :** Synchronisation forcée des versions Expo (SDK 54), configuration `pnpm` (hoisting) et sécurisation du `getBaseURL` pour supporter l'HTTPS.
 
 ---
 
-### PHASE 4 : Le "Clou du Spectacle" (Data Analyst)
+### PHASE 4 : Consolidation & Robustesse (Produit Durable)
 
-- [x] **Tâche 4.1 (Configuration Metabase) :** Cette étape est manuelle. "Va sur `http://localhost:3000` (Metabase). Connecte-le à PostgreSQL. Crée un Camembert avec la répartition des âges, et une Courbe temporelle du remplissage des terrains."
+- [ ] **Tâche 4.1 (Configuration Metabase) :** Cette étape est manuelle. "Va sur `http://localhost:3000` (Metabase). Connecte-le à PostgreSQL. Crée un Camembert avec la répartition des âges, et une Courbe temporelle du remplissage des terrains."
+- [ ] **Tâche 4.2 (Authentification & Sécurité) :** Implémentation d'un système JWT/OAuth2 (ou session sécurisée) pour protéger les endpoints joueurs et réservations. Restriction du Middleware CORS.
+- [ ] **Tâche 4.3 (Migrations & Maintenance) :** Initialisation d'Alembic pour la base de données. Refactorisation de `create_all` vers un système de migration pérenne.
 
-### PHASE 5 : Sécurisation & Mise en Production 🛡️
-- [ ] **Authentification (OAuth2/JWT)** : Sécuriser les endpoints pour que seul le joueur puisse accéder à ses données.
-- [ ] **Rate Limiting** : Protéger l'API Groq contre les abus.
-- [ ] **Durcissement Docker** :
-    - [ ] Passer à un utilisateur non-root dans le Dockerfile.
-    - [ ] Configurer les CORS dynamiquement via `.env`.
-    - [ ] Créer une image de production optimisée (sans `--reload`).
+### PHASE 5 : Sécurisation Mobile & Mise en Production 🛡️
+
+- [ ] **Tâche 5.1 (Rate Limiting) :** Protéger l'API Groq contre les abus via un limiteur de débit côté backend.
+- [ ] **Tâche 5.2 (User Acceptance Testing - UAT) :** Test complet du parcours utilisateur (Saisie -> Stats -> Historique -> Réservation) sur un appareil physique.
+- [ ] **Tâche 5.3 (Déploiement) :**
+    - [ ] Configuration utilisateur non-root dans Docker.
+    - [ ] Image de production optimisée (sans `--reload`).
+    - [ ] Nettoyage des `console.log` et des secrets dans le bundle mobile.
 
 ---
 

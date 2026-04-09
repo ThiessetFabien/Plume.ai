@@ -44,14 +44,14 @@ export default function HistoryScreen() {
       <View style={styles.cardHeader}>
         <Calendar color={Colors.textSecondary} size={14} />
         <Text style={styles.dateText}>
-          {new Date(item.created_at).toLocaleDateString('fr-FR', {
+          {item.created_at ? new Date(item.created_at).toLocaleDateString('fr-FR', {
             day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit'
-          })}
+          }) : 'Date inconnue'}
         </Text>
       </View>
       <View style={styles.messageContent}>
          <Sparkles color={Colors.secondary} size={18} style={styles.quoteIcon} />
-         <Text style={styles.messageText}>{item.message}</Text>
+         <Text style={styles.messageText}>{item.message || 'Aucun message.'}</Text>
       </View>
     </View>
   );
@@ -68,11 +68,16 @@ export default function HistoryScreen() {
     <View style={styles.container}>
       <FlatList
         data={history}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
         renderItem={renderItem}
         contentContainerStyle={styles.list}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.primary} />
+          <RefreshControl 
+            refreshing={Boolean(refreshing)} 
+            onRefresh={onRefresh} 
+            colors={[Colors.primary]} 
+            progressBackgroundColor={Colors.surface}
+          />
         }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>

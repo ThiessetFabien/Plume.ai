@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Dimensions, StyleSheet } from 'react-native';
-import { BarChart } from 'react-native-chart-kit';
+import { LineChart } from 'react-native-chart-kit';
 import { Colors } from '../theme/colors';
 
 const screenWidth = Dimensions.get('window').width;
@@ -8,7 +8,7 @@ const screenWidth = Dimensions.get('window').width;
 const AttendanceChart = ({ data }) => {
   // Transformation des données pour le Chart Kit
   const chartData = {
-    labels: data.labels || ["Sem 1", "Sem 2", "Sem 3", "Sem 4"],
+    labels: data.labels || ["Semaine 1", "Semaine 2", "Semaine 3", "Semaine 4"],
     datasets: [
       {
         data: data.values || [0, 0, 0, 0],
@@ -27,25 +27,33 @@ const AttendanceChart = ({ data }) => {
       borderRadius: 16,
     },
     propsForDots: {
-      r: "6",
-      strokeWidth: "2",
-      stroke: Colors.secondary,
+      r: "3",
+      strokeWidth: "0",
     },
+    propsForLabels: {
+      fontSize: 10,
+    },
+    fillShadowGradient: Colors.primary,
+    fillShadowGradientOpacity: 0.2,
+    useShadowColorFromDataset: false,
+    strokeWidth: 3,
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Activité (30j)</Text>
-      <BarChart
+      <Text style={styles.title}>Nombre de séances par semaine</Text>
+      <LineChart
         style={styles.chart}
         data={chartData}
-        width={screenWidth - 80}
+        width={screenWidth - 64}
         height={220}
-        yAxisLabel=""
         chartConfig={chartConfig}
+        bezier
         verticalLabelRotation={0}
         fromZero={true}
-        showValuesOnTopOfBars={true}
+        withInnerLines={false}
+        withOuterLines={false}
+        withShadow={true}
       />
     </View>
   );

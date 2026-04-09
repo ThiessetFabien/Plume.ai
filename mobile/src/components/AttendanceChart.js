@@ -5,7 +5,7 @@ import { Colors } from '../theme/colors';
 
 const screenWidth = Dimensions.get('window').width;
 
-const AttendanceChart = ({ data }) => {
+const AttendanceChart = ({ data, height = 220 }) => {
   // Transformation des données pour le Chart Kit
   const chartData = {
     labels: data.labels || ["Semaine 1", "Semaine 2", "Semaine 3", "Semaine 4"],
@@ -46,7 +46,7 @@ const AttendanceChart = ({ data }) => {
         style={styles.chart}
         data={chartData}
         width={screenWidth - 64}
-        height={220}
+        height={height}
         chartConfig={chartConfig}
         bezier
         verticalLabelRotation={0}

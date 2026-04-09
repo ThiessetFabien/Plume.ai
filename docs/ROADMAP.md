@@ -75,6 +75,7 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 - [x] **Tâche 3.6 (Saisie de Présence) :** Formulaire rapide pour ajouter une session d'entraînement, avec validation en temps réel. ✅
 - [x] **Tâche 3.7 (Audit & Stabilisation) :** Versions Expo SDK 54 alignées (`screens@4.16.0`, `safe-area@5.6.0`, `svg@15.12.1`). `getBaseURL` sécurisé avec support HTTPS via `EXPO_PUBLIC_API_URL`. Logs de debug conditionnels (`__DEV__`). ✅
 - [x] **Fix 3.5a (Timezone & Quota UI) :** Correction du bug de décalage de date (toLocalDateStr vs toISOString UTC+2). Affichage clair des places restantes (X/20), badge "Dernières places" sous 5 disponibles, gestion d'erreur réseau. ✅
+- [x] **Tâche 3.8 (Désinscription & Simulation E2E) :** Fonctionnalité de désabonnement intégrée (UI bascule sur Statut Inscrit rouge + Backend `DELETE`). Récriture du contrôleur `seed.py` pour contraindre la génération aux créneaux officiels et éviter l'épuisement silencieux des quotas. ✅
 
 ---
 

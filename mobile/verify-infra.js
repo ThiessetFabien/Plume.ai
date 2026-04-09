@@ -45,10 +45,26 @@ essentialDeps.forEach(dep => {
   }
 });
 
-// 3. Résumé
+// 3. Heuristique simple de "Style Linting"
+console.log("\n🧹 Vérification des styles orphelins (Heuristique) :");
+const appContent = fs.readFileSync(path.join(mobileDir, 'src/AppContent.js'), 'utf8');
+const stylesMatch = appContent.match(/styles\.([a-zA-Z0-9]+)/g) || [];
+const definedStyles = appContent.match(/([a-zA-Z0-9]+):\s*{/g) || [];
+
+definedStyles.forEach(s => {
+  const styleName = s.replace(/:\s*{/, '').trim();
+  if (styleName !== 'container' && !appContent.includes(`styles.${styleName}`)) {
+    console.log(`  ⚠️  Style '${styleName}' défini mais semble inutilisé.`);
+    // errors++; // On ne bloque pas pour l'instant, c'est informatif
+  } else {
+    console.log(`  ✅ Style '${styleName}' utilisé.`);
+  }
+});
+
+// 4. Résumé
 console.log("\n---");
 if (errors === 0) {
-  console.log("🚀 Validation réussie ! Le socle mobile est stable.");
+  console.log("🚀 Validation réussie ! Le socle mobile est stable et propre.");
   process.exit(0);
 } else {
   console.log(`⚠️  Échec de la validation (${errors} erreur(s)).`);

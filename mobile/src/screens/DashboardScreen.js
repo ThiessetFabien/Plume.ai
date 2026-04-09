@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
-import { Users, Target, Calendar, Award } from 'lucide-react-native';
+import { StyleSheet, Text, View, ScrollView, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native';
+import { Users as UsersIcon, Target as TargetIcon, Calendar as CalendarIcon, Award as AwardIcon, Sparkles as SparkleIcon } from 'lucide-react-native';
 import api from '../services/api';
 import { Colors } from '../theme/colors';
 import StatCard from '../components/StatCard';
 import AttendanceChart from '../components/AttendanceChart';
+import CoachingCard from '../components/CoachingCard';
 
 export default function DashboardScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [stats, setStats] = useState(null);
   const [error, setError] = useState(null);
+  const [coachingMessage, setCoachingMessage] = useState(null);
+  const [isThinking, setIsThinking] = useState(false);
 
   const fetchData = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // 1. On récupère d'abord les joueurs pour en choisir un (ex: le premier)
       const playersRes = await api.get('/players/');
       if (playersRes.data.length === 0) {
         throw new Error("Aucun joueur trouvé en base.");
       }
       
       const playerId = playersRes.data[0].id;
-      
-      // 2. On récupère ses statistiques complètes
       const statsRes = await api.get(`/players/${playerId}/stats`);
       setStats(statsRes.data);
     } catch (err) {
@@ -34,6 +34,20 @@ export default function DashboardScreen() {
     } finally {
       setLoading(false);
       setRefreshing(false);
+    }
+  };
+
+  const getAICoaching = async () => {
+    if (!stats) return;
+    try {
+      setIsThinking(true);
+      const res = await api.post(`/players/${stats.id}/copilot/`);
+      setCoachingMessage(res.data.message);
+    } catch (err) {
+      console.error(err);
+      setCoachingMessage("Désolé, ton coach est momentanément indisponible.");
+    } finally {
+      setIsThinking(false);
     }
   };
 
@@ -64,7 +78,6 @@ export default function DashboardScreen() {
     );
   }
 
-  // Préparation des données pour le graphique (groupement par semaine fictif pour la démo)
   const chartData = {
     labels: ["Sem 1", "Sem 2", "Sem 3", "Sem 4"],
     values: [
@@ -90,13 +103,13 @@ export default function DashboardScreen() {
           <StatCard 
             label="Assiduité" 
             value={`${stats?.attendance_rate || 0}%`} 
-            icon={Target} 
+            icon={TargetIcon} 
             color="#22c55e" 
           />
           <StatCard 
             label="Séances" 
             value={stats?.total_attendances || 0} 
-            icon={Calendar} 
+            icon={CalendarIcon} 
             color="#3b82f6" 
           />
         </View>
@@ -104,19 +117,32 @@ export default function DashboardScreen() {
           <StatCard 
             label="Cible" 
             value={`${stats?.average_frequency || 0}/sem`} 
-            icon={Award} 
+            icon={AwardIcon} 
             color="#f59e0b" 
           />
           <StatCard 
             label="Âge" 
             value={`${stats?.age || '?'} ans`} 
-            icon={Users} 
+            icon={UsersIcon} 
             color="#a855f7" 
           />
         </View>
       </View>
 
       <AttendanceChart data={chartData} />
+
+      {(isThinking || coachingMessage) && (
+        <CoachingCard message={coachingMessage} isLoading={isThinking} />
+      )}
+
+      <TouchableOpacity 
+        style={styles.aiButton} 
+        onPress={getAICoaching}
+        disabled={isThinking}
+      >
+        <SparkleIcon color={Colors.background} size={20} />
+        <Text style={styles.aiButtonText}>Mon Bilan IA</Text>
+      </TouchableOpacity>
 
       <View style={styles.infoCard}>
         <Text style={styles.infoTitle}>Le saviez-vous ?</Text>
@@ -176,6 +202,22 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     gap: 12,
+  },
+  aiButton: {
+    backgroundColor: Colors.secondary,
+    padding: 18,
+    borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    marginVertical: 10,
+  },
+  aiButtonText: {
+    color: Colors.background,
+    fontWeight: '800',
+    fontSize: 16,
+    letterSpacing: 0.5,
   },
   infoCard: {
     backgroundColor: Colors.primary + '15',

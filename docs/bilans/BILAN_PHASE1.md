@@ -14,7 +14,7 @@ La couche de données (Data Layer) du projet **Plume.ai** est désormais achevé
 
 ### 3. Traitement Exemplaire des Dettes Techniques (Release v0.1.0)
 Pour garantir l'excellence *Portfolio-First*, toutes les carences temporaires ont été traitées via des branches Git dédiées, fusionnées proprement vers `main` :
-- [x] **Belles Données (Seed 1.A)** : Refonte de `seed.py` assistée de la librairie `Faker`. La base compte désormais plus de 50 profils et leur historique d'heures calculé intelligemment : indispensable pour construire de superbes dashboards Metabase.
+- [x] **Belles Données (Seed 1.A)** : Refonte de `seed.py` assistée de la librairie `Faker`. La base compte désormais **60 joueurs** avec un historique d'heures calculé intelligemment et une simulation de saturation forcée (**20/20 places**) sur les créneaux critiques pour tester les limites du système.
 - [x] **Conformité RGPD (Anonymisation 1.B)** : Protection côté service IA. Le contexte envoyé au LLM Llama est expurgé des prénoms et patronymes, et utilise la variable neutre `Joueur_{ID}`.
 - [x] **Couverture Qualité (Tests 1.C)** : Initialisation de l'écosystème `pytest`. Une base de données éphémère simulée en mémoire (`sqlite:///:memory:`) valide localement l'intégralité du CRUD via 5 tests robustes, passant tous au vert en moins d'une seconde.
 - [x] **Livraison Officielle (Release 1.D)** : Scellement de la version logicielle par le biais du commit de clôture `chore: close Phase 1 - data layer stable` et ajout du de la balise (tag) Git `v0.1.0`.

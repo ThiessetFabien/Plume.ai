@@ -14,13 +14,11 @@ router = APIRouter(prefix="/reservations", tags=["Réservations"])
 def create_reservation(
     reservation: schemas.ReservationCreate, db: Session = Depends(get_db)
 ):
-    db_res = crud.create_reservation(db=db, reservation=reservation)
-    if db_res is None:
-        raise HTTPException(
-            status_code=400,
-            detail="Conflit de réservation : le terrain est déjà occupé sur ce créneau.",
-        )
-    return db_res
+    try:
+        db_res = crud.create_reservation(db=db, reservation=reservation)
+        return db_res
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.get("/day/{date_str}", response_model=List[schemas.Reservation])

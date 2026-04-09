@@ -31,10 +31,10 @@ L'association affiche complet, mais de nombreux terrains restent vides car certa
 - Elle exploite intelligemment les capacités de rédaction contextuelle des LLM (Génération de SMS de rétention).
 
 ### L'aspect "Gestion Capacitaire" : La Réservation de Terrains
-Pour assurer le bon fonctionnement du club au quotidien, le système intègre une gestion de réservation en temps réel :
-1. **Disponibilité des Terrains** : Visualisation des 5 terrains disponibles sur des créneaux de 60 minutes.
-2. **Équité & Flux** : Un joueur ne peut réserver qu'un créneau à la fois, garantissant une rotation fluide des membres.
-3. **Analytique Terrain** : Les données de réservation alimentent directement les dashboards Metabase pour l'optimisation des horaires d'ouverture.
+Pour assurer le bon fonctionnement du club au quotidien, le système intègre une gestion de réservation robuste :
+1. **Quota Capacitaire** : Un maximum de **20 places** est disponible par créneau horaire (Lundi 17h-22h, Jeudi 19h-22h, Samedi 9h-12h).
+2. **Équité & Partage** : Un joueur ne peut réserver que **2 séances par semaine calendaire** (Lundi au Dimanche), garantissant que chacun puisse accéder aux créneaux.
+3. **Analytique de Remplissage** : Les données de réservation permettent d'ajuster les quotas via les dashboards Metabase.
 
 ## 4. Stack Technique Hybride
 La "Golden Stack" du prototype permet d'épouser au mieux l'état de l'art actuel du développement logiciel :

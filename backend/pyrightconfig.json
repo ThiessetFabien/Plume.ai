@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/pyright/main/packages/pyright/schemas/pyrightconfig.schema.json",
+  "ignore": [
+    "scratch/**"
+  ],
+  "reportMissingModuleSource": "none",
+  "venvPath": ".",
+  "venv": "venv"
+}

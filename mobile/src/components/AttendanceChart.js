@@ -39,7 +39,7 @@ const AttendanceChart = ({ data }) => {
       <BarChart
         style={styles.chart}
         data={chartData}
-        width={screenWidth - 48}
+        width={screenWidth - 80}
         height={220}
         yAxisLabel=""
         chartConfig={chartConfig}

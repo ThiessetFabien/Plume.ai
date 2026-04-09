@@ -69,7 +69,7 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 
 - [x] **Tâche 3.1 (Infrastructure Mobile) :** Configuration du client API (Axios/Fetch) avec gestion dynamique de l'IP du serveur (indispensable pour Expo Go). Mise en place d'un dossier `services/` et `theme/` pour le Design System. ✅
 - [x] **Tâche 3.2 (Le Dashboard Premium) :** Création de l'écran d'accueil avec `react-native-chart-kit`. Affichage dynamique du taux de présence et des statistiques individuelles. Design soigné (Mode Sombre/Clair, dégradés). ✅
-- [ ] **Tâche 3.3 (L'Expérience Copilote) :** Intégration du coaching IA. Animation de chargement ("Thinking...") et affichage du message Llama 3 sous forme de carte interactive.
+- [x] **Tâche 3.3 (L'Expérience Copilote) :** Intégration du coaching IA. Animation de chargement ("Thinking...") et affichage du message Llama 3 sous forme de carte interactive. ✅
 - [ ] **Tâche 3.4 (Historique & Mémoire) :** Nouvel écran pour consulter la liste des anciens conseils enregistrés (Tâche 2.3). Mise en place de la navigation (React Navigation).
 - [ ] **Tâche 3.5 (Module de Réservation) :** Création de l'interface de sélection de terrain et de créneau horaire. Validation visuelle de la disponibilité.
 - [ ] **Tâche 3.6 (Saisie de Présence) :** Formulaire rapide pour ajouter une session d'entraînement, avec validation en temps réel.

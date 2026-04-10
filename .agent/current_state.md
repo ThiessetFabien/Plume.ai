@@ -4,35 +4,28 @@ Ce document sert de mémoire vive persistante pour l'agent IA. Il doit être mis
 
 ---
 
-## 📅 Dernière mise à jour : 2026-04-08 | 16:10
-## 🚀 Statut Actuel : Phase 2 TERMINÉE ✅ | Phase 2.5 (Réservation) TERMINÉE ✅
+## 📅 Dernière mise à jour : 2026-04-10 | 17:30
+## 🚀 Statut Actuel : Phase 3 TERMINÉE ✅ | Phase 3.9 (Polissage & Robustesse) EN COURS 🚧
 
 ## ✅ Tâches Complétées :
-*   [x] Initialisation du dépôt Git.
-*   [x] Configuration Docker (Postgres, Metabase).
-*   [x] Backend FastAPI avec SQLAlchemy 2.0.
-*   [x] Modèles `Player`, `Attendance`, `CoachingMessage` et `Reservation`.
-*   [x] Script de Seed réaliste avec Faker.
-*   [x] **ANONYMISATION RGPD** sur Groq (Llama 3.3).
-*   [x] **HISTORIQUE COACHING** (Persistance et API).
-*   [x] **MEMBRES FANTÔMES** (Endpoint de détection).
-*   [x] **SYSTÈME DE RÉSERVATION** (Modèle, CRUD, Conflits et Tests).
-*   [x] **SUITE DE TESTS PYTEST** (CRUD + Réservations).
-*   [x] **CONVENTION GIT UNIFORMISÉE** dans `.agent/roles.md`.
+*   [x] Configuration Professionnelle Gitflow (`main` prod / `dev` integration).
+*   [x] Phase 3 Mobile 100% OK : Dashboard (LineChart Bézier), Réservation (Quotas/Désinscription), Coaching IA (Bienveillance/Anonymisation).
+*   [x] Audit technique complet réalisé : identification des dettes en indexation, cascades et UX.
+*   [x] **SYSTÈME DE TOASTS** intégré (remplace les alertes système). ✅
+*   [x] Roadmap mise à jour avec la Phase 3.9 (Polissage).
+*   [x] Mise en place du Protocole de Contribution (`GIT_PROTOCOL.md`).
 
-## 🚧 En cours (Phase 3 — L'Interface Mobile) :
-*   [ ] Configuration Expo / React Native.
-*   [ ] Mise en place du Design System.
-*   [ ] Développement du Dashboard.
+## 🚧 En cours (Phase 3.9 — Polissage & Robustesse) :
+*   [ ] **Tâche 3.9.3 (UX : Empty States)** : Design des écrans sans données (historique, réservations).
 
 ## 📋 Prochaines étapes recommandées :
-1.  Démarrer la Phase 3.1 : Infrastructure Mobile & Client API.
-2.  Définir le thème visuel (Navigation, Couleurs).
+1.  Terminer la validation de la Tâche 3.9.1 (Test de suppression en cascade).
+2.  Démarrer la Tâche 3.9.2 : Système de Toasts/Snackbars sur Mobile.
+3.  Lancer la Phase 4 : Authentification JWT dès que 3.9 est soldé.
 
 ---
 
 ## 💡 Notes de Contextes (Key Insights)
-*   **Connexion DB** : Stable via Docker.
-*   **Sécurité** : Audit de Phase 2 positif (Secrets isolés, Injections parées).
-*   **Git** : Utiliser désormais les Conventional Commits type `feat(scope): message`.
-*   **IA** : Toujours anonymiser le nom du joueur avant l'envoi au prompt.
+*   **Git** : Toujours travailler sur `dev` ou des branches éphémères `feat/`. Ne jamais toucher à `main` en direct.
+*   **IA** : Le prompt système pour le coaching a été renforcé (bienveillance, empathie, anonymisation stricte).
+*   **Mobile** : Les versions d'Expo sont stabilisées sur le SDK 54. Toujours valider via `verify-infra.js`.

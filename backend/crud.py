@@ -177,7 +177,7 @@ def create_reservation(db: Session, reservation: schemas.ReservationCreate):
     if total_slots_taken >= 20:
         raise ValueError("Le quota maximum de 20 joueurs est déjà atteint pour ce créneau.")
 
-    # 2. Vérification du Plafond Hebdomadaire (Max 2 séances par semaine calendaire)
+    # 2. Vérification du Plafond Hebdomadaire (Max 2 JOURS par semaine calendaire)
     current_time = reservation.start_time
     days_since_monday = current_time.weekday()
     start_of_week = current_time.replace(
@@ -185,17 +185,26 @@ def create_reservation(db: Session, reservation: schemas.ReservationCreate):
     ) - timedelta(days=days_since_monday)
     end_of_week = start_of_week + timedelta(days=7)
 
-    player_weekly_count = (
+    # Récupérer toutes les réservations du joueur pour cette semaine
+    existing_reservations = (
         db.query(models.Reservation)
         .filter(
             models.Reservation.player_id == reservation.player_id,
             models.Reservation.start_time >= start_of_week,
             models.Reservation.start_time < end_of_week,
         )
-        .count()
+        .all()
     )
-    if player_weekly_count >= 2:
-        raise ValueError("Vous avez déjà atteint votre limite de 2 séances pour cette semaine calendaire.")
+
+    # Extraire les dates uniques (YYYY-MM-DD)
+    reserved_days = {res.start_time.date().isoformat() for res in existing_reservations}
+    requested_day = current_time.date().isoformat()
+
+    # Si le jour demandé est nouveau ET qu'on a déjà 2 jours réservés
+    if requested_day not in reserved_days and len(reserved_days) >= 2:
+        # On passe les jours réservés dans le message d'erreur pour le frontend
+        days_list = ",".join(sorted(list(reserved_days)))
+        raise ValueError(f"DAY_LIMIT_REACHED|{days_list}")
 
     # 3. Création de la réservation
     db_reservation = models.Reservation(
@@ -217,4 +226,25 @@ def delete_reservation(db: Session, reservation_id: int):
         db.commit()
         return True
     return False
+
+
+def delete_player_reservations_by_day(db: Session, player_id: int, date: datetime):
+    """
+    Supprime toutes les réservations d'un joueur pour une journée spécifique.
+    Utile pour la résolution de conflits de quota.
+    """
+    start_of_day = datetime(date.year, date.month, date.day, 0, 0, 0)
+    end_of_day = start_of_day + timedelta(days=1)
+
+    deleted_count = (
+        db.query(models.Reservation)
+        .filter(
+            models.Reservation.player_id == player_id,
+            models.Reservation.start_time >= start_of_day,
+            models.Reservation.start_time < end_of_day,
+        )
+        .delete(synchronize_session=False)
+    )
+    db.commit()
+    return deleted_count > 0
 

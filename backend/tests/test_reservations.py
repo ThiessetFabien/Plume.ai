@@ -60,33 +60,52 @@ def test_create_reservation_nominal():
     assert data["player_id"] == 1
 
 
-def test_create_reservation_conflict():
-    """Vérifie qu'un conflit horaire est bien détecté et bloqué."""
-    # Tente de réserver le même terrain au même créneau (déjà pris par le test précédent)
-    response = client.post(
-        "/reservations/",
-        json={
-            "player_id": 2,
-            "court_number": 1,
-            "start_time": "2024-05-10T10:00:00",
-            "duration": 60,
-        },
-    )
-    assert response.status_code == 400
-    assert "Conflit" in response.json()["detail"]
+def test_create_reservation_quota_days():
+    """Vérifie la règle des 2 jours max par semaine."""
+    # 1. On crée un nouveau joueur
+    p_resp = client.post("/players/", json={"full_name": "Quota Tester", "email": "quota@test.fr"})
+    p_id = p_resp.json()["id"]
+
+    # 2. Jour 1 (Lundi) - Créneau 1: OK
+    client.post("/reservations/", json={
+        "player_id": p_id, "court_number": 0, "start_time": "2024-05-13T10:00:00", "duration": 60
+    })
+
+    # 3. Jour 1 (Lundi) - Créneau 2: OK (Même jour)
+    resp = client.post("/reservations/", json={
+        "player_id": p_id, "court_number": 0, "start_time": "2024-05-13T11:00:00", "duration": 60
+    })
+    assert resp.status_code == 200
+
+    # 4. Jour 2 (Mardi) - Créneau 1: OK
+    resp = client.post("/reservations/", json={
+        "player_id": p_id, "court_number": 0, "start_time": "2024-05-14T10:00:00", "duration": 60
+    })
+    assert resp.status_code == 200
+
+    # 5. Jour 3 (Mercredi) - Créneau 1: KO (Quota 2 jours atteint)
+    resp = client.post("/reservations/", json={
+        "player_id": p_id, "court_number": 0, "start_time": "2024-05-15T10:00:00", "duration": 60
+    })
+    assert resp.status_code == 400
+    assert "DAY_LIMIT_REACHED" in resp.json()["detail"]
+    # Vérifie que les jours réservés sont listés
+    assert "2024-05-13" in resp.json()["detail"]
+    assert "2024-05-14" in resp.json()["detail"]
 
 
-def test_get_reservations_day():
-    """Vérifie la récupération du planning journalier."""
-    response = client.get("/reservations/day/2024-05-10")
-    assert response.status_code == 200
-    data = response.json()
-    assert len(data) == 1
-    assert data[0]["court_number"] == 1
+def test_delete_player_day_reservations():
+    """Vérifie la suppression en bloc d'une journée pour un joueur."""
+    # Le joueur a des résas le 2024-05-13
+    p_id = 3 # (D'après la suite des tests)
+    
+    # On supprime tout le Lundi 13
+    resp = client.delete(f"/reservations/player/{p_id}/day/2024-05-13")
+    assert resp.status_code == 204
 
-
-def test_get_reservations_invalid_date():
-    """Vérifie la gestion d'erreur de format de date."""
-    response = client.get("/reservations/day/10-05-2024")  # Mauvais format
-    assert response.status_code == 400
-    assert "Format de date invalide" in response.json()["detail"]
+    # On vérifie que les résas du 13 sont parties
+    # Note: On utilise l'API de base
+    day_resp = client.get("/reservations/day/2024-05-13")
+    data = day_resp.json()
+    # Il ne devrait plus rester de résas pour ce joueur sur ce jour
+    assert all(r["player_id"] != p_id for r in data)

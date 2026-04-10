@@ -45,3 +45,22 @@ def delete_reservation(reservation_id: int, db: Session = Depends(get_db)):
     if not success:
         raise HTTPException(status_code=404, detail="Réservation introuvable.")
     return None
+
+
+@router.delete("/player/{player_id}/day/{date_str}", status_code=204)
+def delete_player_day_reservations(
+    player_id: int, date_str: str, db: Session = Depends(get_db)
+):
+    """
+    Supprime TOUTES les réservations d'un joueur pour un jour spécifique.
+    Indispensable pour la permutation de jours (Quota 2 jours).
+    """
+    try:
+        date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+    except ValueError:
+        raise HTTPException(
+            status_code=400, detail="Format de date invalide (YYYY-MM-DD)."
+        )
+
+    crud.delete_player_reservations_by_day(db, player_id=player_id, date=date_obj)
+    return None

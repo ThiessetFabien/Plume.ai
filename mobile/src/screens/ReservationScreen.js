@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet, Text, View, ScrollView,
-  TouchableOpacity, ActivityIndicator, Alert
+  TouchableOpacity, ActivityIndicator
 } from 'react-native';
-import { Calendar, Users, Clock, CheckCircle2, AlertCircle, WifiOff } from 'lucide-react-native';
+import { 
+  Calendar, Users, Clock, CheckCircle2, 
+  AlertCircle, WifiOff, AlertTriangle 
+} from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 import api from '../services/api';
 import { Colors } from '../theme/colors';
+import { CustomConfirmationModal } from '../components/ConfirmationModal';
+import { ConflictResolutionModal } from '../components/ConflictResolutionModal';
+import { BulkCancelModal } from '../components/BulkCancelModal';
 
 const QUOTA_MAX = 20;
 
@@ -39,6 +45,15 @@ const getDayOfWeek = (dateStr) => {
 
 const DAY_LABELS = { 1: 'Lundi', 4: 'Jeudi', 6: 'Samedi' };
 
+/**
+ * Formate une chaîne YYYY-MM-DD en JJ/MM/AAAA.
+ */
+const formatDateFr = (dateStr) => {
+  if (!dateStr) return '';
+  const [y, m, d] = dateStr.split('-');
+  return `${d}/${m}/${y}`;
+};
+
 export default function ReservationScreen() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [reservations, setReservations] = useState([]);
@@ -46,6 +61,18 @@ export default function ReservationScreen() {
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState(false);
   const [currentPlayerId, setCurrentPlayerId] = useState(null);
+
+  // États pour la modale de confirmation simple (désinscription d'un slot)
+  const [cancelModalVisible, setCancelModalVisible] = useState(false);
+  const [reservationIdToCancel, setReservationIdToCancel] = useState(null);
+
+  // États pour la résolution de conflit (quota 2 jours atteint)
+  const [conflictModalVisible, setConflictModalVisible] = useState(false);
+  const [conflictingDays, setConflictingDays] = useState([]);
+  const [pendingSlot, setPendingSlot] = useState(null);
+
+  // État pour la désinscription groupée
+  const [bulkCancelModalVisible, setBulkCancelModalVisible] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -114,55 +141,132 @@ export default function ReservationScreen() {
       Toast.show({
         type: 'success',
         text1: 'Séance réservée ! 🏸',
-        text2: `Créneau du ${selectedDate} à ${slot} confirmé.`,
+        text2: `Créneau du ${formatDateFr(selectedDate)} à ${slot} confirmé.`,
       });
       fetchAvailability();
     } catch (err) {
-      const detail = err.response?.data?.detail
+      const detail = err.response?.data?.detail;
+      
+      // Gestion du conflit de quota par jour
+      if (typeof detail === 'string' && detail.startsWith('DAY_LIMIT_REACHED')) {
+        const days = detail.split('|')[1].split(',');
+        setConflictingDays(days);
+        setPendingSlot(slot);
+        setConflictModalVisible(true);
+        return;
+      }
+
+      const errorMsg = detail
         || (err.response?.status === 422 ? "Données invalides." : null)
         || "Créneau complet ou limite hebdomadaire atteinte.";
+      
       Toast.show({
         type: 'error',
         text1: 'Réservation impossible',
-        text2: detail,
+        text2: errorMsg,
       });
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleCancel = (reservationId) => {
-    Alert.alert(
-      "Se désinscrire ?",
-      "Voulez-vous vraiment annuler votre présence à cette séance ?",
-      [
-        { text: "Annuler", style: "cancel" },
-        { 
-          text: "Oui, me désinscrire", 
-          style: "destructive",
-          onPress: async () => {
-            try {
-              setSubmitting(true);
-              await api.delete(`/reservations/${reservationId}`);
-              Toast.show({
-                type: 'success',
-                text1: 'Désinscription',
-                text2: 'Vous êtes bien désinscrit de cette séance.',
-              });
-              fetchAvailability();
-            } catch (err) {
-              Toast.show({
-                type: 'error',
-                text1: 'Erreur',
-                text2: "Impossible d'annuler la réservation.",
-              });
-            } finally {
-              setSubmitting(false);
-            }
-          }
-        }
-      ]
-    );
+  const handleResolveConflict = async (dayToCancel) => {
+    try {
+      setConflictModalVisible(false);
+      setSubmitting(true);
+      
+      // 1. Annuler toutes les réservations du jour choisi
+      await api.delete(`/reservations/player/${currentPlayerId}/day/${dayToCancel}`);
+      
+      // 2. Tenter la nouvelle réservation
+      const slot = pendingSlot;
+      const payload = {
+        player_id: currentPlayerId,
+        court_number: 0,
+        start_time: `${selectedDate}T${slot}:00`,
+      };
+      
+      await api.post('/reservations/', payload);
+      
+      Toast.show({
+        type: 'success',
+        text1: 'Changement effectué ! 🔄',
+        text2: `Journée du ${formatDateFr(dayToCancel)} libérée au profit du ${formatDateFr(selectedDate)}.`,
+      });
+      
+      setPendingSlot(null);
+      fetchAvailability();
+    } catch (err) {
+      Toast.show({
+        type: 'error',
+        text1: 'Erreur technique',
+        text2: "Impossible de modifier vos réservations.",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleCancelClick = (reservationId) => {
+    // Vérifier combien de réservations l'utilisateur a aujourd'hui
+    const userReservationsToday = reservations.filter(r => r.player_id === currentPlayerId);
+    
+    setReservationIdToCancel(reservationId);
+
+    if (userReservationsToday.length > 1) {
+      setBulkCancelModalVisible(true);
+    } else {
+      setCancelModalVisible(true);
+    }
+  };
+
+  const confirmCancellation = async () => {
+    if (!reservationIdToCancel) return;
+    setCancelModalVisible(false);
+    
+    try {
+      setSubmitting(true);
+      await api.delete(`/reservations/${reservationIdToCancel}`);
+      Toast.show({
+        type: 'success',
+        text1: 'Désinscription',
+        text2: 'Vous êtes bien désinscrit de cette séance.',
+      });
+      fetchAvailability();
+    } catch (err) {
+      Toast.show({
+        type: 'error',
+        text1: 'Erreur',
+        text2: "Impossible d'annuler la réservation.",
+      });
+    } finally {
+      setSubmitting(false);
+      setReservationIdToCancel(null);
+    }
+  };
+
+  const handleBulkCancel = async () => {
+    setBulkCancelModalVisible(false);
+    try {
+      setSubmitting(true);
+      // Supprimer TOUTE la journée pour l'utilisateur
+      await api.delete(`/reservations/player/${currentPlayerId}/day/${selectedDate}`);
+      Toast.show({
+        type: 'success',
+        text1: 'Journée libérée',
+        text2: 'Toutes vos réservations pour ce jour ont été annulées.',
+      });
+      fetchAvailability();
+    } catch (err) {
+      Toast.show({
+        type: 'error',
+        text1: 'Erreur',
+        text2: "Impossible d'annuler la journée.",
+      });
+    } finally {
+      setSubmitting(false);
+      setReservationIdToCancel(null);
+    }
   };
 
   const getSlotOccupancy = (slot) =>
@@ -239,7 +343,7 @@ export default function ReservationScreen() {
                       !isRegistered && isLowStock && styles.slotLow,
                     ]}
                     disabled={(!isRegistered && isFull) || Boolean(submitting)}
-                    onPress={() => isRegistered ? handleCancel(userReservation.id) : handleReserve(slot)}
+                    onPress={() => isRegistered ? handleCancelClick(userReservation.id) : handleReserve(slot)}
                     activeOpacity={0.75}
                   >
                     {/* Heure */}
@@ -279,9 +383,44 @@ export default function ReservationScreen() {
       <View style={styles.footerNote}>
         <AlertCircle size={13} color={Colors.textSecondary} />
         <Text style={styles.footerText}>
-          Limite de 2 séances par semaine calendaire · {QUOTA_MAX} places/créneau
+          Limite de 2 JOURS par semaine calendaire · {QUOTA_MAX} places/créneau
         </Text>
       </View>
+
+      {/* Modale de Confirmation de Désinscription (Simple) */}
+      <CustomConfirmationModal
+        visible={cancelModalVisible}
+        title="Se désinscrire ?"
+        message="Voulez-vous vraiment annuler votre présence à cette séance ?"
+        confirmText="Oui, me désinscrire"
+        onConfirm={confirmCancellation}
+        onCancel={() => setCancelModalVisible(false)}
+      />
+
+      {/* Modale de Résolution de Conflit (Quota 2 jours) */}
+      <ConflictResolutionModal
+        visible={conflictModalVisible}
+        reservedDays={conflictingDays}
+        onResolve={handleResolveConflict}
+        onCancel={() => {
+          setConflictModalVisible(false);
+          setPendingSlot(null);
+        }}
+      />
+
+      {/* Modale de Choix de Désinscription (Multiple) */}
+      <BulkCancelModal
+        visible={bulkCancelModalVisible}
+        onCancelSingle={() => {
+          setBulkCancelModalVisible(false);
+          confirmCancellation(); // Suppression directe sans 2ème confirmation
+        }}
+        onCancelAll={handleBulkCancel}
+        onDismiss={() => {
+          setBulkCancelModalVisible(false);
+          setReservationIdToCancel(null);
+        }}
+      />
     </View>
   );
 }

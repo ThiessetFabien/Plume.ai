@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Toast from 'react-native-toast-message';
+import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 import DashboardScreen from './src/screens/DashboardScreen';
 import HistoryScreen from './src/screens/HistoryScreen';
 import ReservationScreen from './src/screens/ReservationScreen';
@@ -9,6 +9,44 @@ import AttendanceScreen from './src/screens/AttendanceScreen';
 import { Colors } from './src/theme/colors';
 
 const Stack = createNativeStackNavigator();
+
+/**
+ * Configuration des Toasts personnalisés pour Plume.ai
+ */
+const toastConfig = {
+  success: (props) => (
+    <BaseToast
+      {...props}
+      style={{ borderLeftColor: Colors.success, backgroundColor: Colors.surface, height: 70 }}
+      contentContainerStyle={{ paddingHorizontal: 15 }}
+      text1Style={{
+        fontSize: 16,
+        fontWeight: '800',
+        color: Colors.text
+      }}
+      text2Style={{
+        fontSize: 13,
+        color: Colors.textSecondary
+      }}
+    />
+  ),
+  error: (props) => (
+    <ErrorToast
+      {...props}
+      style={{ borderLeftColor: Colors.error, backgroundColor: Colors.surface, height: 70 }}
+      contentContainerStyle={{ paddingHorizontal: 15 }}
+      text1Style={{
+        fontSize: 16,
+        fontWeight: '800',
+        color: Colors.text
+      }}
+      text2Style={{
+        fontSize: 13,
+        color: Colors.textSecondary
+      }}
+    />
+  )
+};
 
 export default function App() {
   return (
@@ -61,7 +99,7 @@ export default function App() {
           }}
         />
       </Stack.Navigator>
-      <Toast />
+      <Toast config={toastConfig} />
     </NavigationContainer>
   );
 }

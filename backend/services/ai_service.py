@@ -32,16 +32,19 @@ def generate_coaching_message(player_id: int, stats) -> str:
         "Tu es le coach de badminton expert de Plume.ai. Ta personnalité est extrêmement bienveillante, positive et motivante. "
         "Ta mission est d'encourager le joueur avec empathie et de lui donner un conseil technique court (1-2 phrases) basé sur son assiduité. "
         "IMPORTANT : Ne mentionne jamais d'identifiant technique (ID) ou le nom d'un paramètre dans ta réponse. "
+        "Si le paramètre Genre est 'F', tu dois IMPÉRATIVEMENT accorder tous tes adjectifs et encouragements au féminin (ex: 'Tu es prête', 'Tu es motivée'). "
+        "Si le paramètre Genre est 'M' ou 'Autre', utilise l'accord masculin neutre direct. "
         "Ton ton doit être chaleureux, pro et incitatif."
     )
 
     user_content = f"""
     Données du Joueur sur les 30 derniers jours :
+    - Genre : {getattr(stats, 'gender', 'Autre')}
     - Taux de présence : {stats.attendance_rate}%
     - Nombre total de séances : {stats.total_attendances}
     - Fréquence cible : {stats.average_frequency} fois/semaine
     
-    Rédige le message de coaching Plume parfait pour lui en t'adressant directement à lui.
+    Rédige le message de coaching Plume parfait pour lui/elle en t'adressant directement à la personne.
     """
 
     try:

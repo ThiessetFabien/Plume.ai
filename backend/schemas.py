@@ -37,6 +37,9 @@ class PlayerBase(BaseModel):
     age: Optional[int] = Field(
         None, ge=5, le=120, description="Âge réaliste (5 à 120 ans)"
     )
+    gender: Optional[str] = Field(
+        "Autre", description="Genre M, F ou Autre"
+    )
     average_frequency: Optional[float] = Field(
         0.0, ge=0.0, le=7.0, description="Fréquence d'entraînement hebdo (0-7)"
     )

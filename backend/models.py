@@ -11,6 +11,7 @@ class Player(Base):
     full_name = Column(String, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     age = Column(Integer)
+    gender = Column(String, default="Autre")
     average_frequency = Column(Float, default=0.0)
 
     # Relation : Un joueur peut avoir plusieurs présences

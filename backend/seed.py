@@ -25,24 +25,28 @@ def seed_db():
             "full_name": "Lucas Petit",
             "email": "lucas.tester@example.com",
             "age": 28,
+            "gender": "M",
             "freq": 4.0,
         },  # Le Pro
         {
             "full_name": "Sophie Martin",
             "email": "s.martin@gmail.com",
             "age": 35,
+            "gender": "F",
             "freq": 2.0,
         },  # L'Amateur
         {
             "full_name": "Marc Dubois",
             "email": "m.dubois@outlook.com",
             "age": 52,
+            "gender": "M",
             "freq": 1.0,
         },  # Le Débutant
         {
             "full_name": "Emma Bernard",
             "email": "emma.b@club.fr",
             "age": 22,
+            "gender": "F",
             "freq": 3.0,
         },  # L'Espoir
     ]
@@ -53,6 +57,7 @@ def seed_db():
             full_name=p["full_name"],
             email=p["email"],
             age=p["age"],
+            gender=p["gender"],
             average_frequency=p["freq"],
         )
         db.add(player)
@@ -78,7 +83,14 @@ def seed_db():
         )
 
         for i in range(num_sessions):
-            attendance_date = end_date - timedelta(days=random.randint(0, 30))
+            # Assiduité aléatoire dans le passé
+            days_ago = random.randint(0, 30)
+            base_date = end_date - timedelta(days=days_ago)
+            # Heure aléatoire entre 17h et 21h (créneaux typiques club)
+            hour = random.choice([17, 18, 19, 20, 21])
+            minute = random.choice([0, 15, 30])
+            attendance_date = base_date.replace(hour=hour, minute=minute, second=0, microsecond=0)
+            
             duration = random.choice([60, 90, 120])
 
             attendance = models.Attendance(

@@ -79,6 +79,17 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 
 ---
 
+### PHASE 3.9 : Polissage, UX & Robustesse (Solder la Dette) 💎
+
+- [x] **Tâche 3.9.1 (Indexation & Cascades) :** Ajouter des index sur les clés étrangères (`player_id`) et configurer les cascades de suppression (`Reservation`, `CoachingMessage`). ✅
+- [ ] **Tâche 3.9.2 (UX : Feedback & Toasts) :** Remplacer les alertes système par un système de Toasts/Snackbars pour une expérience plus fluide.
+- [ ] **Tâche 3.9.3 (UX : Empty States) :** Ajouter des visuels ou messages dédiés pour les écrans sans données (historique, réservations).
+- [ ] **Tâche 3.9.4 (Sécurité & Hygiène) :** Restreindre le middleware CORS et ajouter une validation de format côté frontend.
+- [ ] **Tâche 3.9.5 (Identité) :** Création des fichiers `LICENSE` et `CONTRIBUTING.md` pour un portfolio professionnel.
+- [x] **Tâche 3.9.6 (Infrastructure Git) :** Mise en place d'un Gitflow professionnel (Main/Dev/Feat) et protocole d'agent. ✅
+
+---
+
 ### PHASE 4 : Consolidation & Robustesse (Produit Durable)
 
 - [ ] **Tâche 4.1 (Configuration Metabase) :** Cette étape est manuelle. "Va sur `http://localhost:3000` (Metabase). Connecte-le à PostgreSQL. Crée un Camembert avec la répartition des âges, et une Courbe temporelle du remplissage des terrains."

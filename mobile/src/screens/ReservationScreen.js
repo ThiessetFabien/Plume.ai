@@ -4,6 +4,7 @@ import {
   TouchableOpacity, ActivityIndicator, Alert
 } from 'react-native';
 import { Calendar, Users, Clock, CheckCircle2, AlertCircle, WifiOff } from 'lucide-react-native';
+import Toast from 'react-native-toast-message';
 import api from '../services/api';
 import { Colors } from '../theme/colors';
 
@@ -84,7 +85,11 @@ export default function ReservationScreen() {
     } catch (err) {
       console.error('fetchAvailability error:', err);
       setApiError(true);
-      Alert.alert("Connexion", "Impossible de charger les disponibilités. Vérifiez votre réseau.");
+      Toast.show({
+        type: 'error',
+        text1: 'Connexion',
+        text2: 'Impossible de charger les disponibilités. Vérifiez votre réseau.',
+      });
     } finally {
       setLoading(false);
     }
@@ -106,13 +111,21 @@ export default function ReservationScreen() {
       };
 
       await api.post('/reservations/', payload);
-      Alert.alert("Séance réservée ! 🏸", `Créneau du ${selectedDate} à ${slot} confirmé.`);
+      Toast.show({
+        type: 'success',
+        text1: 'Séance réservée ! 🏸',
+        text2: `Créneau du ${selectedDate} à ${slot} confirmé.`,
+      });
       fetchAvailability();
     } catch (err) {
       const detail = err.response?.data?.detail
         || (err.response?.status === 422 ? "Données invalides." : null)
         || "Créneau complet ou limite hebdomadaire atteinte.";
-      Alert.alert("Réservation impossible", detail);
+      Toast.show({
+        type: 'error',
+        text1: 'Réservation impossible',
+        text2: detail,
+      });
     } finally {
       setSubmitting(false);
     }
@@ -131,10 +144,18 @@ export default function ReservationScreen() {
             try {
               setSubmitting(true);
               await api.delete(`/reservations/${reservationId}`);
-              Alert.alert("Désinscription", "Vous êtes bien désinscrit de cette séance.");
+              Toast.show({
+                type: 'success',
+                text1: 'Désinscription',
+                text2: 'Vous êtes bien désinscrit de cette séance.',
+              });
               fetchAvailability();
             } catch (err) {
-              Alert.alert("Erreur", "Impossible d'annuler la réservation.");
+              Toast.show({
+                type: 'error',
+                text1: 'Erreur',
+                text2: "Impossible d'annuler la réservation.",
+              });
             } finally {
               setSubmitting(false);
             }

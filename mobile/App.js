@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Toast from 'react-native-toast-message';
 import DashboardScreen from './src/screens/DashboardScreen';
 import HistoryScreen from './src/screens/HistoryScreen';
 import ReservationScreen from './src/screens/ReservationScreen';
@@ -60,6 +61,7 @@ export default function App() {
           }}
         />
       </Stack.Navigator>
+      <Toast />
     </NavigationContainer>
   );
 }

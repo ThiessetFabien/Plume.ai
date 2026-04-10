@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert, ActivityIndicator, ScrollView } from 'react-native';
-import { Calendar as CalendarIcon, Clock, CheckCircle, ChevronLeft } from 'lucide-react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import { Calendar as CalendarIcon, Clock, CheckCircle } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 import api from '../services/api';
 import { Colors } from '../theme/colors';
 
@@ -35,14 +36,19 @@ export default function AttendanceScreen() {
 
       await api.post('/attendances/', payload);
       
-      Alert.alert(
-        "Séance Enregistrée ! 🏸",
-        "Bravo pour ton entraînement. Tes statistiques ont été mises à jour.",
-        [{ text: "Super !", onPress: () => navigation.goBack() }]
-      );
+      Toast.show({
+        type: 'success',
+        text1: 'Séance Enregistrée ! 🏸',
+        text2: 'Bravo pour ton entraînement. Tes statistiques ont été mises à jour.',
+      });
+      navigation.goBack();
     } catch (err) {
       console.error(err);
-      Alert.alert("Erreur", "Impossible d'enregistrer la séance.");
+      Toast.show({
+        type: 'error',
+        text1: 'Erreur',
+        text2: "Impossible d'enregistrer la séance.",
+      });
     } finally {
       setSubmitting(false);
     }

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, FlatList, ActivityIndicator, RefreshControl } from 'react-native';
-import { Sparkles, Calendar } from 'lucide-react-native';
+import { Sparkles, Calendar, MessageSquareOff } from 'lucide-react-native';
 import api from '../services/api';
 import { Colors } from '../theme/colors';
+import { EmptyState } from '../components/EmptyState';
 
 export default function HistoryScreen() {
   const [loading, setLoading] = useState(true);
@@ -80,9 +81,13 @@ export default function HistoryScreen() {
           />
         }
         ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>Aucun conseil enregistré pour le moment.</Text>
-          </View>
+          <EmptyState 
+            icon={MessageSquareOff}
+            title="Aucun conseil"
+            description="Tes conseils personnalisés apparaîtront ici dès que tu auras enregistré des séances."
+            actionLabel="S'entraîner maintenant"
+            onAction={() => fetchHistory()}
+          />
         }
       />
     </View>
@@ -134,13 +139,4 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     flex: 1,
   },
-  emptyContainer: {
-    padding: 40,
-    alignItems: 'center',
-  },
-  emptyText: {
-    color: Colors.textSecondary,
-    textAlign: 'center',
-    fontSize: 16,
-  }
 });

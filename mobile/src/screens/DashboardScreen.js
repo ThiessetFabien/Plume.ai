@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { Target as TargetIcon, Calendar as CalendarIcon, Sparkles as SparkleIcon, Clock as ClockIcon, MapPin } from 'lucide-react-native';
+import { Target as TargetIcon, Calendar as CalendarIcon, Sparkles as SparkleIcon, Clock as ClockIcon, MapPin, AlertTriangle } from 'lucide-react-native';
 import api from '../services/api';
 import { Colors } from '../theme/colors';
 import StatCard from '../components/StatCard';
 import AttendanceChart from '../components/AttendanceChart';
 import CoachingCard from '../components/CoachingCard';
+import { EmptyState } from '../components/EmptyState';
 
 const COACH_TIPS = [
   "Une régularité de 2 séances par semaine augmente votre progression de 40%.",
@@ -90,10 +91,13 @@ export default function DashboardScreen() {
   if (error) {
     return (
       <View style={styles.center}>
-        <Text style={styles.errorText}>⚠️ {error}</Text>
-        <TouchableOpacity style={styles.retryBtn} onPress={fetchData}>
-          <Text style={styles.retryText}>Réessayer</Text>
-        </TouchableOpacity>
+        <EmptyState 
+          icon={AlertTriangle}
+          title="Oups !"
+          description={error || "Un problème technique est survenu lors de la récupération des données."}
+          actionLabel="Réessayer"
+          onAction={fetchData}
+        />
       </View>
     );
   }
@@ -218,7 +222,4 @@ const styles = StyleSheet.create({
   reserveSubtitle: { color: Colors.textSecondary, fontSize: 14 },
   infoTitle: { color: Colors.primary, fontWeight: '700', fontSize: 16, marginBottom: 4 },
   infoBody: { color: Colors.textSecondary, fontSize: 14, lineHeight: 20 },
-  errorText: { color: Colors.text, fontSize: 16, marginBottom: 16 },
-  retryBtn: { backgroundColor: Colors.primary, padding: 12, borderRadius: 8 },
-  retryText: { color: 'white', fontWeight: 'bold' }
 });

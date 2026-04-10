@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { 
   Calendar, Users, Clock, CheckCircle2, 
-  AlertCircle, WifiOff, AlertTriangle 
+  AlertCircle, WifiOff, AlertTriangle, CalendarX 
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 import api from '../services/api';
@@ -13,6 +13,7 @@ import { Colors } from '../theme/colors';
 import { CustomConfirmationModal } from '../components/ConfirmationModal';
 import { ConflictResolutionModal } from '../components/ConflictResolutionModal';
 import { BulkCancelModal } from '../components/BulkCancelModal';
+import { EmptyState } from '../components/EmptyState';
 
 const QUOTA_MAX = 20;
 
@@ -322,7 +323,17 @@ export default function ReservationScreen() {
         ) : (
           <ScrollView contentContainerStyle={styles.slotList}>
             {timeSlots.length === 0 ? (
-              <Text style={styles.emptyText}>Aucun créneau ce jour.</Text>
+              <EmptyState 
+                icon={CalendarX}
+                title="Journée fermée"
+                description="Aucun créneau n'est disponible pour cette date. Essaye le jour suivant !"
+                actionLabel="Sélectionner demain"
+                onAction={() => {
+                  const tomorrow = new Date(selectedDate);
+                  tomorrow.setDate(tomorrow.getDate() + 1);
+                  setSelectedDate(toLocalDateStr(tomorrow));
+                }}
+              />
             ) : (
               timeSlots.map(slot => {
                 const userReservation = reservations.find(r => r.player_id === currentPlayerId && r.start_time.includes(`T${slot}`));
@@ -482,7 +493,6 @@ const styles = StyleSheet.create({
     paddingVertical: 3, paddingHorizontal: 8, borderRadius: 6,
   },
 
-  emptyText: { color: Colors.textSecondary, fontStyle: 'italic', textAlign: 'center', marginTop: 30 },
 
   footerNote: { flexDirection: 'row', alignItems: 'center', gap: 7, justifyContent: 'center', marginTop: 6, marginBottom: 10 },
   footerText: { fontSize: 11, color: Colors.textSecondary, fontStyle: 'italic' },

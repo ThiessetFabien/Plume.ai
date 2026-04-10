@@ -20,4 +20,3 @@ Pour toute nouvelle session ou après un crash, suis ces étapes dans l'ordre po
 1. Inspecter les logs Docker : `docker compose logs --tail 20`
 2. Vérifier l'état de Postgres : `docker exec plume_db pg_isready -U plume_admin`
 3. Vérifier l'API Backend : `curl -s http://localhost:8000/health`
-4. Vérifier la liste des terrains : `curl -s http://localhost:8000/api/v1/courts | python3 -m json.tool`

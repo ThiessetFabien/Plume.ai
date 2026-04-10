@@ -13,9 +13,17 @@ class Player(Base):
     age = Column(Integer)
     average_frequency = Column(Float, default=0.0)
 
-    # Relation : Un joueur peut avoir plusieurs présences (Data Scientist : Crucial pour les jointures)
+    # Relation : Un joueur peut avoir plusieurs présences
     attendances = relationship(
         "Attendance", back_populates="owner", cascade="all, delete-orphan"
+    )
+    # Relation : Un joueur peut avoir plusieurs messages de coaching
+    coaching_messages = relationship(
+        "CoachingMessage", back_populates="player", cascade="all, delete-orphan"
+    )
+    # Relation : Un joueur peut avoir plusieurs réservations
+    reservations = relationship(
+        "Reservation", back_populates="owner", cascade="all, delete-orphan"
     )
 
 
@@ -25,7 +33,7 @@ class Attendance(Base):
     id = Column(Integer, primary_key=True, index=True)
     date = Column(DateTime, default=datetime.datetime.utcnow)
     duration = Column(Integer)  # en minutes
-    player_id = Column(Integer, ForeignKey("players.id"))
+    player_id = Column(Integer, ForeignKey("players.id"), index=True)
 
     # Relation inverse : Une présence appartient à un joueur unique
     owner = relationship("Player", back_populates="attendances")
@@ -37,10 +45,10 @@ class CoachingMessage(Base):
     id = Column(Integer, primary_key=True, index=True)
     message = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    player_id = Column(Integer, ForeignKey("players.id"))
+    player_id = Column(Integer, ForeignKey("players.id"), index=True)
 
     # Relation : Un message appartient à un joueur
-    player = relationship("Player")
+    player = relationship("Player", back_populates="coaching_messages")
 
 
 class Reservation(Base):
@@ -48,9 +56,9 @@ class Reservation(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     court_number = Column(Integer, nullable=False)  # Terrains 1 à 5
-    start_time = Column(DateTime, nullable=False)
+    start_time = Column(DateTime, nullable=False, index=True)
     duration = Column(Integer, default=60)  # Minutes
-    player_id = Column(Integer, ForeignKey("players.id"))
+    player_id = Column(Integer, ForeignKey("players.id"), index=True)
 
     # Relation : Une réservation appartient à un joueur
-    owner = relationship("Player")
+    owner = relationship("Player", back_populates="reservations")

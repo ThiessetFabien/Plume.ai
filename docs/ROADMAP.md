@@ -86,11 +86,10 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 
 ---
 
-### PHASE 4 : Consolidation & Robustesse (Produit Durable)
-
-- [ ] **Tâche 4.1 (Configuration Metabase) :** Cette étape est manuelle. "Va sur `http://localhost:3000` (Metabase). Connecte-le à PostgreSQL. Crée un Camembert avec la répartition des âges, et une Courbe temporelle du remplissage des terrains."
-- [ ] **Tâche 4.2 (Authentification & Sécurité) :** Implémentation d'un système JWT/OAuth2 (ou session sécurisée) pour protéger les endpoints joueurs et réservations. Restriction du Middleware CORS.
-- [ ] **Tâche 4.3 (Migrations & Maintenance) :** Initialisation d'Alembic pour la base de données. Refactorisation de `create_all` vers un système de migration pérenne.
+## 🚧 En cours (Phase 4 — Consolidation & Robustesse) :
+*   [ ] **Tâche 4.1 (Configuration Metabase)** : Configuration manuelle des tableaux de bord.
+*   [ ] **Tâche 4.2 (Authentification & Sécurité)** : Implémentation d'un système JWT/OAuth2.
+*   [ ] **Tâche 4.3 (Inscription Mobile)** : Création d'un écran d'inscription (Onboarding) pour gérer la création de comptes avec profil de genre (pour le coaching).
 
 ### PHASE 5 : Sécurisation Mobile & Mise en Production 🛡️
 

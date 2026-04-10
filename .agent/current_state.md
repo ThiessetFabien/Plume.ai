@@ -13,9 +13,10 @@ Ce document sert de mémoire vive persistante pour l'agent IA. Il doit être mis
 *   [x] Audit technique et sécurité complété avec succès.
 *   [x] Interface unifiée avec Toasts et Empty States.
 *   [x] Identité du projet (License & Contributing).
+*   [x] **PERSONNALISATION IA** : Intégration du genre (M/F) et accord grammatical dans le coaching. ✅
 
 ## 🚧 En cours (Phase 4 — Consolidation & Robustesse) :
-*   [ ] **Tâche 4.1 (Configuration Metabase)** : Configuration manuelle des tableaux de bord.
+*   [ ] **Tâche 4.1 (Configuration Metabase)** : Création des tableaux de bord pour les gérants (Âges, Assiduité).
 *   [ ] **Tâche 4.2 (Authentification & Sécurité)** : Implémentation d'un système JWT/OAuth2.
 
 ## 📋 Prochaines étapes recommandées :

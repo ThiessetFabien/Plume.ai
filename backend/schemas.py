@@ -46,7 +46,7 @@ class PlayerBase(BaseModel):
 
 
 class PlayerCreate(PlayerBase):
-    pass
+    password: str = Field(..., min_length=8, description="Mot de passe (min 8 caractères)")
 
 
 class Player(PlayerBase):
@@ -54,6 +54,16 @@ class Player(PlayerBase):
     attendances: List[Attendance] = []
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# --- SCHÉMAS AUTH ---
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    email: Optional[str] = None
 
 
 # --- SCHÉMAS STATS ---

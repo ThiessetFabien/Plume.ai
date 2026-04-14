@@ -12,6 +12,10 @@ Remplace `[FEATURE]` par une description courte de ce que tu veux construire.
 
 ## Étapes
 
+0. **Git branching (Automatique)**
+   // turbo
+   > « En tant que Tech Lead, crée une branche `feat/[FEATURE_NAME]` à partir de `dev` avant de commencer. »
+
 1. **Product Owner** — Rédiger la user story
    > « En tant que PO, rédige une user story pour [FEATURE] avec ses critères d'acceptation. »
    > ⚠️ **Note Git** : La branche de travail `feat/[FEATURE_NAME]` doit impérativement partir de `dev`.

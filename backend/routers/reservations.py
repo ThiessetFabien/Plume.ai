@@ -5,15 +5,22 @@ from datetime import datetime
 
 import crud
 import schemas
+import models
 from database import get_db
+from dependencies import get_current_player
 
 router = APIRouter(prefix="/reservations", tags=["Réservations"])
 
 
 @router.post("/", response_model=schemas.Reservation)
 def create_reservation(
-    reservation: schemas.ReservationCreate, db: Session = Depends(get_db)
+    reservation: schemas.ReservationCreate, 
+    db: Session = Depends(get_db),
+    current_player: models.Player = Depends(get_current_player)
 ):
+    """Effectue une réservation pour le joueur connecté."""
+    # Sécurité IDOR : On force le player_id
+    reservation.player_id = current_player.id
     try:
         db_res = crud.create_reservation(db=db, reservation=reservation)
         return db_res
@@ -37,22 +44,35 @@ def read_reservations_by_day(date_str: str, db: Session = Depends(get_db)):
 
 
 @router.delete("/{reservation_id}", status_code=204)
-def delete_reservation(reservation_id: int, db: Session = Depends(get_db)):
+def delete_reservation(
+    reservation_id: int, 
+    db: Session = Depends(get_db),
+    current_player: models.Player = Depends(get_current_player)
+):
     """
     Supprime une réservation existante (Désinscription).
+    Vérifie que la réservation appartient au joueur connecté.
     """
-    success = crud.delete_reservation(db, reservation_id=reservation_id)
-    if not success:
+    # 1. Récupération pour vérification d'identité
+    db_res = db.query(models.Reservation).filter(models.Reservation.id == reservation_id).first()
+    if not db_res:
         raise HTTPException(status_code=404, detail="Réservation introuvable.")
+    
+    if db_res.player_id != current_player.id:
+        raise HTTPException(status_code=403, detail="Vous n'êtes pas autorisé à supprimer cette réservation.")
+
+    crud.delete_reservation(db, reservation_id=reservation_id)
     return None
 
 
-@router.delete("/player/{player_id}/day/{date_str}", status_code=204)
+@router.delete("/day/{date_str}", status_code=204)
 def delete_player_day_reservations(
-    player_id: int, date_str: str, db: Session = Depends(get_db)
+    date_str: str, 
+    db: Session = Depends(get_db),
+    current_player: models.Player = Depends(get_current_player)
 ):
     """
-    Supprime TOUTES les réservations d'un joueur pour un jour spécifique.
+    Supprime TOUTES les réservations du joueur CONNECTÉ pour un jour spécifique.
     Indispensable pour la permutation de jours (Quota 2 jours).
     """
     try:
@@ -62,5 +82,5 @@ def delete_player_day_reservations(
             status_code=400, detail="Format de date invalide (YYYY-MM-DD)."
         )
 
-    crud.delete_player_reservations_by_day(db, player_id=player_id, date=date_obj)
+    crud.delete_player_reservations_by_day(db, player_id=current_player.id, date=date_obj)
     return None

@@ -3,6 +3,7 @@ from sqlalchemy import func
 import models
 import schemas
 from datetime import datetime, timedelta
+from security import get_password_hash
 
 
 # --- LOGIQUE PLAYER ---
@@ -14,12 +15,17 @@ def get_players(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Player).offset(skip).limit(limit).all()
 
 
+def get_player_by_email(db: Session, email: str):
+    return db.query(models.Player).filter(models.Player.email == email).first()
+
+
 def create_player(db: Session, player: schemas.PlayerCreate):
     db_player = models.Player(
         full_name=player.full_name,
         email=player.email,
         age=player.age,
         average_frequency=player.average_frequency,
+        hashed_password=get_password_hash(player.password),
     )
     db.add(db_player)
     db.commit()

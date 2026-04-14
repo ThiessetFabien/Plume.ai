@@ -13,6 +13,7 @@ class Player(Base):
     age = Column(Integer)
     gender = Column(String, default="Autre")
     average_frequency = Column(Float, default=0.0)
+    hashed_password = Column(String, nullable=False)
 
     # Relation : Un joueur peut avoir plusieurs présences
     attendances = relationship(

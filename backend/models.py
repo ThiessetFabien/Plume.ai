@@ -84,3 +84,15 @@ class Reservation(Base):
 
     # Relation : Une réservation appartient à un joueur
     owner = relationship("Player", back_populates="reservations")
+
+class AuditLog(Base):
+    __tablename__ = "audit_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    target_player_id = Column(Integer, ForeignKey("players.id"), index=True)
+    user_email = Column(String, nullable=False)
+    action = Column(String, nullable=False)
+    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+
+    # Relation : Un log concerne un joueur
+    target = relationship("Player")

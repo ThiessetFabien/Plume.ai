@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -23,8 +23,18 @@ def create_player(player: schemas.PlayerCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/me", response_model=schemas.Player)
-def read_player_me(current_player: models.Player = Depends(get_current_player)):
+def read_player_me(
+    background_tasks: BackgroundTasks,
+    current_player: models.Player = Depends(get_current_player),
+    db: Session = Depends(get_db)
+):
     """Récupère le profil du joueur actuellement connecté."""
+    background_tasks.add_task(
+        crud.create_audit_log, 
+        target_id=current_player.id, 
+        user_email=current_player.email, 
+        action="READ_PROFILE"
+    )
     return current_player
 
 
@@ -55,10 +65,17 @@ def read_player_me(current_player: models.Player = Depends(get_current_player)):
 
 @router.get("/stats", response_model=schemas.PlayerStats)
 def read_player_stats(
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db), 
     current_player: models.Player = Depends(get_current_player)
 ):
     """Calcul des statistiques d'assiduité du joueur connecté."""
+    background_tasks.add_task(
+        crud.create_audit_log, 
+        target_id=current_player.id, 
+        user_email=current_player.email, 
+        action="READ_STATS"
+    )
     stats = crud.get_player_stats(db, player_id=current_player.id)
     if not stats:
         raise HTTPException(

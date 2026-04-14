@@ -154,3 +154,18 @@ class Reservation(ReservationBase):
     player_id: int
 
     model_config = ConfigDict(from_attributes=True)
+
+# --- SCHÉMAS AUDIT LOG ---
+class AuditLogBase(BaseModel):
+    target_player_id: int
+    user_email: str
+    action: str
+
+class AuditLogCreate(AuditLogBase):
+    pass
+
+class AuditLog(AuditLogBase):
+    id: int
+    timestamp: datetime
+
+    model_config = ConfigDict(from_attributes=True)

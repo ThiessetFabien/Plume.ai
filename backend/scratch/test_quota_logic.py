@@ -18,11 +18,23 @@ timestamp = int(datetime.now().timestamp())
 players = []
 for i in range(20):
     email = f"test_quota_{timestamp}_{i}@example.com"
-    p = crud.create_player(db, schemas.PlayerCreate(full_name=f"Quota Tester {i}", email=email))
+    p = crud.create_player(db, schemas.PlayerCreate(
+        full_name=f"Quota Tester {i}", 
+        email=email,
+        password="Plume_Placeholder_Secret"
+    ))
     players.append(p)
 
-extra_player = crud.create_player(db, schemas.PlayerCreate(full_name="Extra Tester", email=f"test_quota_extra_{timestamp}@example.com"))
-weekly_player = crud.create_player(db, schemas.PlayerCreate(full_name="Weekly Tester", email=f"test_weekly_{timestamp}@example.com"))
+extra_player = crud.create_player(db, schemas.PlayerCreate(
+    full_name="Extra Tester", 
+    email=f"test_quota_extra_{timestamp}@example.com",
+    password="Plume_Placeholder_Secret"
+))
+weekly_player = crud.create_player(db, schemas.PlayerCreate(
+    full_name="Weekly Tester", 
+    email=f"test_weekly_{timestamp}@example.com",
+    password="Plume_Placeholder_Secret"
+))
 
 # --- TEST 1 : Quota Global ---
 print("\n--- [TEST 1] QUOTA GLOBAL (20 PLACES PAR CRÉNEAU) ---")

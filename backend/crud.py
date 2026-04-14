@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
+from database import SessionLocal
 import models
 import schemas
 from datetime import datetime, timedelta
@@ -255,3 +256,22 @@ def delete_player_reservations_by_day(db: Session, player_id: int, date: datetim
     db.commit()
     return deleted_count > 0
 
+
+def create_audit_log(target_id: int, user_email: str, action: str):
+    """
+    Crée une entrée d'audit pour la traçabilité RGPD.
+    Ouvre sa propre session pour être compatible avec les BackgroundTasks.
+    """
+    db = SessionLocal()
+    try:
+        db_log = models.AuditLog(
+            target_player_id=target_id,
+            user_email=user_email,
+            action=action
+        )
+        db.add(db_log)
+        db.commit()
+        db.refresh(db_log)
+        return db_log
+    finally:
+        db.close()

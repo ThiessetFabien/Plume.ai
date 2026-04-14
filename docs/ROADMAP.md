@@ -86,21 +86,30 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 
 ---
 
-## 🚧 En cours (Phase 4 — Consolidation & Robustesse) :
-*   [ ] **Tâche 4.1 (Configuration Metabase)** : Configuration manuelle des tableaux de bord.
-*   [ ] **Tâche 4.2 (Authentification & Sécurité)** : Implémentation d'un système JWT/OAuth2.
-*   [ ] **Tâche 4.3 (Inscription Mobile)** : Création d'un écran d'inscription (Onboarding) pour gérer la création de comptes avec profil de genre (pour le coaching).
+### PHASE 4 : Consolidation & Robustesse ✅
 
-### PHASE 5 : Sécurisation Mobile & Mise en Production 🛡️
+- [x] **Tâche 4.1 (Configuration Metabase)** : Configuration manuelle des tableaux de bord. ✅
+- [x] **Tâche 4.2 (Authentification & Sécurité)** : Implémentation d'un système JWT/OAuth2 et sécurisation RGPD/OWASP. ✅
+- [x] **Tâche 4.3 (Inscription Mobile)** : Création de l'AuthContext et de l'écran d'inscription (Onboarding) pour gérer la création de comptes. ✅
+- [x] **Tâche 4.4 (Rate Limiting IA) :** Protéger l'API Groq contre les abus via un limiteur de débit côté backend. ✅
+- [x] **Tâche 4.5 (Conseils Dynamiques Mobile) :** Créer la banque `COACH_TIPS` et implémenter la sélection aléatoire au montage UI. ✅
+- [x] **Tâche 4.6 (User Acceptance Testing - UAT) :** Test complet du parcours utilisateur final sur un appareil mobile. ✅
+- [x] **Phase Tech Lead : Finalisation** : Commit & Merge vers `main` ✅
 
-- [x] **Tâche 5.1 (Rate Limiting) :** Protéger l'API Groq contre les abus via un limiteur de débit côté backend. ✅
-- [x] **Tâche 5.2 (User Acceptance Testing - UAT) :** Test complet du parcours utilisateur (Saisie -> Stats -> Historique -> Réservation) sur un appareil physique. ✅
-- [x] **Développement Mobile (Conseils Dynamiques)**
-    - [x] Créer la banque de données `COACH_TIPS` ✅
-    - [x] Implémenter la sélection aléatoire au montage ✅
-- [x] **Phase Tech Lead : Finalisation**
-    - [x] Commit & Merge vers `main` ✅
-- [ ] **Tâche 5.3 (Déploiement) :**
+---
+
+## 🚧 En cours (Phase 5 — Renforcement UX, Sécurité Mobile & CI/CD)
+
+- [ ] **Tâche 5.1 (UX Auth) :**
+    - [ ] Ajouter une fonctionnalité de récupération de la passphrase (mot de passe oublié).
+    - [ ] Ajouter un visuel temporaire (icône œil) pour afficher/masquer la passphrase lors du signin et login.
+- [ ] **Tâche 5.2 (Sécurité & Stockage) :**
+    - [ ] Ajouter un rate limiting (limiteur de requêtes) strict sur la route backend `/token`.
+    - [ ] Remplacer `AsyncStorage` par `SecureStore` (Expo) pour le stockage chiffré des JWT.
+- [ ] **Tâche 5.3 (Qualité & CI/CD) :**
+    - [ ] Ajouter des tests automatisés côté frontend (Jest / E2E avec Maestro ou Detox).
+    - [ ] Configurer les GitHub Actions (`pytest`, `flake8`) lors des pull requests vers `main`.
+- [ ] **Tâche 5.4 (Déploiement) :**
     - [ ] Configuration utilisateur non-root dans Docker.
     - [ ] Image de production optimisée (sans `--reload`).
     - [ ] Nettoyage des `console.log` et des secrets dans le bundle mobile.

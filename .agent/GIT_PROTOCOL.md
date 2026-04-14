@@ -20,6 +20,7 @@ Utiliser les **Conventional Commits** :
 - `fix(...)`: Correction de bug.
 - `chore(...)`: Maintenance (docs, build, etc.).
 - `refactor(...)`: Modification de code sans changement de comportement.
+- **⚠️ RÈGLE : Tous les messages de commit DOIVENT être rédigés en Anglais (mandatory).**
 
 ## 3. Workflow d'une tâche
 1. `git checkout dev`

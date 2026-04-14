@@ -1,7 +1,7 @@
 import random
 from datetime import datetime, timedelta
 from faker import Faker
-from database import SessionLocal
+from database import SessionLocal, engine
 import models
 from security import get_password_hash
 
@@ -11,6 +11,8 @@ fake = Faker("fr_FR")
 
 def seed_db():
     print("🚀 Démarrage du peuplement de la base de données Premium...")
+    # S’assurer que les tables existent (surtout après un DROP)
+    models.Base.metadata.create_all(bind=engine)
     db = SessionLocal()
 
     # Nettoyage GLOBAL (Standard QA : Repartir de zéro pour les tests)
@@ -60,7 +62,7 @@ def seed_db():
             age=p["age"],
             gender=p["gender"],
             average_frequency=p["freq"],
-            hashed_password=get_password_hash("Plume_2026!")
+            hashed_password=get_password_hash("Plume_Placeholder_Secret")
         )
         db.add(player)
         created_players.append(player)

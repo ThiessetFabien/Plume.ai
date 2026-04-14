@@ -107,10 +107,16 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 - [x] **Tâche 5.2 (Sécurité & Stockage) :** ✅
     - [x] Rate Limiting en mémoire RAM (`slowapi`) sur la route `/token` — max 5 tentatives/minute/IP.
     - [x] Chiffrement natif des JWT avec `SecureStore` (SDK Expo) — remplacement de `AsyncStorage`.
-- [ ] **Tâche 5.3 (Qualité & CI/CD) :**
+- [x] **Tâche 5.3 (Durcissement Sécurité — ANSSI) :**
+    - [ ] Implémenter le chiffrement au repos (Encryption at Rest) pour les champs sensibles (`age`, `gender`) via un module de cryptographie (ex: `cryptography.fernet`).
+    - [ ] Création d'un service de "Audit Log" pour tracer chaque accès en lecture aux données de profil (Exigence RGPD pour données sensibles).
+- [ ] **Tâche 5.4 (Qualité & CI/CD) :**
     - [ ] Socle de tests automatisés frontend avec `Jest`.
     - [ ] Exécution automatique des tests backend via GitHub Actions lors des PR vers `main`.
-- [ ] **Tâche 5.4 (Déploiement Lean) :**
+- [ ] **Tâche 5.5 (Conformité & Légal — RGPD/HDS-Ready) :**
+    - [ ] Audit de minimisation : s'assurer que seules les données nécessaires au coaching sont collectées.
+    - [ ] Modal de consentement explicite à l'inscription pour le traitement des données de bien-être physique.
+- [ ] **Tâche 5.6 (Déploiement Lean) :**
     - [ ] Lancement optimisé de l'image de production (sans le paramètre `--reload`).
     - [ ] Désactivation silencieuse des `console.log` dans le build final mobile.
 

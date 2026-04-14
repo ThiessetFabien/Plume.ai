@@ -1,7 +1,27 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, TypeDecorator
 from sqlalchemy.orm import relationship
 from database import Base
 import datetime
+from security_internal import encrypt_data, decrypt_data
+
+
+class EncryptedField(TypeDecorator):
+    """
+    Type personnalisé pour chiffrer/déchiffrer automatiquement les données sensibles.
+    ANSSI : Protection des données au repos.
+    """
+    impl = String(500)  # On prévoit large car Fernet augmente la taille
+
+    def process_bind_param(self, value, dialect):
+        if value is not None:
+            return encrypt_data(str(value))
+        return value
+
+    def process_result_value(self, value, dialect):
+        if value is not None:
+            return decrypt_data(value)
+        return value
+
 
 
 class Player(Base):
@@ -10,8 +30,8 @@ class Player(Base):
     id = Column(Integer, primary_key=True, index=True)
     full_name = Column(String, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
-    age = Column(Integer)
-    gender = Column(String, default="Autre")
+    age = Column(EncryptedField)
+    gender = Column(EncryptedField, default="Autre")
     average_frequency = Column(Float, default=0.0)
     hashed_password = Column(String, nullable=False)
 

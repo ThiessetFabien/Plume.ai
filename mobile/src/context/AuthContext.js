@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 import api from '../services/api';
 
 const AuthContext = createContext();
@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
 
   const checkToken = async () => {
     try {
-      const token = await AsyncStorage.getItem('userToken');
+      const token = await SecureStore.getItemAsync('userToken');
       if (token) {
         // Optionnel : On pourrait vérifier la validité du token ici via /players/me
         const response = await api.get('/players/me', {
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (e) {
       console.log('Erreur checkToken:', e);
-      await AsyncStorage.removeItem('userToken');
+      await SecureStore.deleteItemAsync('userToken');
     } finally {
       setIsLoading(false);
     }
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
       });
 
       const token = response.data.access_token;
-      await AsyncStorage.setItem('userToken', token);
+      await SecureStore.setItemAsync('userToken', token);
       
       // Récupérer les infos de l'utilisateur
       const userResponse = await api.get('/players/me', {
@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }) => {
   const signOut = async () => {
     setIsLoading(true);
     try {
-      await AsyncStorage.removeItem('userToken');
+      await SecureStore.deleteItemAsync('userToken');
       setUserToken(null);
       setUser(null);
     } catch (e) {

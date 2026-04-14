@@ -13,7 +13,8 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { Colors } from '../theme/colors';
-import { Sparkles, Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react-native';
+import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react-native';
+import RacketIcon from '../components/RacketIcon';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -41,7 +42,7 @@ export default function LoginScreen({ navigation }) {
       >
         <View style={styles.header}>
           <View style={styles.logoContainer}>
-            <Sparkles size={40} color={Colors.secondary} />
+            <RacketIcon size={44} color={Colors.secondary} />
           </View>
           <Text style={styles.title}>Plume<Text style={{color: Colors.secondary}}>.ai</Text></Text>
           <Text style={styles.subtitle}>Votre copilote badminton intelligent</Text>

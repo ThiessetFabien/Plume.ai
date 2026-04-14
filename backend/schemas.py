@@ -1,4 +1,5 @@
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, field_validator
+import re
 from datetime import datetime
 from typing import List, Optional
 
@@ -46,7 +47,25 @@ class PlayerBase(BaseModel):
 
 
 class PlayerCreate(PlayerBase):
-    password: str = Field(..., min_length=8, description="Mot de passe (min 8 caractères)")
+    password: str = Field(
+        ...,
+        min_length=12,
+        description="Mot de passe (min 12 chars, Maj, Min, Chiffre, Spécial — ANSSI)",
+    )
+
+    @field_validator("password")
+    @classmethod
+    def validate_password_complexity(cls, v: str) -> str:
+        """Validation manuelle ANSSI (le moteur regex Pydantic v2 ne supporte pas les look-aheads)."""
+        if not re.search(r"[A-Z]", v):
+            raise ValueError("Le mot de passe doit contenir au moins une majuscule.")
+        if not re.search(r"[a-z]", v):
+            raise ValueError("Le mot de passe doit contenir au moins une minuscule.")
+        if not re.search(r"[0-9]", v):
+            raise ValueError("Le mot de passe doit contenir au moins un chiffre.")
+        if not re.search(r"[@$!%*?&]", v):
+            raise ValueError("Le mot de passe doit contenir au moins un caractère spécial (@$!%*?&).")
+        return v
 
 
 class Player(PlayerBase):

@@ -24,6 +24,7 @@ def create_player(db: Session, player: schemas.PlayerCreate):
         full_name=player.full_name,
         email=player.email,
         age=player.age,
+        gender=player.gender,
         average_frequency=player.average_frequency,
         hashed_password=get_password_hash(player.password),
     )

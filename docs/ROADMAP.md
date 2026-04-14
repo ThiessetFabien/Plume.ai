@@ -104,9 +104,9 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 - [x] **Tâche 5.1 (UX Auth) :** ✅
     - [x] Visuel temporaire (icône œil) pour masquer/afficher la passphrase (Login/Register).
     - [x] Lien de récupération de mot de passe oublié *(Mock UI avec état de confirmation email).*
-- [ ] **Tâche 5.2 (Sécurité & Stockage) :**
-    - [ ] Rate Limiting en mémoire RAM (`slowapi`) sur la route `/token` *(Interdiction d'utiliser Redis).*
-    - [ ] Chiffrement natif des JWT en remplaçant `AsyncStorage` par `SecureStore` (SDK Expo).
+- [x] **Tâche 5.2 (Sécurité & Stockage) :** ✅
+    - [x] Rate Limiting en mémoire RAM (`slowapi`) sur la route `/token` — max 5 tentatives/minute/IP.
+    - [x] Chiffrement natif des JWT avec `SecureStore` (SDK Expo) — remplacement de `AsyncStorage`.
 - [ ] **Tâche 5.3 (Qualité & CI/CD) :**
     - [ ] Socle de tests automatisés frontend avec `Jest`.
     - [ ] Exécution automatique des tests backend via GitHub Actions lors des PR vers `main`.

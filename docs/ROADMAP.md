@@ -101,9 +101,9 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 ## 🚧 En cours (Phase 5 — Renforcement UX, Sécurité Mobile & CI/CD)
 > ⚠️ **RÈGLE MVP (No Over-Engineering)** : L'usage de Redis, SendGrid/SMTP, Redux ou d'orchestrateurs complexes est formellement interdit pour cette phase. La stack doit rester Lean (RAM locale, Context API, Mocks intelligents).
 
-- [ ] **Tâche 5.1 (UX Auth) :**
-    - [ ] Visuel temporaire (icône œil) pour masquer/afficher la passphrase (Login/Register).
-    - [ ] Lien de récupération de mot de passe oublié *(Implémentez une Mock UI uniquement pour prouver la maîtrise du flux, pas de configuration SendGrid).*
+- [x] **Tâche 5.1 (UX Auth) :** ✅
+    - [x] Visuel temporaire (icône œil) pour masquer/afficher la passphrase (Login/Register).
+    - [x] Lien de récupération de mot de passe oublié *(Mock UI avec état de confirmation email).*
 - [ ] **Tâche 5.2 (Sécurité & Stockage) :**
     - [ ] Rate Limiting en mémoire RAM (`slowapi`) sur la route `/token` *(Interdiction d'utiliser Redis).*
     - [ ] Chiffrement natif des JWT en remplaçant `AsyncStorage` par `SecureStore` (SDK Expo).

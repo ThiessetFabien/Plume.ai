@@ -29,10 +29,18 @@ Remplace `[FEATURE]` par une description courte de ce que tu veux construire.
 4. **Senior Dev Mobile** *(si écran concerné)*
    > « En tant que Senior Dev Mobile, implémente l'écran [FEATURE] dans mobile/. »
 
-5. **QA Agent** — Valider la feature
+5. **🔍 Code Review & Test (OBLIGATOIRE avant tout commit)**
+   > Vérifications systématiques **avant** de proposer le commit :
+   > - **Revue statique** : Lire les fichiers modifiés (`view_file`) et détecter les bugs potentiels (imports manquants, props incorrectes, SafeAreaView oublié, etc.)
+   > - **Vérification des routes** : S'assurer que tout nouvel écran est bien enregistré dans `App.js`
+   > - **Vérification des imports** : Tous les composants et icônes utilisés sont importés
+   > - **Compatibilité cross-platform** : SafeAreaView présent, comportement `KeyboardAvoidingView` adapté iOS/Android
+   > - ⚠️ **Si un bug est trouvé, le corriger AVANT de passer à l'étape QA**
+
+6. **QA Agent** — Valider la feature
    > « En tant que QA, propose 5 à 10 tests critiques pour couvrir [FEATURE] et ses cas limites. »
 
-6. **Tech Lead** — Release / Merge (Production)
+7. **Tech Lead** — Release / Merge (Production)
    > « En tant que Tech Lead, valide le merge de `feat/*` vers `dev`. »
    > 🚀 **Release** : La fusion de `dev` vers `main` est réservée aux livraisons officielles (fin de phase).
 
@@ -41,5 +49,7 @@ Remplace `[FEATURE]` par une description courte de ce que tu veux construire.
 ## Règles
 - Ne pas sauter l'étape Tech Lead — le plan écrit est obligatoire avant tout code.
 - **Gitflow** : On ne travaille **JAMAIS** directement sur `main`. On part de `dev`, on fusionne dans `dev`.
+- **Jamais de commit sans passer par l'étape 5 (Code Review & Test).**
 - Scope max : 1–3 fichiers par étape Dev.
 - Si une étape révèle un blocage, remonter au rôle précédent avant de continuer.
+

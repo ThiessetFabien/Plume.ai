@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { Colors } from '../theme/colors';
-import { User, Mail, Lock, Calendar, Activity, ArrowLeft } from 'lucide-react-native';
+import { User, Mail, Lock, Calendar, Activity, ArrowLeft, Eye, EyeOff } from 'lucide-react-native';
 
 export default function RegisterScreen({ navigation }) {
   const [fullName, setFullName] = useState('');
@@ -23,7 +23,8 @@ export default function RegisterScreen({ navigation }) {
   const [age, setAge] = useState('');
   const [frequency, setFrequency] = useState('');
   const [gender, setGender] = useState('M');
-  
+  const [showPassword, setShowPassword] = useState(false);
+
   const { signUp, isLoading } = useAuth();
 
   const handleRegister = async () => {
@@ -88,8 +89,13 @@ export default function RegisterScreen({ navigation }) {
                 placeholderTextColor={Colors.textSecondary}
                 value={password}
                 onChangeText={setPassword}
-                secureTextEntry
+                secureTextEntry={!showPassword}
               />
+              <TouchableOpacity onPress={() => setShowPassword(v => !v)} style={styles.eyeIcon}>
+                {showPassword
+                  ? <EyeOff size={20} color={Colors.textSecondary} />
+                  : <Eye size={20} color={Colors.textSecondary} />}
+              </TouchableOpacity>
             </View>
 
             <View style={styles.row}>
@@ -204,6 +210,10 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+  },
+  eyeIcon: {
+    padding: 4,
+    marginLeft: 8,
   },
   inputIcon: {
     marginRight: 12,

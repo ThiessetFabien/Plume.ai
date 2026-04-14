@@ -13,11 +13,12 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { Colors } from '../theme/colors';
-import { Sparkles, Mail, Lock, ArrowRight } from 'lucide-react-native';
+import { Sparkles, Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react-native';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const { signIn, isLoading } = useAuth();
 
   const handleLogin = async () => {
@@ -68,9 +69,21 @@ export default function LoginScreen({ navigation }) {
               placeholderTextColor={Colors.textSecondary}
               value={password}
               onChangeText={setPassword}
-              secureTextEntry
+              secureTextEntry={!showPassword}
             />
+            <TouchableOpacity onPress={() => setShowPassword(v => !v)} style={styles.eyeIcon}>
+              {showPassword
+                ? <EyeOff size={20} color={Colors.textSecondary} />
+                : <Eye size={20} color={Colors.textSecondary} />}
+            </TouchableOpacity>
           </View>
+
+          <TouchableOpacity
+            style={styles.forgotLink}
+            onPress={() => navigation.navigate('ForgotPassword')}
+          >
+            <Text style={styles.forgotText}>Mot de passe oublié ?</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity 
             style={styles.loginButton} 
@@ -171,6 +184,20 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     marginRight: 8,
+  },
+  eyeIcon: {
+    padding: 4,
+    marginLeft: 8,
+  },
+  forgotLink: {
+    alignSelf: 'flex-end',
+    marginBottom: 8,
+    marginTop: -4,
+  },
+  forgotText: {
+    color: Colors.secondary,
+    fontSize: 14,
+    fontWeight: '600',
   },
   footer: {
     flexDirection: 'row',

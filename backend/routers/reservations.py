@@ -29,7 +29,11 @@ def create_reservation(
 
 
 @router.get("/day/{date_str}", response_model=List[schemas.Reservation])
-def read_reservations_by_day(date_str: str, db: Session = Depends(get_db)):
+def read_reservations_by_day(
+    date_str: str, 
+    db: Session = Depends(get_db),
+    current_player: models.Player = Depends(get_current_player)
+):
     """
     Récupère toutes les réservations pour un jour donné (format YYYY-MM-DD).
     """

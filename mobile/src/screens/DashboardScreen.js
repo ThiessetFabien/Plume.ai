@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { Target as TargetIcon, Calendar as CalendarIcon, Sparkles as SparkleIcon, Clock as ClockIcon, MapPin, AlertTriangle } from 'lucide-react-native';
+import { Target as TargetIcon, Calendar as CalendarIcon, Sparkles as SparkleIcon, Clock as ClockIcon, MapPin, AlertTriangle, LogOut } from 'lucide-react-native';
 import api from '../services/api';
 import { Colors } from '../theme/colors';
 import StatCard from '../components/StatCard';
 import AttendanceChart from '../components/AttendanceChart';
 import CoachingCard from '../components/CoachingCard';
 import { EmptyState } from '../components/EmptyState';
+import { useAuth } from '../context/AuthContext';
 
 const COACH_TIPS = [
   "Une régularité de 2 séances par semaine augmente votre progression de 40%.",
@@ -21,6 +22,7 @@ const COACH_TIPS = [
 
 export default function DashboardScreen() {
   const navigation = useNavigation();
+  const { signOut } = useAuth();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [stats, setStats] = useState(null);
@@ -33,10 +35,10 @@ export default function DashboardScreen() {
     try {
       setLoading(true);
       setError(null);
-      const playersRes = await api.get('/players/');
-      if (playersRes.data && playersRes.data.length > 0) {
-        const statsRes = await api.get(`/players/${playersRes.data[0].id}/stats`);
-        setStats(statsRes.data);
+      const playersRes = await api.get('/players/me');
+      if (playersRes.data && playersRes.data.id) {
+        const statsRes = await api.get(`/players/stats`);
+        setStats({ ...statsRes.data, full_name: playersRes.data.full_name, id: playersRes.data.id });
       } else {
         throw new Error("Aucun joueur trouvé.");
       }
@@ -52,10 +54,9 @@ export default function DashboardScreen() {
   };
 
   const getAICoaching = async () => {
-    if (!stats || !stats.id) return;
     try {
       setIsThinking(true);
-      const res = await api.post(`/players/${stats.id}/copilot/`);
+      const res = await api.post(`/copilot/`);
       setCoachingMessage(res.data.message);
     } catch (err) {
       console.error(err);
@@ -128,6 +129,9 @@ export default function DashboardScreen() {
          <View style={styles.titleContainer}>
             <Text style={styles.title}>Plume<Text style={{ color: Colors.secondary }}>.ai</Text></Text>
          </View>
+         <TouchableOpacity onPress={signOut} style={{ marginLeft: 'auto', padding: 8 }}>
+            <LogOut size={22} color={Colors.textSecondary} />
+         </TouchableOpacity>
       </View>
 
       <View style={styles.welcome}>

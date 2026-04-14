@@ -16,11 +16,7 @@ export default function HistoryScreen() {
       setLoading(true);
       setError(null);
       
-      const playersRes = await api.get('/players/');
-      if (playersRes.data.length === 0) throw new Error("Aucun joueur trouvé.");
-      const playerId = playersRes.data[0].id;
-
-      const res = await api.get(`/players/${playerId}/coaching-history`);
+      const res = await api.get(`/copilot/history`);
       setHistory(res.data);
     } catch (err) {
       console.error(err);

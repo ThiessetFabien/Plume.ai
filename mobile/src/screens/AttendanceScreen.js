@@ -23,10 +23,10 @@ export default function AttendanceScreen() {
     try {
       setSubmitting(true);
       
-      // Récupérer le premier joueur (Mock Auth)
-      const playersRes = await api.get('/players/');
-      if (playersRes.data.length === 0) throw new Error("Joueur non trouvé");
-      const playerId = playersRes.data[0].id;
+      // Récupérer le joueur connecté
+      const playersRes = await api.get('/players/me');
+      if (!playersRes.data.id) throw new Error("Joueur non trouvé");
+      const playerId = playersRes.data.id;
 
       const payload = {
         player_id: playerId,

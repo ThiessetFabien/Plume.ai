@@ -28,16 +28,29 @@ def read_player_me(current_player: models.Player = Depends(get_current_player)):
     return current_player
 
 
-@router.get("/", response_model=List[schemas.Player])
-def read_players(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    players = crud.get_players(db, skip=skip, limit=limit)
-    return players
+# --- SECURITY (OWASP / RGPD) ---
+# Les routes d'énumération globale sont désactivées pour les utilisateurs standards.
+# TODO : Rétablir ces endpoints sous un router protégé réservé aux Administrateurs/Coachs.
 
-
-@router.get("/ghost", response_model=List[schemas.PlayerGhost], tags=["Intelligence"])
-def read_ghost_players(threshold_days: int = 21, db: Session = Depends(get_db)):
-    """Identification des joueurs n'ayant pas eu de séance depuis X jours."""
-    return crud.get_ghost_players(db, threshold_days=threshold_days)
+# @router.get("/", response_model=List[schemas.Player])
+# def read_players(
+#     skip: int = 0, 
+#     limit: int = 100, 
+#     db: Session = Depends(get_db),
+#     current_player: models.Player = Depends(get_current_player)
+# ):
+#     players = crud.get_players(db, skip=skip, limit=limit)
+#     return players
+# 
+# 
+# @router.get("/ghost", response_model=List[schemas.PlayerGhost], tags=["Intelligence"])
+# def read_ghost_players(
+#     threshold_days: int = 21, 
+#     db: Session = Depends(get_db),
+#     current_player: models.Player = Depends(get_current_player)
+# ):
+#     """Identification des joueurs n'ayant pas eu de séance depuis X jours."""
+#     return crud.get_ghost_players(db, threshold_days=threshold_days)
 
 
 @router.get("/stats", response_model=schemas.PlayerStats)

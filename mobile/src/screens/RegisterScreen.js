@@ -22,17 +22,18 @@ export default function RegisterScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [age, setAge] = useState('');
   const [frequency, setFrequency] = useState('');
+  const [gender, setGender] = useState('M');
   
   const { signUp, isLoading } = useAuth();
 
   const handleRegister = async () => {
-    if (!fullName || !email || !password || !age || !frequency) {
+    if (!fullName || !email || !password || !age || !frequency || !gender) {
       Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
       return;
     }
     
     try {
-      await signUp(fullName, email, password, age, frequency);
+      await signUp(fullName, email, password, age, frequency, gender);
     } catch (error) {
       Alert.alert('Erreur', 'Impossible de créer le compte. Vérifiez vos informations.');
     }
@@ -116,6 +117,24 @@ export default function RegisterScreen({ navigation }) {
               </View>
             </View>
 
+            {/* Sélecteur de Genre Premium */}
+            <View style={styles.genderContainer}>
+              <Text style={styles.genderLabel}>Sexe / Genre</Text>
+              <View style={styles.genderGroup}>
+                {['M', 'F', 'Autre'].map((g) => (
+                  <TouchableOpacity 
+                    key={g} 
+                    style={[styles.genderButton, gender === g && styles.genderButtonSelected]}
+                    onPress={() => setGender(g)}
+                  >
+                    <Text style={[styles.genderText, gender === g && styles.genderTextSelected]}>
+                      {g === 'M' ? 'Homme' : g === 'F' ? 'Femme' : 'Autre'}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
             <TouchableOpacity 
               style={styles.registerButton} 
               onPress={handleRegister}
@@ -194,6 +213,44 @@ const styles = StyleSheet.create({
     height: 56,
     color: Colors.text,
     fontSize: 16,
+  },
+  genderContainer: {
+    marginBottom: 16,
+  },
+  genderLabel: {
+    color: Colors.textSecondary,
+    fontSize: 14,
+    marginBottom: 8,
+    marginLeft: 4,
+    fontWeight: '600'
+  },
+  genderGroup: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: -4,
+  },
+  genderButton: {
+    flex: 1,
+    height: 48,
+    backgroundColor: Colors.surface,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 4,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  genderButtonSelected: {
+    backgroundColor: Colors.secondary,
+    borderColor: Colors.secondary,
+  },
+  genderText: {
+    color: Colors.textSecondary,
+    fontWeight: '600',
+  },
+  genderTextSelected: {
+    color: Colors.background,
+    fontWeight: '800',
   },
   registerButton: {
     backgroundColor: Colors.secondary,

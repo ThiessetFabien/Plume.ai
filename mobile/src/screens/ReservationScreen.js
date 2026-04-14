@@ -78,9 +78,9 @@ export default function ReservationScreen() {
   useEffect(() => {
     (async () => {
       try {
-        const playersRes = await api.get('/players/');
-        if (playersRes.data?.length) {
-          setCurrentPlayerId(playersRes.data[0].id);
+        const playersRes = await api.get('/players/me');
+        if (playersRes.data?.id) {
+          setCurrentPlayerId(playersRes.data.id);
         }
       } catch (err) {
         console.error("Failed to load player", err);

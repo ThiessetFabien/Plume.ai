@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from faker import Faker
 from database import SessionLocal
 import models
+from security import get_password_hash
 
 # Initialisation de Faker (en français pour plus de réalisme Portfolio)
 fake = Faker("fr_FR")
@@ -59,6 +60,7 @@ def seed_db():
             age=p["age"],
             gender=p["gender"],
             average_frequency=p["freq"],
+            hashed_password=get_password_hash("Plume_2026!")
         )
         db.add(player)
         created_players.append(player)

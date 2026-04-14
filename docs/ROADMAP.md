@@ -99,20 +99,20 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 ---
 
 ## 🚧 En cours (Phase 5 — Renforcement UX, Sécurité Mobile & CI/CD)
+> ⚠️ **RÈGLE MVP (No Over-Engineering)** : L'usage de Redis, SendGrid/SMTP, Redux ou d'orchestrateurs complexes est formellement interdit pour cette phase. La stack doit rester Lean (RAM locale, Context API, Mocks intelligents).
 
 - [ ] **Tâche 5.1 (UX Auth) :**
-    - [ ] Ajouter une fonctionnalité de récupération de la passphrase (mot de passe oublié).
-    - [ ] Ajouter un visuel temporaire (icône œil) pour afficher/masquer la passphrase lors du signin et login.
+    - [ ] Visuel temporaire (icône œil) pour masquer/afficher la passphrase (Login/Register).
+    - [ ] Lien de récupération de mot de passe oublié *(Implémentez une Mock UI uniquement pour prouver la maîtrise du flux, pas de configuration SendGrid).*
 - [ ] **Tâche 5.2 (Sécurité & Stockage) :**
-    - [ ] Ajouter un rate limiting (limiteur de requêtes) strict sur la route backend `/token`.
-    - [ ] Remplacer `AsyncStorage` par `SecureStore` (Expo) pour le stockage chiffré des JWT.
+    - [ ] Rate Limiting en mémoire RAM (`slowapi`) sur la route `/token` *(Interdiction d'utiliser Redis).*
+    - [ ] Chiffrement natif des JWT en remplaçant `AsyncStorage` par `SecureStore` (SDK Expo).
 - [ ] **Tâche 5.3 (Qualité & CI/CD) :**
-    - [ ] Ajouter des tests automatisés côté frontend (Jest / E2E avec Maestro ou Detox).
-    - [ ] Configurer les GitHub Actions (`pytest`, `flake8`) lors des pull requests vers `main`.
-- [ ] **Tâche 5.4 (Déploiement) :**
-    - [ ] Configuration utilisateur non-root dans Docker.
-    - [ ] Image de production optimisée (sans `--reload`).
-    - [ ] Nettoyage des `console.log` et des secrets dans le bundle mobile.
+    - [ ] Socle de tests automatisés frontend avec `Jest`.
+    - [ ] Exécution automatique des tests backend via GitHub Actions lors des PR vers `main`.
+- [ ] **Tâche 5.4 (Déploiement Lean) :**
+    - [ ] Lancement optimisé de l'image de production (sans le paramètre `--reload`).
+    - [ ] Désactivation silencieuse des `console.log` dans le build final mobile.
 
 ---
 

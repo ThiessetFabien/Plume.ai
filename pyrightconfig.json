@@ -1,0 +1,19 @@
+{
+  "include": [
+    "backend"
+  ],
+  "exclude": [
+    "mobile",
+    "**/node_modules",
+    "**/__pycache__"
+  ],
+  "extraPaths": [
+    "/home/fabien/Projets/Plume.ai/backend"
+  ],
+  "venvPath": "/home/fabien/Projets/Plume.ai",
+  "venv": "venv",
+  "reportMissingModuleSource": "none",
+  "typeCheckingMode": "basic",
+  "pythonVersion": "3.14",
+  "pythonPlatform": "Linux"
+}

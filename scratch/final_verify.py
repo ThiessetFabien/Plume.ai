@@ -10,7 +10,7 @@ def test_pydantic_validator():
     valid_data = {
         "full_name": "Fabien Thiesset",
         "email": "fabien@test.ai",
-        "password": "Plume_Placeholder_Secret",
+        "password": os.getenv("DEFAULT_PLAYER_PASSWORD", "Plume_ChangeMe_2026"),
         "age": 30,
         "average_frequency": 2.0,
         "gender": "M"

@@ -1,4 +1,5 @@
 import random
+import os
 from datetime import datetime, timedelta
 from faker import Faker
 from database import SessionLocal, engine
@@ -54,6 +55,9 @@ def seed_db():
         },  # L'Espoir
     ]
 
+    # Utilisation du mot de passe par défaut de l'environnement (ou fallback générique)
+    default_password = os.getenv("DEFAULT_PLAYER_PASSWORD", "Plume_ChangeMe_2026")
+    
     created_players = []
     for p in profiles:
         player = models.Player(
@@ -62,7 +66,7 @@ def seed_db():
             age=p["age"],
             gender=p["gender"],
             average_frequency=p["freq"],
-            hashed_password=get_password_hash("Plume_Placeholder_Secret")
+            hashed_password=get_password_hash(default_password)
         )
         db.add(player)
         created_players.append(player)

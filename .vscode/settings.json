@@ -1,0 +1,8 @@
+{
+  "python.analysis.extraPaths": [
+    "/home/fabien/Projets/Plume.ai/backend"
+  ],
+  "python.defaultInterpreterPath": "/home/fabien/Projets/Plume.ai/venv/bin/python",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.typeCheckingMode": "basic"
+}

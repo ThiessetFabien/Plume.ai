@@ -1,5 +1,6 @@
 import sys
 import os
+import requests
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "backend")))
 
 from pydantic import ValidationError
@@ -10,7 +11,7 @@ def test_pydantic_validator():
     valid_data = {
         "full_name": "Fabien Thiesset",
         "email": "fabien@test.ai",
-        "password": "Plume_Placeholder_Secret",
+        "password": os.getenv("DEFAULT_PLAYER_PASSWORD", "Plume_ChangeMe_2026"),
         "age": 30,
         "average_frequency": 2.0,
         "gender": "M"

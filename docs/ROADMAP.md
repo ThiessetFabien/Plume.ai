@@ -107,9 +107,9 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 - [x] **Tâche 5.2 (Sécurité & Stockage) :** ✅
     - [x] Rate Limiting en mémoire RAM (`slowapi`) sur la route `/token` — max 5 tentatives/minute/IP.
     - [x] Chiffrement natif des JWT avec `SecureStore` (SDK Expo) — remplacement de `AsyncStorage`.
-- [x] **Tâche 5.3 (Durcissement Sécurité — ANSSI) :**
-    - [ ] Implémenter le chiffrement au repos (Encryption at Rest) pour les champs sensibles (`age`, `gender`) via un module de cryptographie (ex: `cryptography.fernet`).
-    - [ ] Création d'un service de "Audit Log" pour tracer chaque accès en lecture aux données de profil (Exigence RGPD pour données sensibles).
+- [x] **Tâche 5.3 (Durcissement Sécurité — ANSSI) :** ✅
+    - [x] Implémenter le chiffrement au repos (Encryption at Rest) pour les champs sensibles (`age`, `gender`) via un module de cryptographie (ex: `cryptography.fernet`).
+    - [x] Création d'un service de "Audit Log" pour tracer chaque accès en lecture aux données de profil (Exigence RGPD pour données sensibles).
 - [ ] **Tâche 5.4 (Qualité & CI/CD) :**
     - [ ] Socle de tests automatisés frontend avec `Jest`.
     - [ ] Exécution automatique des tests backend via GitHub Actions lors des PR vers `main`.

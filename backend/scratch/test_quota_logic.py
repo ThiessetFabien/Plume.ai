@@ -21,19 +21,19 @@ for i in range(20):
     p = crud.create_player(db, schemas.PlayerCreate(
         full_name=f"Quota Tester {i}", 
         email=email,
-        password="Plume_Placeholder_Secret"
+        password=os.getenv("DEFAULT_PLAYER_PASSWORD", "Plume_ChangeMe_2026")
     ))
     players.append(p)
 
 extra_player = crud.create_player(db, schemas.PlayerCreate(
     full_name="Extra Tester", 
     email=f"test_quota_extra_{timestamp}@example.com",
-    password="Plume_Placeholder_Secret"
+    password=os.getenv("DEFAULT_PLAYER_PASSWORD", "Plume_ChangeMe_2026")
 ))
 weekly_player = crud.create_player(db, schemas.PlayerCreate(
     full_name="Weekly Tester", 
     email=f"test_weekly_{timestamp}@example.com",
-    password="Plume_Placeholder_Secret"
+        password=os.getenv("DEFAULT_PLAYER_PASSWORD", "Plume_ChangeMe_2026")
 ))
 
 # --- TEST 1 : Quota Global ---

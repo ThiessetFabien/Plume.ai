@@ -25,8 +25,7 @@ def create_player(player: schemas.PlayerCreate, db: Session = Depends(get_db)):
 @router.get("/me", response_model=schemas.Player)
 def read_player_me(
     background_tasks: BackgroundTasks,
-    current_player: models.Player = Depends(get_current_player),
-    db: Session = Depends(get_db)
+    current_player: models.Player = Depends(get_current_player)
 ):
     """Récupère le profil du joueur actuellement connecté."""
     background_tasks.add_task(

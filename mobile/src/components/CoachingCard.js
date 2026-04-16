@@ -24,7 +24,7 @@ const CoachingCard = ({ message, isLoading, onClose }) => {
           <Text style={styles.title}>Conseil Copilote</Text>
         </View>
         
-        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+        <TouchableOpacity onPress={onClose} style={styles.closeButton} testID="close-button">
           <X color={Colors.textSecondary} size={20} />
         </TouchableOpacity>
       </View>

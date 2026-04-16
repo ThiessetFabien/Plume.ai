@@ -129,7 +129,7 @@ export default function DashboardScreen() {
          <View style={styles.titleContainer}>
             <Text style={styles.title}>Plume<Text style={{ color: Colors.secondary }}>.ai</Text></Text>
          </View>
-         <TouchableOpacity onPress={signOut} style={{ marginLeft: 'auto', padding: 8 }}>
+         <TouchableOpacity onPress={signOut} style={{ marginLeft: 'auto', padding: 8 }} testID="logout-button">
             <LogOut size={22} color={Colors.textSecondary} />
          </TouchableOpacity>
       </View>

@@ -37,7 +37,10 @@ Remplace `[FEATURE]` par une description courte de ce que tu veux construire.
    > - **Compatibilité cross-platform** : SafeAreaView présent, comportement `KeyboardAvoidingView` adapté iOS/Android
    > - ⚠️ **Si un bug est trouvé, le corriger AVANT de passer à l'étape QA**
 
-6. **QA Agent** — Valider la feature
+6. **🛡️ Security Check (OWASP/HDS) (Automatique)**
+   > « En tant qu'Agent Sécurité, vérifie que [FEATURE] respecte le Zero Trust (Identity-first via `Depends(get_current_player)`), chiffre ses données sensibles "at rest" avec Fernet (si nécessaire), génère des traces d'audit (HDS) via `crud.create_audit_log` sur les accès/modifications, et filtre correctement toutes les entrées utilisateur via Pydantic. »
+
+7. **QA Agent** — Valider la feature
    > « En tant que QA, propose 5 à 10 tests critiques pour couvrir [FEATURE] et ses cas limites. »
 
 7. **Tech Lead** — Release / Merge (Production)

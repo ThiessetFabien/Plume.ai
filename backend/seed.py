@@ -17,6 +17,7 @@ def seed_db():
     db = SessionLocal()
 
     # Nettoyage GLOBAL (Standard QA : Repartir de zéro pour les tests)
+    db.query(models.AuditLog).delete()
     db.query(models.CoachingMessage).delete()
     db.query(models.Reservation).delete()
     db.query(models.Attendance).delete()

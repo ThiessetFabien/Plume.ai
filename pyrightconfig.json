@@ -1,16 +1,30 @@
 {
   "include": [
-    "backend"
+    "backend",
+    "scratch"
   ],
   "exclude": [
     "mobile",
     "**/node_modules",
     "**/__pycache__"
   ],
-  "extraPaths": [
-    "/home/fabien/Projets/Plume.ai/backend"
+  "executionEnvironments": [
+    {
+      "root": "backend",
+      "pythonVersion": "3.14",
+      "extraPaths": [
+        "."
+      ]
+    },
+    {
+      "root": "scratch",
+      "pythonVersion": "3.14",
+      "extraPaths": [
+        "../backend"
+      ]
+    }
   ],
-  "venvPath": "/home/fabien/Projets/Plume.ai",
+  "venvPath": ".",
   "venv": "venv",
   "reportMissingModuleSource": "none",
   "typeCheckingMode": "basic",

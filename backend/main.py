@@ -14,12 +14,15 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Configuration CORS
+# Configuration CORS (Durcissement OWASP/HDS)
+import os
+trusted_origins = os.getenv("TRUSTED_ORIGINS", "http://localhost:19006,http://localhost:3000").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=trusted_origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 

@@ -17,7 +17,7 @@ def test_audit_and_zero_trust():
         return False
 
     # 2. Obtenir un jeton d'accès pour Lucas
-    login_data = {"username": "lucas.tester@example.com", "password": os.getenv("DEFAULT_PLAYER_PASSWORD", "Safe_Lucas_2026!")}
+    login_data = {"username": "lucas.tester@example.com", "password": os.getenv("DEFAULT_PLAYER_PASSWORD")}
     response = requests.post(f"{BASE_URL}/token", data=login_data)
     if response.status_code != 200:
         print("❌ Impossible de se connecter en tant que Lucas.")

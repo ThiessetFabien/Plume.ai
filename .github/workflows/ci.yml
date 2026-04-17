@@ -35,16 +35,17 @@ jobs:
 
       - name: "🧪 Exécution des tests Pytest"
         env:
-          # Variables d'environnement mockées pour le CI (SQLite en mémoire, pas de Postgres)
+          # Variables mockées (pas de Postgres requis — SQLite in-memory)
           POSTGRES_USER: test
           POSTGRES_PASSWORD: test
           POSTGRES_DB: test
           POSTGRES_HOST: localhost
-          JWT_SECRET_KEY: "ci-test-jwt-secret-key-not-for-production"
-          PLUME_ENCRYPTION_KEY: "wbkCcEKaJVDOq6s5Y5i9Ydu-y7v-BVAjq_eSvBcVPco="
           TRUSTED_ORIGINS: "http://localhost:3000"
-          GROQ_API_KEY: "ci-placeholder-key"
+          GROQ_API_KEY: "ci-placeholder-groq-key"
           DATABASE_URL: "sqlite:///./test.db"
+          # Secrets injectés depuis GitHub Secrets (Settings > Secrets and variables > Actions)
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          PLUME_ENCRYPTION_KEY: ${{ secrets.PLUME_ENCRYPTION_KEY }}
         run: pytest tests/ -v --tb=short
 
   # ─────────────────────────────────────────────

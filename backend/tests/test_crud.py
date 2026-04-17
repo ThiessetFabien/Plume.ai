@@ -68,10 +68,10 @@ def test_create_player():
     assert "id" in data
 
 def test_read_players():
-    """Test 2: Récupération de la liste des joueurs."""
+    """Test 2: GET /players/ n'est pas une méthode autorisée (route POST uniquement — RGPD)."""
     response = client.get("/players/", headers=get_auth_header())
-    # L'énumération est désormais interdite pour sécuriser les données (RGPD)
-    assert response.status_code == 404
+    # La route POST /players/ existe mais pas GET — FastAPI retourne 405 Method Not Allowed
+    assert response.status_code == 405
 
 def test_read_player_by_id():
     """Test 3: Récupération d'un joueur par son ID (endpoint retiré ou non?). En fait la route /players/me remplace souvent l'ID en lecture seule. Mais au cas où."""

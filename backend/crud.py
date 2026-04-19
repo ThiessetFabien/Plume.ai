@@ -3,7 +3,7 @@ from sqlalchemy import func
 from database import SessionLocal
 import models
 import schemas
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from security import get_password_hash
 
 
@@ -62,7 +62,7 @@ def get_player_stats(db: Session, player_id: int, days: int = 30):
         return None
 
     # Calculer la date limite (ex: 30 jours glissants)
-    limit_date = datetime.utcnow() - timedelta(days=days)
+    limit_date = datetime.now(UTC).replace(tzinfo=None) - timedelta(days=days)
 
     # Filtrer les sessions d'entraînement sur cette période
     recent_attendances = (
@@ -125,7 +125,7 @@ def get_ghost_players(db: Session, threshold_days: int = 21):
     """
     Retourne les joueurs n'ayant pas eu de séance depuis X jours (ou jamais).
     """
-    threshold_date = datetime.utcnow() - timedelta(days=threshold_days)
+    threshold_date = datetime.now(UTC).replace(tzinfo=None) - timedelta(days=threshold_days)
 
     # Sous-requête pour obtenir la date de dernière présence par joueur
     # (Data Engineering : Optimisation par aggrégation)

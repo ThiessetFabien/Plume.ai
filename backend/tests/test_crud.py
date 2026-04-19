@@ -5,6 +5,7 @@ from sqlalchemy.pool import StaticPool
 
 import sys
 import os
+from datetime import datetime, UTC
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -85,9 +86,11 @@ def test_read_player_by_id():
 
 def test_create_attendance():
     """Test 4: Création d'une présence pour ce joueur."""
+    # On utilise la date du jour pour que les stats (30j glissants) soient vertes
+    today = datetime.now(UTC).replace(tzinfo=None).isoformat()
     response = client.post(
         "/attendances/",
-        json={"player_id": 1, "date": "2023-10-27T18:00:00", "duration": 120},
+        json={"player_id": 1, "date": today, "duration": 120},
         headers=get_auth_header()
     )
     assert response.status_code == 200
@@ -104,4 +107,4 @@ def test_read_player_stats():
     data = response.json()
     assert "total_attendances" in data
     assert "attendance_rate" in data
-    assert data["total_attendances"] == 0
+    assert data["total_attendances"] == 1

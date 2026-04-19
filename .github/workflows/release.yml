@@ -64,27 +64,34 @@ jobs:
           echo "main_version=$MAIN_VERSION" >> $GITHUB_OUTPUT
 
       - name: "✅ Comparaison des versions (doit être supérieure)"
+        env:
+          PR_VERSION: ${{ steps.version_check.outputs.pr_version }}
+          MAIN_VERSION: ${{ steps.main_version.outputs.main_version }}
         run: |
-          PR_VERSION="${{ steps.version_check.outputs.pr_version }}"
-          MAIN_VERSION="${{ steps.main_version.outputs.main_version }}"
+          echo "🔎 Comparaison des versions :"
+          echo "   → PR (dev) : $PR_VERSION"
+          echo "   → Main     : $MAIN_VERSION"
           
-          python3 << 'EOF'
-          import sys
+          python3 -c "
+          import sys, os
           from packaging.version import Version
+          pr = os.getenv('PR_VERSION')
+          main = os.getenv('MAIN_VERSION')
           
-          pr = "${{ steps.version_check.outputs.pr_version }}"
-          main = "${{ steps.main_version.outputs.main_version }}"
-
-          print(f"🔎 Comparaison : PR={pr} vs main={main}")
-
-          if Version(pr) <= Version(main):
-              print(f"")
-              print(f"❌ ÉCHEC : La version '{pr}' doit être STRICTEMENT SUPÉRIEURE à '{main}'.")
-              print(f"   → Mettez à jour la version dans backend/main.py avant de merger.")
+          if not pr or not main:
+              print('❌ ERREUR : Impossible de récupérer les numéros de version.')
               sys.exit(1)
-          else:
-              print(f"✅ Version validée : {pr} > {main}")
-          EOF
+              
+          v_pr = Version(pr)
+          v_main = Version(main)
+          
+          if v_pr <= v_main:
+              print(f'\n❌ ÉCHEC : La version {v_pr} n\'est pas supérieure à la version actuelle {v_main}.')
+              print('   → Action : Augmentez le numéro de version dans backend/main.py (ex: 1.1.0).')
+              sys.exit(1)
+          
+          print(f'\n✅ Version validée : {v_pr} > {v_main}')
+          "
 
 
 

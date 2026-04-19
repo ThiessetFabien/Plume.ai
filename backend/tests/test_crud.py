@@ -59,7 +59,8 @@ def test_create_player():
             "email": "qa@badminton.fr",
             "age": 30,
             "average_frequency": 2.0,
-            "password": "SecurePassword123!"
+            "password": "SecurePassword123!",
+            "rgpd_consent": True
         },
     )
     assert response.status_code == 200, response.text

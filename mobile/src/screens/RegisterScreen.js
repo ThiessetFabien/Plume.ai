@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { Colors } from '../theme/colors';
-import { User, Mail, Lock, Calendar, Activity, ArrowLeft, Eye, EyeOff } from 'lucide-react-native';
+import { User, Mail, Lock, Calendar, Activity, ArrowLeft, Eye, EyeOff, ShieldCheck } from 'lucide-react-native';
 
 export default function RegisterScreen({ navigation }) {
   const [fullName, setFullName] = useState('');
@@ -23,6 +23,7 @@ export default function RegisterScreen({ navigation }) {
   const [age, setAge] = useState('');
   const [frequency, setFrequency] = useState('');
   const [gender, setGender] = useState('M');
+  const [rgpdConsent, setRgpdConsent] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
 
@@ -48,6 +49,7 @@ export default function RegisterScreen({ navigation }) {
     if (!password) errors.password = 'Mot de passe requis';
     if (!age) errors.age = 'Âge requis';
     if (!frequency) errors.frequency = 'Fréquence requise';
+    if (!rgpdConsent) errors.rgpd = 'Vous devez accepter les conditions RGPD';
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
@@ -63,7 +65,7 @@ export default function RegisterScreen({ navigation }) {
     setFieldErrors({});
 
     try {
-      await signUp(fullName, email, password, age, frequency, gender);
+      await signUp(fullName, email, password, age, frequency, gender, rgpdConsent);
     } catch (error) {
       const detail = error?.response?.data?.detail;
       const msg = detail === 'Cet email est déjà enregistré.'
@@ -209,6 +211,22 @@ export default function RegisterScreen({ navigation }) {
                 ))}
               </View>
             </View>
+
+            {/* Tunnel de Consentement RGPD (HDS-Ready) */}
+            <TouchableOpacity 
+              style={[styles.rgpdContainer, fieldErrors.rgpd && styles.inputError]} 
+              onPress={() => setRgpdConsent(!rgpdConsent)}
+              activeOpacity={0.7}
+            >
+              <View style={[styles.checkbox, rgpdConsent && styles.checkboxChecked]}>
+                {rgpdConsent && <ShieldCheck size={14} color="white" />}
+              </View>
+              <Text style={styles.rgpdText}>
+                J'accepte que mes données (âge, sexe, entraînements) soient traitées pour personnaliser mon coaching IA.
+              </Text>
+            </TouchableOpacity>
+            {fieldErrors.rgpd && <Text style={styles.errorText}>{fieldErrors.rgpd}</Text>}
+
 
             <TouchableOpacity 
               style={styles.registerButton} 
@@ -365,6 +383,36 @@ const styles = StyleSheet.create({
   genderTextSelected: {
     color: Colors.background,
     fontWeight: '800',
+  },
+  rgpdContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.surface,
+    padding: 12,
+    borderRadius: 12,
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: Colors.textSecondary,
+    marginRight: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkboxChecked: {
+    backgroundColor: Colors.secondary,
+    borderColor: Colors.secondary,
+  },
+  rgpdText: {
+    flex: 1,
+    fontSize: 12,
+    color: Colors.textSecondary,
+    lineHeight: 16,
   },
   registerButton: {
     backgroundColor: Colors.secondary,

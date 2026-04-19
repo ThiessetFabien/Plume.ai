@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signUp = async (fullName, email, password, age, frequency, gender) => {
+  const signUp = async (fullName, email, password, age, frequency, gender, rgpdConsent) => {
     setIsLoading(true);
     try {
       await api.post('/players/', {
@@ -71,7 +71,8 @@ export const AuthProvider = ({ children }) => {
         password,
         age: parseInt(age),
         average_frequency: parseFloat(frequency),
-        gender: gender
+        gender: gender,
+        rgpd_consent: rgpdConsent
       });
       // Après inscription, on connecte directement
       await signIn(email, password);

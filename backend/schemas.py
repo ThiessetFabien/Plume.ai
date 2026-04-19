@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, ConfigDict, field_validator
 import re
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import List, Optional
 
 
@@ -44,6 +44,8 @@ class PlayerBase(BaseModel):
     average_frequency: Optional[float] = Field(
         0.0, ge=0.0, le=7.0, description="Fréquence d'entraînement hebdo (0-7)"
     )
+    rgpd_consent: bool = Field(False, description="Consentement explicite aux CGU/RGPD")
+    consent_date: Optional[datetime] = None
 
 
 class PlayerCreate(PlayerBase):
@@ -119,7 +121,7 @@ class CopilotMessage(BaseModel):
 
     message: str
     player_id: int
-    generated_at: datetime = Field(default_factory=datetime.utcnow)
+    generated_at: datetime = Field(default_factory=lambda: datetime.now(UTC).replace(tzinfo=None))
 
 
 class CoachingMessageBase(BaseModel):

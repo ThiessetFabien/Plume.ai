@@ -34,6 +34,10 @@ class Player(Base):
     gender = Column(EncryptedField, default="Autre")
     average_frequency = Column(Float, default=0.0)
     hashed_password = Column(String, nullable=False)
+    
+    # RGPD : Consentement explicite pour les données sensibles (HDS-Ready)
+    rgpd_consent = Column(Integer, default=0)  # 0: non, 1: oui (SQLite friendly)
+    consent_date = Column(DateTime)
 
     # Relation : Un joueur peut avoir plusieurs présences
     attendances = relationship(
@@ -53,7 +57,7 @@ class Attendance(Base):
     __tablename__ = "attendances"
 
     id = Column(Integer, primary_key=True, index=True)
-    date = Column(DateTime, default=datetime.datetime.utcnow)
+    date = Column(DateTime, default=lambda: datetime.datetime.now(datetime.UTC).replace(tzinfo=None))
     duration = Column(Integer)  # en minutes
     player_id = Column(Integer, ForeignKey("players.id"), index=True)
 
@@ -66,7 +70,7 @@ class CoachingMessage(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     message = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.UTC).replace(tzinfo=None))
     player_id = Column(Integer, ForeignKey("players.id"), index=True)
 
     # Relation : Un message appartient à un joueur
@@ -92,7 +96,7 @@ class AuditLog(Base):
     target_player_id = Column(Integer, ForeignKey("players.id"), index=True)
     user_email = Column(String, nullable=False)
     action = Column(String, nullable=False)
-    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+    timestamp = Column(DateTime, default=lambda: datetime.datetime.now(datetime.UTC).replace(tzinfo=None))
 
     # Relation : Un log concerne un joueur
     target = relationship("Player")

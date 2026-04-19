@@ -28,6 +28,8 @@ def create_player(db: Session, player: schemas.PlayerCreate):
         gender=player.gender,
         average_frequency=player.average_frequency,
         hashed_password=get_password_hash(player.password),
+        rgpd_consent=1 if player.rgpd_consent else 0,
+        consent_date=datetime.now(UTC).replace(tzinfo=None) if player.rgpd_consent else None,
     )
     db.add(db_player)
     db.commit()

@@ -9,19 +9,18 @@ Ce document sert de mémoire vive persistante pour l'agent IA. Il doit être mis
 
 ## ✅ Tâches Complétées :
 *   [x] Configuration Professionnelle Gitflow (`main` prod / `dev` integration).
-*   [x] Phase 3 Mobile 100% OK : Dashboard (LineChart Bézier), Réservation, Coaching IA.
+*   [x] Phase 3 Mobile 100% OK : Dashboard, Réservation, Coaching IA.
 *   [x] Audit technique et sécurité complété avec succès.
-*   [x] Interface unifiée avec Toasts et Empty States.
+*   [x] **CI/CD & QUALITÉ** : Pipeline GitHub Actions (Pytest + Jest) avec gate de versioning sémantique et secrets sécurisés. ✅
+*   [x] **STABILISATION** : Correction des avertissements de dépréciation (datetime, Node.js 24) et tests robustes. ✅
 *   [x] Identité du projet (License & Contributing).
-*   [x] **PERSONNALISATION IA** : Intégration du genre (M/F) et accord grammatical dans le coaching. ✅
 
-## 🚧 En cours (Phase 4 — Consolidation & Robustesse) :
-*   [ ] **Tâche 4.1 (Configuration Metabase)** : Création des tableaux de bord pour les gérants (Âges, Assiduité).
-*   [ ] **Tâche 4.2 (Authentification & Sécurité)** : Implémentation d'un système JWT/OAuth2.
+## 🚧 En cours (Phase 5 — Renforcement UX, Sécurité & CI/CD) :
+*   [ ] **Tâche 5.5 (Conformité & Légal)** : Audit de minimisation et modal de consentement explicite (RGPD/HDS-Ready).
 
 ## 📋 Prochaines étapes recommandées :
-1.  Si vous le souhaitez, initiez manuellement la configuration Metabase (Tâche 4.1).
-2.  Démarrer la Tâche 4.2 : Sécurisation API par session/JWT.
+1.  Démarrer la Tâche 5.5 : Implémenter le tunnel de consentement RGPD.
+2.  Finaliser la Phase 5.6 : Optimisation du déploiement Lean.
 
 ---
 

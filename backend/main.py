@@ -11,7 +11,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="Plume.ai API",
     description="Backend modulaire 10/10 pour la gestion d'un club de badminton et coaching IA.",
-    version="1.0.0",
+    version="1.1.0",
 )
 
 # Configuration CORS (Durcissement OWASP/HDS)

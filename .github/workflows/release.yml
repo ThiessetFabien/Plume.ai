@@ -52,11 +52,11 @@ jobs:
         run: |
           # Récupérer la version sur la branche main (pas la PR)
           git fetch origin main
-          MAIN_VERSION=$(git show origin/main:backend/main.py | python3 -c "
+          MAIN_VERSION=$(git show origin/main:backend/main.py 2>/dev/null | python3 -c "
           import re, sys
           content = sys.stdin.read()
           match = re.search(r'version=\"(\d+\.\d+\.\d+)\"', content)
-          # Si main n'a pas encore de version, on accepte n'importe quelle version valide
+          # Si main n'a pas encore de version ou de fichier, on part de 0.0.0
           print(match.group(1) if match else '0.0.0')
           ")
           

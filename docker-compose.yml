@@ -23,6 +23,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: plume_backend
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     restart: always
     env_file:
       - .env # Source de vérité unique pour les secrets (non versionné)

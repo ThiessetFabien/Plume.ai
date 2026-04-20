@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from typing import Any, Union
 from jose import jwt
 from passlib.context import CryptContext
@@ -9,8 +9,10 @@ load_dotenv()
 
 import bcrypt
 
-# Configuration de la sécurité
-SECRET_KEY = os.getenv("JWT_SECRET_KEY", "b3f0c2a8d1e9f4c5b3a2d1e0f9c8b7a6") # Fallback dev
+# Configuration de la sécurité (Strict Environment Variable management)
+SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+if not SECRET_KEY:
+    raise ValueError("JWT_SECRET_KEY n'est pas défini. La sécurité de l'application est compromise !")
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 43200)) # 30 jours par défaut
 
@@ -26,13 +28,15 @@ def get_password_hash(password: str) -> str:
     salt = bcrypt.gensalt()
     return bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
 
-def create_access_token(subject: Union[str, Any], expires_delta: timedelta = None) -> str:
+def create_access_token(subject: Union[str, Any], expires_delta: timedelta = None, extra_claims: dict = None) -> str:
     """Génère un jeton JWT signé."""
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(UTC).replace(tzinfo=None) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.now(UTC).replace(tzinfo=None) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     
     to_encode = {"exp": expire, "sub": str(subject)}
+    if extra_claims:
+        to_encode.update(extra_claims)
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, FlatList, ActivityIndicator, RefreshControl } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Sparkles, Calendar, MessageSquareOff } from 'lucide-react-native';
 import api from '../services/api';
 import { Colors } from '../theme/colors';
 import { EmptyState } from '../components/EmptyState';
 
 export default function HistoryScreen() {
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [history, setHistory] = useState([]);
@@ -81,8 +83,8 @@ export default function HistoryScreen() {
             icon={MessageSquareOff}
             title="Aucun conseil"
             description="Tes conseils personnalisés apparaîtront ici dès que tu auras enregistré des séances."
-            actionLabel="S'entraîner maintenant"
-            onAction={() => fetchHistory()}
+            actionLabel="Réserver un terrain"
+            onAction={() => navigation.navigate('Reservation')}
           />
         }
       />

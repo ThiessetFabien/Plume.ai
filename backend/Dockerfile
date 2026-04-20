@@ -17,4 +17,5 @@ COPY . .
 EXPOSE 8000
 
 # Commande de lancement avec hot-reload (crucial pour le confort de dev)
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Commande de lancement (Prod par défaut, surchargeable via Railway/Docker)
+CMD ["gunicorn", "-c", "gunicorn_conf.py", "main:app"]

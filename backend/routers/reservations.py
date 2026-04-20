@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import datetime
@@ -15,10 +15,17 @@ router = APIRouter(prefix="/reservations", tags=["Réservations"])
 @router.post("/", response_model=schemas.Reservation)
 def create_reservation(
     reservation: schemas.ReservationCreate, 
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_player: models.Player = Depends(get_current_player)
 ):
     """Effectue une réservation pour le joueur connecté."""
+    background_tasks.add_task(
+        crud.create_audit_log, 
+        target_id=current_player.id, 
+        user_email=current_player.email, 
+        action="CREATE_RESERVATION"
+    )
     # Sécurité IDOR : On force le player_id
     reservation.player_id = current_player.id
     try:
@@ -50,6 +57,7 @@ def read_reservations_by_day(
 @router.delete("/{reservation_id}", status_code=204)
 def delete_reservation(
     reservation_id: int, 
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_player: models.Player = Depends(get_current_player)
 ):
@@ -65,6 +73,12 @@ def delete_reservation(
     if db_res.player_id != current_player.id:
         raise HTTPException(status_code=403, detail="Vous n'êtes pas autorisé à supprimer cette réservation.")
 
+    background_tasks.add_task(
+        crud.create_audit_log, 
+        target_id=current_player.id, 
+        user_email=current_player.email, 
+        action="DELETE_RESERVATION"
+    )
     crud.delete_reservation(db, reservation_id=reservation_id)
     return None
 
@@ -72,6 +86,7 @@ def delete_reservation(
 @router.delete("/day/{date_str}", status_code=204)
 def delete_player_day_reservations(
     date_str: str, 
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_player: models.Player = Depends(get_current_player)
 ):
@@ -87,4 +102,10 @@ def delete_player_day_reservations(
         )
 
     crud.delete_player_reservations_by_day(db, player_id=current_player.id, date=date_obj)
+    background_tasks.add_task(
+        crud.create_audit_log, 
+        target_id=current_player.id, 
+        user_email=current_player.email, 
+        action=f"DELETE_DAY_RESERVATIONS_{date_str}"
+    )
     return None

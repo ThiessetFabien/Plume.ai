@@ -101,18 +101,38 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 ## 🚧 En cours (Phase 5 — Renforcement UX, Sécurité Mobile & CI/CD)
 > ⚠️ **RÈGLE MVP (No Over-Engineering)** : L'usage de Redis, SendGrid/SMTP, Redux ou d'orchestrateurs complexes est formellement interdit pour cette phase. La stack doit rester Lean (RAM locale, Context API, Mocks intelligents).
 
-- [ ] **Tâche 5.1 (UX Auth) :**
-    - [ ] Visuel temporaire (icône œil) pour masquer/afficher la passphrase (Login/Register).
-    - [ ] Lien de récupération de mot de passe oublié *(Implémentez une Mock UI uniquement pour prouver la maîtrise du flux, pas de configuration SendGrid).*
-- [ ] **Tâche 5.2 (Sécurité & Stockage) :**
-    - [ ] Rate Limiting en mémoire RAM (`slowapi`) sur la route `/token` *(Interdiction d'utiliser Redis).*
-    - [ ] Chiffrement natif des JWT en remplaçant `AsyncStorage` par `SecureStore` (SDK Expo).
-- [ ] **Tâche 5.3 (Qualité & CI/CD) :**
-    - [ ] Socle de tests automatisés frontend avec `Jest`.
-    - [ ] Exécution automatique des tests backend via GitHub Actions lors des PR vers `main`.
-- [ ] **Tâche 5.4 (Déploiement Lean) :**
+- [x] **Tâche 5.1 (UX Auth) :** ✅
+    - [x] Visuel temporaire (icône œil) pour masquer/afficher la passphrase (Login/Register).
+    - [x] Lien de récupération de mot de passe oublié *(Mock UI avec état de confirmation email).*
+- [x] **Tâche 5.2 (Sécurité & Stockage) :** ✅
+    - [x] Rate Limiting en mémoire RAM (`slowapi`) sur la route `/token` — max 5 tentatives/minute/IP.
+    - [x] Chiffrement natif des JWT avec `SecureStore` (SDK Expo) — remplacement de `AsyncStorage`.
+- [x] **Tâche 5.3 (Durcissement Sécurité — ANSSI) :** ✅
+    - [x] Implémenter le chiffrement au repos (Encryption at Rest) pour les champs sensibles (`age`, `gender`) via un module de cryptographie (ex: `cryptography.fernet`).
+    - [x] Création d'un service de "Audit Log" pour tracer chaque accès en lecture aux données de profil (Exigence RGPD pour données sensibles).
+- [x] **Tâche 5.4 (Qualité & CI/CD) :** ✅
+    - [x] Socle de tests automatisés frontend avec `Jest`.
+    - [x] Exécution automatique des tests backend via GitHub Actions lors des PR vers `main`.
+- [x] **Tâche 5.5 (Conformité & Sécurité — RGPD/Hardening) :** ✅
+    - [x] Audit de minimisation : s'assurer que seules les données nécessaires au coaching sont collectées.
+    - [x] Modal de consentement explicite à l'inscription (HDS-Ready).
+    - [x] **Hardening** : Retrait de tous les secrets par défaut (Zero Fallback Policy).
+    - [x] **Pre-commit** : Intégration de `ggshield` pour prévenir les fuites de secrets.
+- [ ] **Tâche 5.6 (Déploiement Lean) :**
     - [ ] Lancement optimisé de l'image de production (sans le paramètre `--reload`).
+    - [ ] Configuration d'un environnement de staging/prod (ex: Railway, Render ou Fly.io).
     - [ ] Désactivation silencieuse des `console.log` dans le build final mobile.
+- [x] **Tâche 5.7 (Espace Bureau — Pilotage In-App) :** ✅
+    - [x] **RBAC** : Implémenter la gestion des rôles (`player` / `admin`) au niveau du modèle et des JWT.
+    - [x] **Admin API** : Créer des endpoints sécurisés pour les statistiques globales du club.
+    - [x] **UI Admin** : Créer un écran "Tableau de Bord Bureau" réservé aux administrateurs.
+    - [x] **Analyse d'Assiduité** : Indicateurs de pics (jours et heures) affichés en Progress Bars horizontales.
+    - [x] **Horaires Lundi** : Mis à jour de 17h00 à 17h30 (seed.py + ReservationScreen).
+- [x] **Tâche 5.8 (UX Empty States) :** ✅
+    - [x] Lier le bouton de l'état vide de l'historique de coaching à la réservation de terrain au lieu d'une simple actualisation.
+- [x] **Tâche 5.9 (UX Calendrier Réservation) :** ✅
+    - [x] Refactoriser le sélecteur de dates en grille (`flexWrap`, 4 colonnes) avec scroll vertical.
+    - [x] Générer 60 jours de dates, tronqués au multiple de 4 pour des lignes complètes.
 
 ---
 

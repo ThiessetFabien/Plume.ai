@@ -95,9 +95,22 @@ def seed_db():
             # Assiduité aléatoire dans le passé
             days_ago = random.randint(0, 30)
             base_date = end_date - timedelta(days=days_ago)
-            # Heure aléatoire entre 17h et 21h (créneaux typiques club)
-            hour = random.choice([17, 18, 19, 20, 21])
-            minute = random.choice([0, 15, 30])
+            
+            # S'assurer que la date est un jour d'ouverture (Lundi=0, Jeudi=3, Samedi=5)
+            while base_date.weekday() not in [0, 3, 5]:
+                base_date -= timedelta(days=1)
+            
+            # Définir l'heure selon le jour
+            if base_date.weekday() == 0:
+                hour = random.choice([17, 18, 19, 20])
+                minute = 30
+            elif base_date.weekday() == 3:
+                hour = random.choice([19, 20, 21])
+                minute = 0
+            else: # Samedi
+                hour = random.choice([9, 10, 11])
+                minute = 0
+                
             attendance_date = base_date.replace(hour=hour, minute=minute, second=0, microsecond=0)
             
             duration = random.choice([60, 90, 120])
@@ -115,7 +128,7 @@ def seed_db():
     
     # Créneaux autorisés
     auth_schedules = {
-        0: ["17:00", "18:00", "19:00", "20:00", "21:00"], # Lundi = 0 en Python weekday()
+        0: ["17:30", "18:30", "19:30", "20:30"],            # Lundi = 0 en Python weekday()
         3: ["19:00", "20:00", "21:00"],                   # Jeudi = 3
         5: ["09:00", "10:00", "11:00"],                   # Samedi = 5
     }

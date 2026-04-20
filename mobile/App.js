@@ -15,6 +15,7 @@ import DashboardScreen from './src/screens/DashboardScreen';
 import HistoryScreen from './src/screens/HistoryScreen';
 import ReservationScreen from './src/screens/ReservationScreen';
 import AttendanceScreen from './src/screens/AttendanceScreen';
+import AdminDashboardScreen from './src/screens/AdminDashboardScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -92,6 +93,11 @@ const Navigation = () => {
             name="Attendance" 
             component={AttendanceScreen} 
             options={{ title: 'Déclarer une séance' }}
+          />
+          <Stack.Screen 
+            name="AdminDashboard" 
+            component={AdminDashboardScreen} 
+            options={{ title: 'Administration' }}
           />
         </Stack.Group>
       )}

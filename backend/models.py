@@ -41,6 +41,7 @@ class Player(Base):
     gender = Column(EncryptedField, default="Autre")
     average_frequency = Column(EncryptedField, default="0.0")
     hashed_password = Column(String, nullable=False)
+    role = Column(String, default="player")  # RBAC : player ou admin
     
     # RGPD : Consentement explicite pour les données sensibles (HDS-Ready)
     rgpd_consent = Column(Integer, default=0)  # 0: non, 1: oui (SQLite friendly)

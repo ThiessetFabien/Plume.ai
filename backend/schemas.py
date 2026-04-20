@@ -46,6 +46,7 @@ class PlayerBase(BaseModel):
     )
     rgpd_consent: bool = Field(False, description="Consentement explicite aux CGU/RGPD")
     consent_date: Optional[datetime] = None
+    role: str = Field("player", description="Rôle RBAC (player/admin)")
 
 
 class PlayerCreate(PlayerBase):
@@ -85,6 +86,7 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+    role: Optional[str] = None
 
 
 # --- SCHÉMAS STATS ---

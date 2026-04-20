@@ -28,7 +28,7 @@ def get_password_hash(password: str) -> str:
     salt = bcrypt.gensalt()
     return bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
 
-def create_access_token(subject: Union[str, Any], expires_delta: timedelta = None) -> str:
+def create_access_token(subject: Union[str, Any], expires_delta: timedelta = None, extra_claims: dict = None) -> str:
     """Génère un jeton JWT signé."""
     if expires_delta:
         expire = datetime.now(UTC).replace(tzinfo=None) + expires_delta
@@ -36,5 +36,7 @@ def create_access_token(subject: Union[str, Any], expires_delta: timedelta = Non
         expire = datetime.now(UTC).replace(tzinfo=None) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     
     to_encode = {"exp": expire, "sub": str(subject)}
+    if extra_claims:
+        to_encode.update(extra_claims)
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt

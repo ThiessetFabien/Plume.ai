@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { Target as TargetIcon, Calendar as CalendarIcon, Sparkles as SparkleIcon, Clock as ClockIcon, MapPin, AlertTriangle, LogOut } from 'lucide-react-native';
+import { Target as TargetIcon, Calendar as CalendarIcon, Sparkles as SparkleIcon, Clock as ClockIcon, MapPin, AlertTriangle, LogOut, BarChart3 } from 'lucide-react-native';
 import api from '../services/api';
 import { Colors } from '../theme/colors';
 import StatCard from '../components/StatCard';
@@ -22,7 +22,7 @@ const COACH_TIPS = [
 
 export default function DashboardScreen() {
   const navigation = useNavigation();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [stats, setStats] = useState(null);
@@ -174,7 +174,7 @@ export default function DashboardScreen() {
           disabled={Boolean(isThinking)}
         >
           <SparkleIcon color={Colors.background} size={20} />
-          <Text style={styles.aiButtonText}>Nouveau Conseil</Text>
+          <Text style={styles.aiButtonText}>Mon Bilan IA</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
@@ -190,6 +190,15 @@ export default function DashboardScreen() {
         >
           <ClockIcon color={Colors.textSecondary} size={24} />
         </TouchableOpacity>
+        
+        {user?.role === 'admin' && (
+          <TouchableOpacity 
+            style={[styles.historyBtn, { marginLeft: 'auto', backgroundColor: '#8b5cf620' }]} 
+            onPress={() => navigation.navigate('AdminDashboard')}
+          >
+            <BarChart3 color="#8b5cf6" size={24} />
+          </TouchableOpacity>
+        )}
       </View>
 
 

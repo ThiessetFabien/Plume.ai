@@ -122,10 +122,12 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
     - [ ] Lancement optimisé de l'image de production (sans le paramètre `--reload`).
     - [ ] Configuration d'un environnement de staging/prod (ex: Railway, Render ou Fly.io).
     - [ ] Désactivation silencieuse des `console.log` dans le build final mobile.
-- [ ] **Tâche 5.7 (Espace Bureau — Pilotage In-App) :** 🆕
-    - [ ] **RBAC** : Implémenter la gestion des rôles (`player` / `admin`) au niveau du modèle et des JWT.
-    - [ ] **Admin API** : Créer des endpoints sécurisés pour les statistiques globales du club.
-    - [ ] **UI Admin** : Créer un écran "Tableau de Bord Bureau" réservé aux administrateurs.
+- [x] **Tâche 5.7 (Espace Bureau — Pilotage In-App) :** ✅
+    - [x] **RBAC** : Implémenter la gestion des rôles (`player` / `admin`) au niveau du modèle et des JWT.
+    - [x] **Admin API** : Créer des endpoints sécurisés pour les statistiques globales du club.
+    - [x] **UI Admin** : Créer un écran "Tableau de Bord Bureau" réservé aux administrateurs.
+- [x] **Tâche 5.8 (UX Empty States) :** ✅
+    - [x] Lier le bouton de l'état vide de l'historique de coaching à la réservation de terrain au lieu d'une simple actualisation.
 
 ---
 

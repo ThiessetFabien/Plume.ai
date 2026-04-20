@@ -177,12 +177,6 @@ export default function DashboardScreen() {
           <Text style={styles.aiButtonText}>Mon Bilan IA</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={styles.addSessionBtn} 
-          onPress={() => navigation.navigate('Attendance')}
-        >
-          <TargetIcon color={Colors.text} size={24} />
-        </TouchableOpacity>
 
         <TouchableOpacity 
           style={styles.historyBtn} 
@@ -226,7 +220,6 @@ const styles = StyleSheet.create({
   actionRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginVertical: 10 },
   aiButton: { flex: 1, backgroundColor: Colors.secondary, padding: 18, borderRadius: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 },
   aiButtonText: { color: Colors.background, fontWeight: '800', fontSize: 16 },
-  addSessionBtn: { backgroundColor: Colors.primary, padding: 18, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
   historyBtn: { backgroundColor: Colors.surface, padding: 18, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
   infoCard: { backgroundColor: Colors.primary + '15', padding: 18, borderRadius: 20, borderWidth: 1, borderColor: Colors.primary + '30', marginVertical: 10, marginBottom: 30 },
   reserveBanner: { backgroundColor: Colors.surface, padding: 18, borderRadius: 24, flexDirection: 'row', alignItems: 'center', marginVertical: 8, borderLeftWidth: 6, borderLeftColor: Colors.primary },

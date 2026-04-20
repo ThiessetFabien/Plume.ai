@@ -100,10 +100,9 @@ class AuditLog(Base):
     __tablename__ = "audit_logs"
 
     id = Column(Integer, primary_key=True, index=True)
-    target_player_id = Column(Integer, ForeignKey("players.id"), index=True)
+    target_player_id = Column(Integer, index=True, nullable=True)
     user_email = Column(String, nullable=False)
     action = Column(String, nullable=False)
     timestamp = Column(DateTime, default=lambda: datetime.datetime.now(datetime.UTC).replace(tzinfo=None))
 
-    # Relation : Un log concerne un joueur
-    target = relationship("Player")
+

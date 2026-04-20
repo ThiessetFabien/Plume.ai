@@ -2,5 +2,8 @@
   "python.defaultInterpreterPath": "${workspaceFolder}/venv/bin/python",
   "python.analysis.autoImportCompletions": true,
   "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.extraPaths": [
+    "./backend"
+  ],
   "python.terminal.activateEnvironment": true
 }

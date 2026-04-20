@@ -29,7 +29,8 @@
     }
   ],
   "extraPaths": [
-    "./backend"
+    "./backend",
+    "."
   ],
   "reportMissingImports": "warning",
   "typeCheckingMode": "basic",

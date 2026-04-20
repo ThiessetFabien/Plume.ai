@@ -1,4 +1,4 @@
-// Importation supprimée (intégré dans @testing-library/react-native v12.4+)
+import '@testing-library/jest-native/extend-expect';
 
 // Mocker Expo Secure Store
 jest.mock('expo-secure-store', () => ({

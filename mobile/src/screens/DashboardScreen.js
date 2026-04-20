@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { Target as TargetIcon, Calendar as CalendarIcon, Sparkles as SparkleIcon, Clock as ClockIcon, MapPin, AlertTriangle, LogOut } from 'lucide-react-native';
+import { Target as TargetIcon, Calendar as CalendarIcon, Sparkles as SparkleIcon, Clock as ClockIcon, MapPin, AlertTriangle, LogOut, BarChart3 } from 'lucide-react-native';
 import api from '../services/api';
 import { Colors } from '../theme/colors';
 import StatCard from '../components/StatCard';
@@ -22,7 +22,7 @@ const COACH_TIPS = [
 
 export default function DashboardScreen() {
   const navigation = useNavigation();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [stats, setStats] = useState(null);
@@ -129,7 +129,7 @@ export default function DashboardScreen() {
          <View style={styles.titleContainer}>
             <Text style={styles.title}>Plume<Text style={{ color: Colors.secondary }}>.ai</Text></Text>
          </View>
-         <TouchableOpacity onPress={signOut} style={{ marginLeft: 'auto', padding: 8 }}>
+         <TouchableOpacity onPress={signOut} style={{ marginLeft: 'auto', padding: 8 }} testID="logout-button">
             <LogOut size={22} color={Colors.textSecondary} />
          </TouchableOpacity>
       </View>
@@ -174,15 +174,9 @@ export default function DashboardScreen() {
           disabled={Boolean(isThinking)}
         >
           <SparkleIcon color={Colors.background} size={20} />
-          <Text style={styles.aiButtonText}>Nouveau Conseil</Text>
+          <Text style={styles.aiButtonText}>Mon Bilan IA</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={styles.addSessionBtn} 
-          onPress={() => navigation.navigate('Attendance')}
-        >
-          <TargetIcon color={Colors.text} size={24} />
-        </TouchableOpacity>
 
         <TouchableOpacity 
           style={styles.historyBtn} 
@@ -190,6 +184,15 @@ export default function DashboardScreen() {
         >
           <ClockIcon color={Colors.textSecondary} size={24} />
         </TouchableOpacity>
+        
+        {user?.role === 'admin' && (
+          <TouchableOpacity 
+            style={[styles.historyBtn, { marginLeft: 'auto', backgroundColor: '#8b5cf620' }]} 
+            onPress={() => navigation.navigate('AdminDashboard')}
+          >
+            <BarChart3 color="#8b5cf6" size={24} />
+          </TouchableOpacity>
+        )}
       </View>
 
 
@@ -217,7 +220,6 @@ const styles = StyleSheet.create({
   actionRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginVertical: 10 },
   aiButton: { flex: 1, backgroundColor: Colors.secondary, padding: 18, borderRadius: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 },
   aiButtonText: { color: Colors.background, fontWeight: '800', fontSize: 16 },
-  addSessionBtn: { backgroundColor: Colors.primary, padding: 18, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
   historyBtn: { backgroundColor: Colors.surface, padding: 18, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
   infoCard: { backgroundColor: Colors.primary + '15', padding: 18, borderRadius: 20, borderWidth: 1, borderColor: Colors.primary + '30', marginVertical: 10, marginBottom: 30 },
   reserveBanner: { backgroundColor: Colors.surface, padding: 18, borderRadius: 24, flexDirection: 'row', alignItems: 'center', marginVertical: 8, borderLeftWidth: 6, borderLeftColor: Colors.primary },

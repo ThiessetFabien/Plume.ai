@@ -28,9 +28,10 @@ def get_current_player(
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
+        role: str = payload.get("role")
         if email is None:
             raise credentials_exception
-        token_data = schemas.TokenData(email=email)
+        token_data = schemas.TokenData(email=email, role=role)
     except JWTError:
         raise credentials_exception
     
@@ -39,3 +40,17 @@ def get_current_player(
         raise credentials_exception
     
     return player
+
+def get_current_admin(
+    current_player: models.Player = Depends(get_current_player)
+) -> models.Player:
+    """
+    Dépendance stricte pour les routes administratives.
+    Vérifie que l'utilisateur a le rôle 'admin'.
+    """
+    if current_player.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Accès réservé aux administrateurs"
+        )
+    return current_player

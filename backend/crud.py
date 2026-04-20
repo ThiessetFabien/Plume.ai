@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
+from database import SessionLocal
 import models
 import schemas
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from security import get_password_hash
 
 
@@ -24,8 +25,11 @@ def create_player(db: Session, player: schemas.PlayerCreate):
         full_name=player.full_name,
         email=player.email,
         age=player.age,
+        gender=player.gender,
         average_frequency=player.average_frequency,
         hashed_password=get_password_hash(player.password),
+        rgpd_consent=1 if player.rgpd_consent else 0,
+        consent_date=datetime.now(UTC).replace(tzinfo=None) if player.rgpd_consent else None,
     )
     db.add(db_player)
     db.commit()
@@ -60,7 +64,7 @@ def get_player_stats(db: Session, player_id: int, days: int = 30):
         return None
 
     # Calculer la date limite (ex: 30 jours glissants)
-    limit_date = datetime.utcnow() - timedelta(days=days)
+    limit_date = datetime.now(UTC).replace(tzinfo=None) - timedelta(days=days)
 
     # Filtrer les sessions d'entraînement sur cette période
     recent_attendances = (
@@ -123,7 +127,7 @@ def get_ghost_players(db: Session, threshold_days: int = 21):
     """
     Retourne les joueurs n'ayant pas eu de séance depuis X jours (ou jamais).
     """
-    threshold_date = datetime.utcnow() - timedelta(days=threshold_days)
+    threshold_date = datetime.now(UTC).replace(tzinfo=None) - timedelta(days=threshold_days)
 
     # Sous-requête pour obtenir la date de dernière présence par joueur
     # (Data Engineering : Optimisation par aggrégation)
@@ -254,3 +258,22 @@ def delete_player_reservations_by_day(db: Session, player_id: int, date: datetim
     db.commit()
     return deleted_count > 0
 
+
+def create_audit_log(target_id: int, user_email: str, action: str):
+    """
+    Crée une entrée d'audit pour la traçabilité RGPD.
+    Ouvre sa propre session pour être compatible avec les BackgroundTasks.
+    """
+    db = SessionLocal()
+    try:
+        db_log = models.AuditLog(
+            target_player_id=target_id,
+            user_email=user_email,
+            action=action
+        )
+        db.add(db_log)
+        db.commit()
+        db.refresh(db_log)
+        return db_log
+    finally:
+        db.close()

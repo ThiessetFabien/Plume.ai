@@ -1,23 +1,80 @@
-name: Plume.ai CI/CD
+name: "🧪 CI — Tests & Qualité (dev)"
 
+# Se déclenche sur toute PR vers dev et sur les pushs directs sur dev
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: ["dev"]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: ["dev"]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  lint-backend:
+  # ─────────────────────────────────────────────
+  # Job 1 : Tests Backend (Pytest + SQLite)
+  # ─────────────────────────────────────────────
+  backend-tests:
+    name: "🐍 Backend — Pytest"
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
-        
-    - name: Pipeline d'attente (Template)
-      run: |
-        echo "Le pipeline CI/CD est initialisé."
-        echo "Les tests Flake8/Pytest s'exécuteront ici lors de la complétion du backend."
+      - name: "📥 Checkout du code"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Setup Python 3.11"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: backend/requirements.txt
+
+      - name: "📦 Installation des dépendances"
+        run: pip install -r requirements.txt
+
+      - name: "🧪 Exécution des tests Pytest"
+        env:
+          # Variables mockées (pas de Postgres requis — SQLite in-memory)
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+          POSTGRES_HOST: localhost
+          TRUSTED_ORIGINS: "http://localhost:3000"
+          GROQ_API_KEY: "ci-placeholder-groq-key"
+          DATABASE_URL: "sqlite:///./test.db"
+          # Secrets injectés depuis GitHub Secrets (Settings > Secrets and variables > Actions)
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          PLUME_ENCRYPTION_KEY: ${{ secrets.PLUME_ENCRYPTION_KEY }}
+        run: pytest tests/ -v --tb=short
+
+  # ─────────────────────────────────────────────
+  # Job 2 : Tests Frontend (Jest)
+  # ─────────────────────────────────────────────
+  frontend-tests:
+    name: "📱 Frontend — Jest"
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: mobile
+
+    steps:
+      - name: "📥 Checkout du code"
+        uses: actions/checkout@v4
+
+      - name: "🟢 Setup Node.js 20"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: "📦 Installation des dépendances npm"
+        run: npm ci --legacy-peer-deps
+
+      - name: "🧪 Exécution des tests Jest"
+        run: npm test -- --watchAll=false --passWithNoTests

@@ -9,19 +9,21 @@ Ce document sert de mémoire vive persistante pour l'agent IA. Il doit être mis
 
 ## ✅ Tâches Complétées :
 *   [x] Configuration Professionnelle Gitflow (`main` prod / `dev` integration).
-*   [x] Phase 3 Mobile 100% OK : Dashboard (LineChart Bézier), Réservation, Coaching IA.
+*   [x] Phase 3 Mobile 100% OK : Dashboard, Réservation, Coaching IA.
 *   [x] Audit technique et sécurité complété avec succès.
-*   [x] Interface unifiée avec Toasts et Empty States.
+*   [x] **CI/CD & QUALITÉ** : Pipeline GitHub Actions (Pytest + Jest) avec gate de versioning sémantique et secrets sécurisés. ✅
+*   [x] **SÉCURITÉ & RGPD** : Hardening des secrets (Zero Fallback), Consentement RGPD, Audit Log, et protection `ggshield`. ✅
+*   [x] **DÉPLOIEMENT LEAN** : Backend optimisé pour la prod (Gunicorn), suppression des logs mobile en prod, et Dockerfile Cloud-Ready. ✅
 *   [x] Identité du projet (License & Contributing).
-*   [x] **PERSONNALISATION IA** : Intégration du genre (M/F) et accord grammatical dans le coaching. ✅
 
-## 🚧 En cours (Phase 4 — Consolidation & Robustesse) :
-*   [ ] **Tâche 4.1 (Configuration Metabase)** : Création des tableaux de bord pour les gérants (Âges, Assiduité).
-*   [ ] **Tâche 4.2 (Authentification & Sécurité)** : Implémentation d'un système JWT/OAuth2.
+## 🚧 En cours (Phase Finale — Lancement & Admin) :
+*   [ ] **Tâche 5.7 (Espace Bureau)** : Implémentation du RBAC et du Dashboard Admin In-App (KPIs globaux).
+*   [ ] **Validation Finale** : Merge final `dev` -> `main` avec validation du gate semver 1.1.0.
 
 ## 📋 Prochaines étapes recommandées :
-1.  Si vous le souhaitez, initiez manuellement la configuration Metabase (Tâche 4.1).
-2.  Démarrer la Tâche 4.2 : Sécurisation API par session/JWT.
+1.  Effectuer le Merge de `dev` vers `main` sur GitHub.
+2.  Vérifier que le pipeline `release.yml` passe au vert et valide la version 1.1.0.
+3.  Lancer le déploiement sur Railway ou Render.
 
 ---
 

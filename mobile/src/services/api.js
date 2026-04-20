@@ -25,7 +25,9 @@ const getBaseURL = () => {
   return `${protocol}://${ip}:8000`;
 };
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
+
+const TOKEN_KEY = 'userToken';
 
 const api = axios.create({
   baseURL: getBaseURL(),
@@ -38,7 +40,7 @@ const api = axios.create({
 // Intercepteur pour ajouter le Token JWT à chaque requête
 api.interceptors.request.use(
   async (config) => {
-    const token = await AsyncStorage.getItem('userToken');
+    const token = await SecureStore.getItemAsync(TOKEN_KEY);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

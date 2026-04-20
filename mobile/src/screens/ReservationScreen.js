@@ -19,7 +19,7 @@ const QUOTA_MAX = 20;
 
 // Horaires autorisés par jour de la semaine (getDay() : 0=dim, 1=lun, 4=jeu, 6=sam)
 const AUTHORIZED_SCHEDULES = {
-  1: ["17:00", "18:00", "19:00", "20:00", "21:00"], // Lundi
+  1: ["17:30", "18:30", "19:30", "20:30"], // Lundi
   4: ["19:00", "20:00", "21:00"],                   // Jeudi
   6: ["09:00", "10:00", "11:00"],                   // Samedi
 };
@@ -88,14 +88,16 @@ export default function ReservationScreen() {
     })();
   }, []);
 
-  // Générer les 21 prochains jours et ne garder que Lun/Jeu/Sam
-  const dates = Array.from({ length: 21 }, (_, i) => {
+  // Générer les 60 prochains jours (plus loin dans le futur) et s'assurer d'un multiple de 4
+  const allDates = Array.from({ length: 60 }, (_, i) => {
     const d = new Date();
     d.setDate(d.getDate() + i);
     return d;
   })
     .filter(d => AUTHORIZED_SCHEDULES[d.getDay()])
     .map(d => toLocalDateStr(d));
+
+  const dates = allDates.slice(0, Math.floor(allDates.length / 4) * 4);
 
   useEffect(() => {
     if (!selectedDate && dates.length > 0) {
@@ -285,29 +287,31 @@ export default function ReservationScreen() {
           <Calendar size={18} color={Colors.primary} />
           <Text style={styles.sectionTitle}>Choisir le jour</Text>
         </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.dateList}>
-          {dates.map(dateStr => {
-            const dow = getDayOfWeek(dateStr);
-            const dayParts = dateStr.split('-');
-            const dayNum = parseInt(dayParts[2], 10);
-            const monthNum = parseInt(dayParts[1], 10);
-            const isSelected = selectedDate === dateStr;
-            return (
-              <TouchableOpacity
-                key={dateStr}
-                style={[styles.dateItem, isSelected && styles.selectedItem]}
-                onPress={() => setSelectedDate(dateStr)}
-              >
-                <Text style={[styles.dateLabel, isSelected && styles.selectedText]}>
-                  {DAY_LABELS[dow]}
-                </Text>
-                <Text style={[styles.dateNum, isSelected && styles.selectedText]}>
-                  {dayNum}/{monthNum}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
+        <View style={{ maxHeight: 180 }}>
+          <ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={styles.dateList}>
+            {dates.map(dateStr => {
+              const dow = getDayOfWeek(dateStr);
+              const dayParts = dateStr.split('-');
+              const dayNum = parseInt(dayParts[2], 10);
+              const monthNum = parseInt(dayParts[1], 10);
+              const isSelected = selectedDate === dateStr;
+              return (
+                <TouchableOpacity
+                  key={dateStr}
+                  style={[styles.dateItem, isSelected && styles.selectedItem]}
+                  onPress={() => setSelectedDate(dateStr)}
+                >
+                  <Text style={[styles.dateLabel, isSelected && styles.selectedText]}>
+                    {DAY_LABELS[dow]}
+                  </Text>
+                  <Text style={[styles.dateNum, isSelected && styles.selectedText]}>
+                    {dayNum}/{monthNum}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
       </View>
 
       {/* Créneaux */}
@@ -443,10 +447,10 @@ const styles = StyleSheet.create({
   sectionTitle: { fontSize: 16, fontWeight: '700', color: Colors.text },
 
   // Sélecteur de dates
-  dateList: { gap: 10, paddingBottom: 4 },
+  dateList: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, paddingBottom: 4, justifyContent: 'flex-start' },
   dateItem: {
-    backgroundColor: Colors.surface, paddingVertical: 12, paddingHorizontal: 16,
-    borderRadius: 16, alignItems: 'center', minWidth: 80,
+    backgroundColor: Colors.surface, paddingVertical: 10, paddingHorizontal: 12,
+    borderRadius: 16, alignItems: 'center', width: '22%', minWidth: 70,
     borderWidth: 1.5, borderColor: 'transparent',
   },
   selectedItem: { backgroundColor: Colors.primary, borderColor: Colors.primary },

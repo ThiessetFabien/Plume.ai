@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { Colors } from '../theme/colors';
-import { User, Mail, Lock, Calendar, Activity, ArrowLeft } from 'lucide-react-native';
+import { User, Mail, Lock, Calendar, Activity, ArrowLeft, Eye, EyeOff, ShieldCheck } from 'lucide-react-native';
 
 export default function RegisterScreen({ navigation }) {
   const [fullName, setFullName] = useState('');
@@ -23,20 +23,63 @@ export default function RegisterScreen({ navigation }) {
   const [age, setAge] = useState('');
   const [frequency, setFrequency] = useState('');
   const [gender, setGender] = useState('M');
-  
+  const [rgpdConsent, setRgpdConsent] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
+
   const { signUp, isLoading } = useAuth();
 
+  const validatePassword = (pwd) => {
+    const rules = [
+      { test: pwd.length >= 12, msg: '12 caractères minimum' },
+      { test: /[A-Z]/.test(pwd), msg: 'une majuscule' },
+      { test: /[a-z]/.test(pwd), msg: 'une minuscule' },
+      { test: /[0-9]/.test(pwd), msg: 'un chiffre' },
+      { test: /[^A-Za-z0-9]/.test(pwd), msg: 'un caractère spécial' },
+    ];
+    const failed = rules.filter(r => !r.test).map(r => r.msg);
+    return failed;
+  };
+
   const handleRegister = async () => {
-    if (!fullName || !email || !password || !age || !frequency || !gender) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
+    // Reset errors
+    const errors = {};
+    if (!fullName) errors.fullName = 'Nom requis';
+    if (!email) errors.email = 'Email requis';
+    if (!password) errors.password = 'Mot de passe requis';
+    if (!age) errors.age = 'Âge requis';
+    if (!frequency) errors.frequency = 'Fréquence requise';
+    if (!rgpdConsent) errors.rgpd = 'Vous devez accepter les conditions RGPD';
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
       return;
     }
-    
-    try {
-      await signUp(fullName, email, password, age, frequency, gender);
-    } catch (error) {
-      Alert.alert('Erreur', 'Impossible de créer le compte. Vérifiez vos informations.');
+
+    const pwdErrors = validatePassword(password);
+    if (pwdErrors.length > 0) {
+      setFieldErrors({ password: 'Mot de passe trop faible (ANSSI)' });
+      return;
     }
+
+    setFieldErrors({});
+
+    try {
+      await signUp(fullName, email, password, age, frequency, gender, rgpdConsent);
+    } catch (error) {
+      const detail = error?.response?.data?.detail;
+      const msg = detail === 'Cet email est déjà enregistré.'
+        ? 'Cet email est déjà utilisé.'
+        : 'Échec de l\'inscription.';
+      setFieldErrors({ email: msg });
+      Alert.alert('Erreur', msg);
+    }
+  };
+
+  const getPasswordRuleStatus = (regex, minLen) => {
+    if (!password) return Colors.textSecondary;
+    const test = minLen ? password.length >= minLen : regex.test(password);
+    return test ? '#4ade80' : Colors.textSecondary;
   };
 
   return (
@@ -56,64 +99,98 @@ export default function RegisterScreen({ navigation }) {
           </View>
 
           <View style={styles.form}>
-            <View style={styles.inputGroup}>
+            <View style={[styles.inputGroup, fieldErrors.fullName && styles.inputError]}>
               <User size={20} color={Colors.textSecondary} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Nom complet"
                 placeholderTextColor={Colors.textSecondary}
                 value={fullName}
-                onChangeText={setFullName}
+                onChangeText={(v) => { setFullName(v); setFieldErrors(prev => ({...prev, fullName: null})); }}
               />
             </View>
+            {fieldErrors.fullName && <Text style={styles.errorText}>{fieldErrors.fullName}</Text>}
 
-            <View style={styles.inputGroup}>
+            <View style={[styles.inputGroup, fieldErrors.email && styles.inputError]}>
               <Mail size={20} color={Colors.textSecondary} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Email"
                 placeholderTextColor={Colors.textSecondary}
                 value={email}
-                onChangeText={setEmail}
+                onChangeText={(v) => { setEmail(v); setFieldErrors(prev => ({...prev, email: null})); }}
                 autoCapitalize="none"
                 keyboardType="email-address"
               />
             </View>
+            {fieldErrors.email && <Text style={styles.errorText}>{fieldErrors.email}</Text>}
 
-            <View style={styles.inputGroup}>
+            <View style={[styles.inputGroup, fieldErrors.password && styles.inputError]}>
               <Lock size={20} color={Colors.textSecondary} style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
                 placeholder="Mot de passe"
                 placeholderTextColor={Colors.textSecondary}
                 value={password}
-                onChangeText={setPassword}
-                secureTextEntry
+                onChangeText={(v) => { setPassword(v); setFieldErrors(prev => ({...prev, password: null})); }}
+                secureTextEntry={!showPassword}
               />
+              <TouchableOpacity onPress={() => setShowPassword(v => !v)} style={styles.eyeIcon}>
+                {showPassword
+                  ? <EyeOff size={20} color={Colors.textSecondary} />
+                  : <Eye size={20} color={Colors.textSecondary} />}
+              </TouchableOpacity>
+            </View>
+            {fieldErrors.password && <Text style={styles.errorText}>{fieldErrors.password}</Text>}
+
+            {/* Aide Mémoire ANSSI */}
+            <View style={styles.pwdRulesContainer}>
+              <View style={styles.ruleRow}>
+                <View style={[styles.ruleDot, { backgroundColor: getPasswordRuleStatus(null, 12)} ]} />
+                <Text style={[styles.ruleText, { color: getPasswordRuleStatus(null, 12) }]}>12 caractères</Text>
+              </View>
+              <View style={styles.ruleRow}>
+                <View style={[styles.ruleDot, { backgroundColor: getPasswordRuleStatus(/[A-Z]/)} ]} />
+                <Text style={[styles.ruleText, { color: getPasswordRuleStatus(/[A-Z]/) }]}>Majuscule</Text>
+              </View>
+              <View style={styles.ruleRow}>
+                <View style={[styles.ruleDot, { backgroundColor: getPasswordRuleStatus(/[0-9]/)} ]} />
+                <Text style={[styles.ruleText, { color: getPasswordRuleStatus(/[0-9]/) }]}>Chiffre</Text>
+              </View>
+              <View style={styles.ruleRow}>
+                <View style={[styles.ruleDot, { backgroundColor: getPasswordRuleStatus(/[^A-Za-z0-9]/)} ]} />
+                <Text style={[styles.ruleText, { color: getPasswordRuleStatus(/[^A-Za-z0-9]/) }]}>Spécial (!@#$)</Text>
+              </View>
             </View>
 
             <View style={styles.row}>
-              <View style={[styles.inputGroup, { flex: 0.4, marginRight: 12 }]}>
-                <Calendar size={20} color={Colors.textSecondary} style={styles.inputIcon} />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Âge"
-                  placeholderTextColor={Colors.textSecondary}
-                  value={age}
-                  onChangeText={setAge}
-                  keyboardType="numeric"
-                />
+              <View style={{ flex: 0.4, marginRight: 12 }}>
+                <View style={[styles.inputGroup, fieldErrors.age && styles.inputError, { marginBottom: 0 }]}>
+                  <Calendar size={20} color={Colors.textSecondary} style={styles.inputIcon} />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Âge"
+                    placeholderTextColor={Colors.textSecondary}
+                    value={age}
+                    onChangeText={(v) => { setAge(v); setFieldErrors(prev => ({...prev, age: null})); }}
+                    keyboardType="numeric"
+                  />
+                </View>
+                {fieldErrors.age && <Text style={styles.errorText}>{fieldErrors.age}</Text>}
               </View>
-              <View style={[styles.inputGroup, { flex: 0.6 }]}>
-                <Activity size={20} color={Colors.textSecondary} style={styles.inputIcon} />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Séances/sem"
-                  placeholderTextColor={Colors.textSecondary}
-                  value={frequency}
-                  onChangeText={setFrequency}
-                  keyboardType="numeric"
-                />
+              <View style={{ flex: 0.6 }}>
+                <View style={[styles.inputGroup, fieldErrors.frequency && styles.inputError, { marginBottom: 0 }]}>
+                  <Activity size={20} color={Colors.textSecondary} style={styles.inputIcon} />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Séances/sem"
+                    placeholderTextColor={Colors.textSecondary}
+                    value={frequency}
+                    onChangeText={(v) => { setFrequency(v); setFieldErrors(prev => ({...prev, frequency: null})); }}
+                    keyboardType="numeric"
+                  />
+                </View>
+                {fieldErrors.frequency && <Text style={styles.errorText}>{fieldErrors.frequency}</Text>}
               </View>
             </View>
 
@@ -134,6 +211,22 @@ export default function RegisterScreen({ navigation }) {
                 ))}
               </View>
             </View>
+
+            {/* Tunnel de Consentement RGPD (HDS-Ready) */}
+            <TouchableOpacity 
+              style={[styles.rgpdContainer, fieldErrors.rgpd && styles.inputError]} 
+              onPress={() => setRgpdConsent(!rgpdConsent)}
+              activeOpacity={0.7}
+            >
+              <View style={[styles.checkbox, rgpdConsent && styles.checkboxChecked]}>
+                {rgpdConsent && <ShieldCheck size={14} color="white" />}
+              </View>
+              <Text style={styles.rgpdText}>
+                J'accepte que mes données (âge, sexe, entraînements) soient traitées pour personnaliser mon coaching IA.
+              </Text>
+            </TouchableOpacity>
+            {fieldErrors.rgpd && <Text style={styles.errorText}>{fieldErrors.rgpd}</Text>}
+
 
             <TouchableOpacity 
               style={styles.registerButton} 
@@ -199,11 +292,50 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 16,
     paddingHorizontal: 16,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: Colors.border,
+  },
+  inputError: {
+    borderColor: '#ff4444',
+    backgroundColor: 'rgba(255, 68, 68, 0.05)',
+  },
+  errorText: {
+    color: '#ff4444',
+    fontSize: 12,
+    marginTop: -12,
+    marginBottom: 12,
+    marginLeft: 4,
+    fontWeight: '600',
+  },
+  pwdRulesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 20,
+    marginTop: -8,
+    paddingHorizontal: 4,
+  },
+  ruleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 16,
+    marginBottom: 4,
+  },
+  ruleDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginRight: 6,
+  },
+  ruleText: {
+    fontSize: 11,
+    fontWeight: '600',
   },
   row: {
     flexDirection: 'row',
+  },
+  eyeIcon: {
+    padding: 4,
+    marginLeft: 8,
   },
   inputIcon: {
     marginRight: 12,
@@ -251,6 +383,36 @@ const styles = StyleSheet.create({
   genderTextSelected: {
     color: Colors.background,
     fontWeight: '800',
+  },
+  rgpdContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.surface,
+    padding: 12,
+    borderRadius: 12,
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: Colors.textSecondary,
+    marginRight: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkboxChecked: {
+    backgroundColor: Colors.secondary,
+    borderColor: Colors.secondary,
+  },
+  rgpdText: {
+    flex: 1,
+    fontSize: 12,
+    color: Colors.textSecondary,
+    lineHeight: 16,
   },
   registerButton: {
     backgroundColor: Colors.secondary,

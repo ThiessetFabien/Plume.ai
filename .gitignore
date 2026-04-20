@@ -10,6 +10,11 @@ __pycache__/
 venv/
 env/
 .venv/
+**/venv/
+**/.venv/
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
 
 # Node / React Native (Frontend Mobile)
 node_modules/
@@ -24,3 +29,6 @@ pgdata/
 # Fichiers Système
 .DS_Store
 Thumbs.db
+
+# Added by ggshield
+.cache_ggshield

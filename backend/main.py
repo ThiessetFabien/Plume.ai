@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import engine
@@ -17,6 +17,7 @@ app = FastAPI(
 # Configuration CORS (Durcissement OWASP/HDS)
 import os
 trusted_origins = os.getenv("TRUSTED_ORIGINS", "http://localhost:19006,http://localhost:3000").split(",")
+trusted_origins = [origin.strip() for origin in trusted_origins if origin.strip()]
 
 app.add_middleware(
     CORSMiddleware,

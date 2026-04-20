@@ -1,5 +1,38 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: plume_db_dev
+    restart: always
+    environment:
+      POSTGRES_USER: plume_admin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-DB_PASSWORD_PLACEHOLDER}
+      POSTGRES_DB: plume_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U plume_admin -d plume_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   backend_api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: plume_backend_dev
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
     volumes:
       - ./backend:/app
+
+volumes:
+  postgres_data_dev:

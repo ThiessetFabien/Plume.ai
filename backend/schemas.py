@@ -66,8 +66,8 @@ class PlayerCreate(PlayerBase):
             raise ValueError("Le mot de passe doit contenir au moins une minuscule.")
         if not re.search(r"[0-9]", v):
             raise ValueError("Le mot de passe doit contenir au moins un chiffre.")
-        if not re.search(r"[@$!%*?&]", v):
-            raise ValueError("Le mot de passe doit contenir au moins un caractère spécial (@$!%*?&).")
+        if not re.search(r"[@$!%*?&_\-]", v):
+            raise ValueError("Le mot de passe doit contenir au moins un caractère spécial (@$!%*?&_-).")
         return v
 
 

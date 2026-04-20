@@ -8,16 +8,16 @@ load_dotenv()
 ENCRYPTION_KEY = os.getenv("PLUME_ENCRYPTION_KEY")
 
 if not ENCRYPTION_KEY:
-    # Fallback pour éviter de planter durant l'import, mais doit logiquement exister
-    # Idéalement : raise ValueError("PLUME_ENCRYPTION_KEY missing in .env")
-    pass
+    # Fail-safe : On refuse de démarrer sans clé de chiffrement (OWASP A02:2021)
+    raise ValueError("CRITICAL: PLUME_ENCRYPTION_KEY missing in environment. Data encryption at rest is mandatory.")
 
 _fernet = Fernet(ENCRYPTION_KEY.encode()) if ENCRYPTION_KEY else None
 
 def encrypt_data(data: str) -> str:
     """Chiffre une chaîne de caractères en base64 via Fernet."""
-    if not data or not _fernet:
+    if not data:
         return data
+    # _fernet est garanti d'exister ici grâce au raise au démarrage
     return _fernet.encrypt(data.encode()).decode()
 
 def decrypt_data(token: str) -> str:

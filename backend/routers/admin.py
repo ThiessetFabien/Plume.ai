@@ -1,17 +1,15 @@
 from fastapi import APIRouter, Depends, BackgroundTasks
 from sqlalchemy.orm import Session
-from sqlalchemy import func, extract
 from collections import Counter
 
 import crud
 import models
-import schemas
 from database import get_db
 from dependencies import get_current_admin
 
 router = APIRouter(prefix="/admin", tags=["Administration"])
 
-@router.get("/stats", dependencies=[Depends(get_current_admin)])
+@router.get("/stats")
 def get_global_stats(
     background_tasks: BackgroundTasks,
     current_admin: models.Player = Depends(get_current_admin),

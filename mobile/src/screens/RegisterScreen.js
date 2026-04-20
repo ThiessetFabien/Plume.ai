@@ -35,7 +35,7 @@ export default function RegisterScreen({ navigation }) {
       { test: /[A-Z]/.test(pwd), msg: 'une majuscule' },
       { test: /[a-z]/.test(pwd), msg: 'une minuscule' },
       { test: /[0-9]/.test(pwd), msg: 'un chiffre' },
-      { test: /[^A-Za-z0-9]/.test(pwd), msg: 'un caractère spécial' },
+      { test: /[@$!%*?&_\-]/.test(pwd), msg: 'un caractère spécial (@$!%*?&_-)' },
     ];
     const failed = rules.filter(r => !r.test).map(r => r.msg);
     return failed;
@@ -158,8 +158,12 @@ export default function RegisterScreen({ navigation }) {
                 <Text style={[styles.ruleText, { color: getPasswordRuleStatus(/[0-9]/) }]}>Chiffre</Text>
               </View>
               <View style={styles.ruleRow}>
-                <View style={[styles.ruleDot, { backgroundColor: getPasswordRuleStatus(/[^A-Za-z0-9]/)} ]} />
-                <Text style={[styles.ruleText, { color: getPasswordRuleStatus(/[^A-Za-z0-9]/) }]}>Spécial (!@#$)</Text>
+                <View style={[styles.ruleDot, { backgroundColor: getPasswordRuleStatus(/[a-z]/)} ]} />
+                <Text style={[styles.ruleText, { color: getPasswordRuleStatus(/[a-z]/) }]}>Minuscule</Text>
+              </View>
+              <View style={styles.ruleRow}>
+                <View style={[styles.ruleDot, { backgroundColor: getPasswordRuleStatus(/[@$!%*?&_\-]/)} ]} />
+                <Text style={[styles.ruleText, { color: getPasswordRuleStatus(/[@$!%*?&_\-]/) }]}>Spécial (@$!%*?&_-)</Text>
               </View>
             </View>
 

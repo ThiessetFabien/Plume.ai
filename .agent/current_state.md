@@ -12,15 +12,18 @@ Ce document sert de mémoire vive persistante pour l'agent IA. Il doit être mis
 *   [x] Phase 3 Mobile 100% OK : Dashboard, Réservation, Coaching IA.
 *   [x] Audit technique et sécurité complété avec succès.
 *   [x] **CI/CD & QUALITÉ** : Pipeline GitHub Actions (Pytest + Jest) avec gate de versioning sémantique et secrets sécurisés. ✅
-*   [x] **STABILISATION** : Correction des avertissements de dépréciation (datetime, Node.js 24) et tests robustes. ✅
+*   [x] **RGPD / CONFORMITÉ** : Tunnel de consentement explicite et audit de minimisation. ✅
+*   [x] **DÉPLOIEMENT LEAN** : Backend optimisé pour la prod (Gunicorn), suppression des logs mobile en prod, et Dockerfile Cloud-Ready. ✅
 *   [x] Identité du projet (License & Contributing).
 
-## 🚧 En cours (Phase 5 — Renforcement UX, Sécurité & CI/CD) :
-*   [ ] **Tâche 5.5 (Conformité & Légal)** : Audit de minimisation et modal de consentement explicite (RGPD/HDS-Ready).
+## 🚧 En cours (Phase Finale — Lancement & Admin) :
+*   [ ] **Tâche 5.7 (Espace Bureau)** : Implémentation du RBAC et du Dashboard Admin In-App (KPIs globaux).
+*   [ ] **Validation Finale** : Merge final `dev` -> `main` avec validation du gate semver 1.1.0.
 
 ## 📋 Prochaines étapes recommandées :
-1.  Démarrer la Tâche 5.5 : Implémenter le tunnel de consentement RGPD.
-2.  Finaliser la Phase 5.6 : Optimisation du déploiement Lean.
+1.  Effectuer le Merge de `dev` vers `main` sur GitHub.
+2.  Vérifier que le pipeline `release.yml` passe au vert et valide la version 1.1.0.
+3.  Lancer le déploiement sur Railway ou Render.
 
 ---
 

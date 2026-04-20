@@ -19,7 +19,14 @@ class EncryptedField(TypeDecorator):
 
     def process_result_value(self, value, dialect):
         if value is not None:
-            return decrypt_data(value)
+            decrypted = decrypt_data(value)
+            # Tenter de convertir en int ou float pour la transparence
+            try:
+                if "." in decrypted:
+                    return float(decrypted)
+                return int(decrypted)
+            except (ValueError, TypeError):
+                return decrypted
         return value
 
 
@@ -32,7 +39,7 @@ class Player(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     age = Column(EncryptedField)
     gender = Column(EncryptedField, default="Autre")
-    average_frequency = Column(Float, default=0.0)
+    average_frequency = Column(EncryptedField, default="0.0")
     hashed_password = Column(String, nullable=False)
     
     # RGPD : Consentement explicite pour les données sensibles (HDS-Ready)
@@ -58,7 +65,7 @@ class Attendance(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     date = Column(DateTime, default=lambda: datetime.datetime.now(datetime.UTC).replace(tzinfo=None))
-    duration = Column(Integer)  # en minutes
+    duration = Column(EncryptedField)  # en minutes (chiffré)
     player_id = Column(Integer, ForeignKey("players.id"), index=True)
 
     # Relation inverse : Une présence appartient à un joueur unique
@@ -81,9 +88,9 @@ class Reservation(Base):
     __tablename__ = "reservations"
 
     id = Column(Integer, primary_key=True, index=True)
-    court_number = Column(Integer, nullable=False)  # Terrains 1 à 5
+    court_number = Column(EncryptedField, nullable=False)  # Terrains 1 à 5 (chiffré)
     start_time = Column(DateTime, nullable=False, index=True)
-    duration = Column(Integer, default=60)  # Minutes
+    duration = Column(EncryptedField, default="60")  # Minutes (chiffré)
     player_id = Column(Integer, ForeignKey("players.id"), index=True)
 
     # Relation : Une réservation appartient à un joueur

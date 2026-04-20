@@ -12,7 +12,7 @@ Ce document sert de mémoire vive persistante pour l'agent IA. Il doit être mis
 *   [x] Phase 3 Mobile 100% OK : Dashboard, Réservation, Coaching IA.
 *   [x] Audit technique et sécurité complété avec succès.
 *   [x] **CI/CD & QUALITÉ** : Pipeline GitHub Actions (Pytest + Jest) avec gate de versioning sémantique et secrets sécurisés. ✅
-*   [x] **RGPD / CONFORMITÉ** : Tunnel de consentement explicite et audit de minimisation. ✅
+*   [x] **SÉCURITÉ & RGPD** : Hardening des secrets (Zero Fallback), Consentement RGPD, Audit Log, et protection `ggshield`. ✅
 *   [x] **DÉPLOIEMENT LEAN** : Backend optimisé pour la prod (Gunicorn), suppression des logs mobile en prod, et Dockerfile Cloud-Ready. ✅
 *   [x] Identité du projet (License & Contributing).
 

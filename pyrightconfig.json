@@ -27,6 +27,9 @@
   "venvPath": ".",
   "venv": "venv",
   "reportMissingModuleSource": "none",
+  "extraPaths": [
+    "./backend"
+  ],
   "typeCheckingMode": "basic",
   "pythonVersion": "3.14",
   "pythonPlatform": "Linux"

@@ -27,8 +27,8 @@ def seed_db():
     # 1. Création de Joueurs avec des profils stratégiques (Expert Business)
     profiles = [
         {
-            "full_name": "Lucas Petit",
-            "email": "lucas.tester@example.com",
+            "full_name": "Utilisateur Test",
+            "email": os.getenv("TEST_PLAYER_EMAIL", "test@plume.ai"),
             "age": 28,
             "gender": "M",
             "freq": 4.0,

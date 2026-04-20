@@ -113,9 +113,11 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 - [x] **Tâche 5.4 (Qualité & CI/CD) :** ✅
     - [x] Socle de tests automatisés frontend avec `Jest`.
     - [x] Exécution automatique des tests backend via GitHub Actions lors des PR vers `main`.
-- [x] **Tâche 5.5 (Conformité & Légal — RGPD/HDS-Ready) :** ✅
+- [x] **Tâche 5.5 (Conformité & Sécurité — RGPD/Hardening) :** ✅
     - [x] Audit de minimisation : s'assurer que seules les données nécessaires au coaching sont collectées.
-    - [x] Modal de consentement explicite à l'inscription pour le traitement des données de bien-être physique.
+    - [x] Modal de consentement explicite à l'inscription (HDS-Ready).
+    - [x] **Hardening** : Retrait de tous les secrets par défaut (Zero Fallback Policy).
+    - [x] **Pre-commit** : Intégration de `ggshield` pour prévenir les fuites de secrets.
 - [ ] **Tâche 5.6 (Déploiement Lean) :**
     - [ ] Lancement optimisé de l'image de production (sans le paramètre `--reload`).
     - [ ] Configuration d'un environnement de staging/prod (ex: Railway, Render ou Fly.io).

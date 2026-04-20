@@ -2,6 +2,10 @@ import sys
 import os
 import time
 import requests
+from dotenv import load_dotenv
+
+# Charger les variables d'environnement (.env)
+load_dotenv()
 
 # URL de base du backend
 BASE_URL = "http://localhost:8000"
@@ -21,16 +25,22 @@ def verify_hardening():
         print(result.stdout)
         return False
 
-    # 2. Test Connection (ANSSI Rules)
+    # 2. Test Connection (ANSSI Password)
     print("\n[STEP 2] Test de connexion (ANSSI Password)...")
-    login_data = {"username": "lucas.tester@example.com", "password": os.getenv("DEFAULT_PLAYER_PASSWORD", "Plume_ChangeMe_2026")}
+    test_email = os.getenv("TEST_PLAYER_EMAIL", "test@plume.ai")
+    test_password = os.getenv("DEFAULT_PLAYER_PASSWORD")
+    
+    if not test_password:
+        print("❌ DEFAULT_PLAYER_PASSWORD non défini dans l'environnement.")
+        return False
+
+    login_data = {"username": test_email, "password": test_password}
     response = requests.post(f"{BASE_URL}/token", data=login_data)
     if response.status_code == 200:
         token = response.json()["access_token"]
-        print("✅ Login : OK (Accès autorisé)")
+        print(f"✅ Login : OK (Accès autorisé pour {test_email})")
     else:
         print(f"❌ Login : ÉCHEC ({response.status_code})")
-        print(response.text)
         return False
 
     # 3. Test Déchiffrement & Audit Log
@@ -50,7 +60,7 @@ def verify_hardening():
     # Vérifier l'Audit Log
     cmd_log = ["docker", "exec", "plume_db", "psql", "-U", "plume_admin", "-d", "plume_ai", "-c", "SELECT action, user_email FROM audit_logs ORDER BY timestamp DESC LIMIT 1;"]
     result_log = subprocess.run(cmd_log, capture_output=True, text=True)
-    if "READ_STATS" in result_log.stdout and "lucas.petit" in result_log.stdout:
+    if "READ_STATS" in result_log.stdout and test_email in result_log.stdout:
         print("✅ Audit Log : OK (Trace détectée en base)")
     else:
         print("❌ Audit Log : ÉCHEC (Trace manquante)")

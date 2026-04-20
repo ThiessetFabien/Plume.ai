@@ -16,8 +16,9 @@ def test_audit_and_zero_trust():
         print(f"❌ Faille d'authentification : statut {response.status_code}")
         return False
 
-    # 2. Obtenir un jeton d'accès pour Lucas
-    login_data = {"username": "lucas.tester@example.com", "password": os.getenv("DEFAULT_PLAYER_PASSWORD")}
+    # 2. Obtenir un jeton d'accès pour les tests (Anonymisé)
+    test_user = os.getenv("TEST_PLAYER_EMAIL", "test@plume.ai")
+    login_data = {"username": test_user, "password": os.getenv("DEFAULT_PLAYER_PASSWORD")}
     response = requests.post(f"{BASE_URL}/token", data=login_data)
     if response.status_code != 200:
         print("❌ Impossible de se connecter en tant que Lucas.")

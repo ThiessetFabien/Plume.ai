@@ -88,7 +88,7 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 
 ### PHASE 4 : Consolidation & Robustesse ✅
 
-- [x] **Tâche 4.1 (Configuration Metabase)** : Configuration manuelle des tableaux de bord. ✅
+- [ ] **Tâche 4.1 (Configuration Metabase)** : Configuration manuelle des tableaux de bord (Déplacé en Phase 6).
 - [x] **Tâche 4.2 (Authentification & Sécurité)** : Implémentation d'un système JWT/OAuth2 et sécurisation RGPD/OWASP. ✅
 - [x] **Tâche 4.3 (Inscription Mobile)** : Création de l'AuthContext et de l'écran d'inscription (Onboarding) pour gérer la création de comptes. ✅
 - [x] **Tâche 4.4 (Rate Limiting IA) :** Protéger l'API Groq contre les abus via un limiteur de débit côté backend. ✅
@@ -98,7 +98,7 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 
 ---
 
-## 🚧 En cours (Phase 5 — Renforcement UX, Sécurité Mobile & CI/CD)
+## ✅ Terminé (Phase 5 — Renforcement UX, Sécurité Mobile & CI/CD)
 > ⚠️ **RÈGLE MVP (No Over-Engineering)** : L'usage de Redis, SendGrid/SMTP, Redux ou d'orchestrateurs complexes est formellement interdit pour cette phase. La stack doit rester Lean (RAM locale, Context API, Mocks intelligents).
 
 - [x] **Tâche 5.1 (UX Auth) :** ✅
@@ -118,10 +118,6 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
     - [x] Modal de consentement explicite à l'inscription (HDS-Ready).
     - [x] **Hardening** : Retrait de tous les secrets par défaut (Zero Fallback Policy).
     - [x] **Pre-commit** : Intégration de `ggshield` pour prévenir les fuites de secrets.
-- [ ] **Tâche 5.6 (Déploiement Lean) :**
-    - [ ] Lancement optimisé de l'image de production (sans le paramètre `--reload`).
-    - [ ] Configuration d'un environnement de staging/prod (ex: Railway, Render ou Fly.io).
-    - [ ] Désactivation silencieuse des `console.log` dans le build final mobile.
 - [x] **Tâche 5.7 (Espace Bureau — Pilotage In-App) :** ✅
     - [x] **RBAC** : Implémenter la gestion des rôles (`player` / `admin`) au niveau du modèle et des JWT.
     - [x] **Admin API** : Créer des endpoints sécurisés pour les statistiques globales du club.
@@ -133,6 +129,28 @@ Voici les étapes exactes à communiquer à l'IA, l'une après l'autre. Ne lance
 - [x] **Tâche 5.9 (UX Calendrier Réservation) :** ✅
     - [x] Refactoriser le sélecteur de dates en grille (`flexWrap`, 4 colonnes) avec scroll vertical.
     - [x] Générer 60 jours de dates, tronqués au multiple de 4 pour des lignes complètes.
+- [ ] **Tâche 5.10 (Hub Social & Consentement IA) :**
+    - [ ] Ajout d'une modal de consentement RGPD pour le "Matching Social".
+    - [ ] Intégration des prénoms des joueurs dans les prompts IA pour personnaliser les feedbacks (via Groq/Ollama).
+    - [ ] Logique de suggestion de partenaires basés sur le niveau et la disponibilité.
+
+---
+
+## 🚀 À venir (Phase 6 — Déploiement & Pilotage Club)
+> 💡 *Cette phase débutera une fois l'acceptation du projet par le club de badminton.*
+
+- [ ] **Tâche 6.1 (Déploiement Souverain sur VPS) :**
+    - [ ] Location et configuration d'un VPS OVHcloud (France).
+    - [ ] Installation de Docker et déploiement de la stack en mode production.
+    - [ ] Configuration du SSL (Let's Encrypt) et du nom de domaine.
+    - [ ] Désactivation silencieuse des `console.log` dans le build final mobile.
+- [ ] **Tâche 6.2 (Pilotage Décisionnel & Dashboards) :**
+    - [ ] Configuration manuelle des tableaux de bord Metabase pour le bureau.
+    - [ ] Export périodique des statistiques d'assiduité (format CSV/Excel).
+- [ ] **Tâche 6.3 (Transition IA Souveraine) :**
+    - [ ] Remplacement du client Groq par l'API Mistral AI.
+    - [ ] Configuration de l'abonnement Mistral ou OVHcloud AI Endpoints.
+    - [ ] Validation de la qualité des conseils de coaching avec le nouveau modèle.
 
 ---
 

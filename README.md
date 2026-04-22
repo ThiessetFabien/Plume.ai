@@ -1,47 +1,50 @@
-# 🏸 Plume.ai - L'IA au service du Badminton
+# 🏸 Plume.ai - L'IA Souveraine au service du Badminton
 
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![React Native](https://img.shields.io/badge/Mobile-React_Native-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactnative.dev/)
-[![Groq](https://img.shields.io/badge/IA-LLaMa_3_Groq-orange?style=for-the-badge)](https://groq.com/)
-[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Mistral AI](https://img.shields.io/badge/IA-Mistral_AI_Souveraine-ff69b4?style=for-the-badge)](https://mistral.ai/)
+[![OVHcloud](https://img.shields.io/badge/Cloud-OVHcloud_France-0050D7?style=for-the-badge&logo=ovh&logoColor=white)](https://www.ovhcloud.com/)
 
-**Plume.ai** est une application intelligente conçue pour l'Association de Badminton de Cuincy. Elle résout le problème des "membres fantômes" en utilisant l'analyse de données et l'IA générative pour booster l'engagement et l'assiduité des joueurs.
-
----
-
-## ✨ La "Feature Waow" : Le Copilote IA
-Plume.ai ne se contente pas de lister des présences. Son **Copilote IA (LLaMa 3 via Groq)** analyse l'historique d'assiduité pour générer des recommandations personnalisées :
-- **Prévention Santé** : "Tu as joué 4 fois cette semaine, attention à tes tendons !"
-- **Motivation** : "On ne t'a pas vu depuis 15 jours, tes partenaires t'attendent mardi !"
-
-## 🛠️ Stack Technique
-- **Backend** : FastAPI (Python 3.11) - Architecture modulaire et typesafe.
-- **Base de Données** : PostgreSQL 16.
-- **Frontend** : React Native / Expo (en cours).
-- **Orchestration** : Docker & Docker Compose.
-- **Intelligence** : Groq API (LLaMa 3.3 70B).
+**Plume.ai** est la première application de gestion de club de badminton intégrant un **Coach IA Souverain**. Conçue pour transformer l'expérience des petits clubs sportifs, elle allie pilotage administratif performant et accompagnement personnalisé des joueurs.
 
 ---
 
-## 🚀 Démarrage Rapide (Docker)
+## ✨ Pourquoi Plume.ai ? (L'effet "Waow")
 
-Assurez-vous d'avoir Docker et un fichier `.env` configuré (voir `.env.example`).
+### 🤖 Un Coach & un Hub Social
+Plume.ai ne se contente pas de lister des présences. En l'absence d'entraîneur physique, son **Copilote IA (Mistral AI)** devient le guide technique des joueurs. Mieux encore, il favorise les **liens sociaux** en suggérant des partenaires de jeu compatibles basés sur le niveau et les disponibilités, créant ainsi une véritable communauté active et soudée.
 
-```bash
-# Lancer l'infrastructure complète (DB + Backend)
-make up
+### 🛡️ Souveraineté & Protection (HDS/RGPD)
+Contrairement aux géants du secteur, Plume.ai garantit que **les données ne quittent jamais le sol français/européen**. Hébergée chez **OVHcloud**, elle utilise la technologie française **Mistral AI**, garantissant une indépendance technologique totale et une conformité RGPD stricte.
 
-# Initialiser la base avec des données de test Premium
-docker exec -it plume_backend python seed.py
-```
+### 📊 Pilotage Décisionnel pour le Bureau
+Grâce à un dashboard sécurisé, les dirigeants du club visualisent en temps réel :
+- Les pics de fréquentation (jours et heures).
+- Le taux d'assiduité global.
+- L'identification automatique des "membres fantômes" pour maintenir l'engagement.
 
-L'API est alors accessible sur : `http://localhost:8000/docs`
+---
+
+## 🛠️ Stack Technique "Portfolio-Ready"
+- **Backend** : FastAPI (Python 3.14) - Architecture modulaire, sécurité Fernet (at-rest).
+- **Base de Données** : PostgreSQL 16 + Metabase pour la Business Intelligence.
+- **Frontend** : React Native / Expo - Expérience mobile fluide et moderne.
+- **Infrastructure** : Docker (Multi-env Dev/Prod) sur VPS Souverain.
+- **IA** : Mistral AI Nemo / Mixtral (via OVHcloud AI Endpoints).
+
+---
+
+## 💰 Un Modèle Économique Disruptif
+Plume.ai propose une alternative aux abonnements coûteux. Pour le prix de quelques boîtes de volants par an, le club bénéficie d'une solution complète :
+- **Setup agile** : 150 € (One-shot).
+- **Abonnement Sérénité** : 25 € / mois (Infrastructure + Support + Rente).
+- **Rentabilité** : Financement possible par une simple augmentation de cotisation de 2€/an par membre.
 
 ---
 
 ## 📅 Roadmap & Vision
-Le projet suit une méthodologie **Portfolio-First** avec un versioning strict (Conventional Commits). 
-Consultez la [ROADMAP.md](./docs/ROADMAP.md) pour le détail des phases.
+Le projet est actuellement en **Phase 6** (Déploiement & Pilotage Club).
+Consultez la [ROADMAP.md](./docs/ROADMAP.md) pour plus de détails.
 
 ## ⚖️ Licence
 Ce projet est sous licence MIT - Voir le fichier [LICENSE](./LICENSE) pour plus de détails.
